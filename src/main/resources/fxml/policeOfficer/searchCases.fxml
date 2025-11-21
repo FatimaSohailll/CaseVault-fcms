@@ -6,16 +6,6 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.SearchCasesController">
 
-    <!-- Topbar -->
-    <top>
-        <fx:include source="../components/topbar.fxml"/>
-    </top>
-
-    <!-- Sidebar -->
-    <left>
-        <fx:include source="../components/sidebar.fxml"/>
-    </left>
-
     <!-- Scrollable center -->
     <center>
         <ScrollPane fitToWidth="true" styleClass="main-content">

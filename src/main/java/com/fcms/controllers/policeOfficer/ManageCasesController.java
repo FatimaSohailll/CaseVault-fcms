@@ -1,10 +1,16 @@
 package com.fcms.controllers.policeOfficer;
 
+import com.fcms.models.Case;
+import com.fcms.models.Evidence;
+import com.fcms.models.Participant;
+import com.fcms.services.CaseService;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.util.List;
 
 public class ManageCasesController {
 
@@ -12,48 +18,27 @@ public class ManageCasesController {
     @FXML private VBox caseDetailsRoot, evidenceContainer, participantsContainer;
     @FXML private Label caseTitle, statusLabel, priorityLabel, typeLabel, dateLabel, locationLabel, officerLabel, descriptionLabel;
 
+    private final CaseService manageCasesService = new CaseService();
+
     @FXML
     public void initialize() {
         showPlaceholder();
 
-        addCaseTile("CASE-2024-001", "Armed Robbery - Downtown Bank", "Under Investigation", "High", "2024-03-15",
-                "Robbery", "123 Main Street, Downtown", "Officer J. Smith",
-                "Armed robbery at First National Bank on Main Street. Two suspects with firearms took approximately $45,000. Security footage available.",
-                new String[][] {
-                        {"EV-001", "Video footage", "2024-03-15", "Bank main entrance"},
-                        {"EV-002", "Fingerprints", "2024-03-15", "Teller counter"}
-                },
-                new String[][] {
-                        {"John Anderson", "Witness", "555-9101"},
-                        {"Sarah Miller", "Victim", "555-9102"}
-                });
+        for (Case c : manageCasesService.getAllCases()) {
+            List<Evidence> evidence = manageCasesService.getEvidenceForCase(c.getId());
+            List<Participant> participants = manageCasesService.getParticipantsForCase(c.getId());
 
-        addCaseTile("CASE-2024-015", "Residential Burglary - Oak Street", "Evidence Analysis", "Medium", "2024-03-18",
-                "Burglary", "17 Oak Street", "Officer R. Khan",
-                "Break-in reported at 17 Oak Street. Jewellery and electronics missing. Prints and shoe impressions collected.",
-                new String[][] {
-                        {"EV-021", "Door pry marks", "2024-03-18", "Front door"},
-                        {"EV-022", "Shoe impression cast", "2024-03-18", "Garden soil"}
-                },
-                new String[][] {
-                        {"Maria Lopez", "Resident", "555-9123"},
-                        {"Tom Reed", "Neighbor", "555-9134"}
-                });
-
-        addCaseTile("CASE-2024-023", "Vehicle Theft - Shopping Mall", "Under Investigation", "Medium", "2024-03-18",
-                "Theft", "Mall Parking Lot C", "Officer S. Hussain",
-                "SUV stolen from mall parking lot. CCTV review pending. GPS tracker last ping at ring road.",
-                new String[][] {
-                        {"EV-030", "CCTV request submitted", "2024-03-18", "Mall security office"}
-                },
-                new String[][] {
-                        {"Rashid Ali", "Owner", "555-9007"}
-                });
+            addCaseTile(
+                    c.getId(), c.getTitle(), c.getStatus(), "High", c.getDate().toString(),
+                    c.getType(), c.getLocation(), c.getOfficer(),
+                    "Description not stored in model",
+                    evidence, participants
+            );
+        }
     }
 
     private void showPlaceholder() {
         caseTitle.setText("Select a case from the list to view details");
-
         statusLabel.setText("");
         priorityLabel.setText("");
         typeLabel.setText("");
@@ -73,7 +58,7 @@ public class ManageCasesController {
 
     private void addCaseTile(String id, String title, String status, String priority, String date,
                              String type, String location, String officer, String description,
-                             String[][] evidence, String[][] participants) {
+                             List<Evidence> evidence, List<Participant> participants) {
 
         VBox tile = new VBox(6);
         tile.getStyleClass().add("case-tile");
@@ -122,24 +107,24 @@ public class ManageCasesController {
             this.descriptionLabel.setText(description);
 
             evidenceContainer.getChildren().clear();
-            for (String[] ev : evidence) {
+            for (Evidence ev : evidence) {
                 VBox item = new VBox(2);
                 item.getStyleClass().add("list-item");
                 item.getChildren().addAll(
-                        new Label(ev[0] + " — " + ev[1]),
-                        new Label("Collected: " + ev[2]),
-                        new Label("Location: " + ev[3])
+                        new Label(ev.getId() + " — " + ev.getDescription()),
+                        new Label("Collected: " + ev.getCollectionDateTime()),
+                        new Label("Location: " + ev.getLocation())
                 );
                 evidenceContainer.getChildren().add(item);
             }
 
             participantsContainer.getChildren().clear();
-            for (String[] p : participants) {
+            for (Participant p : participants) {
                 VBox item = new VBox(2);
                 item.getStyleClass().add("list-item");
                 item.getChildren().addAll(
-                        new Label(p[0] + " — " + p[1]),
-                        new Label("Contact: " + p[2])
+                        new Label(p.getName() + " — " + p.getRole()),
+                        new Label("Contact: " + p.getContact())
                 );
                 participantsContainer.getChildren().add(item);
             }

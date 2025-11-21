@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.RequestAnalysisController.PoliceDashboardController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.PoliceDashboardController">
 
     <top>
         <fx:include source="../components/topbar.fxml"/>
@@ -13,6 +13,7 @@
     <left>
         <!-- Sidebar stays at min/pref width -->
         <fx:include source="../components/sidebar.fxml"/>
+
     </left>
 
     <center>
