@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" style="-fx-background: #f6f6f6;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox spacing="25">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
+
+        <!-- ====================== PAGE TITLE ====================== -->
+        <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Admin Dashboard" />
+
+
+        <!-- ====================== OVERVIEW SECTION ====================== -->
+        <VBox spacing="10">
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Overview" />
+
+            <HBox spacing="20">
+
+                <!-- Total Cases -->
+                <VBox prefWidth="200" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 15; -fx-border-color: #ffa54f;">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #555;" text="Total Users" />
+                    <Label style="-fx-font-size: 30px; -fx-font-weight: bold;" text="52" />
+                </VBox>
+
+                <!-- Cases Awaiting Verdict -->
+                <VBox prefWidth="200" spacing="10" style="-fx-background-color: white; -fx-border-color: #ffa54f;                              -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 15;">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #555;" text="Waiting list" />
+                    <Label style="-fx-font-size: 30px; -fx-font-weight: bold;" text="4" />
+                </VBox>
+
+            </HBox>
+        </VBox>
+
+
+        <!-- ====================== SUBMITTED CASES SECTION ====================== -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20;">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <VBox spacing="3">
+                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Waiting List" />
+                    <Label style="-fx-text-fill: #777;" text="Users waiting to be approved by System Admin." />
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS" />
+                <Label style="-fx-text-fill: #1a2c60; -fx-font-weight: bold;" text="See More &gt;" />
+            </HBox>
+
+            <!-- CARD 1 -->
+            <VBox spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label style="-fx-font-weight: bold;" text="John Smith" />
+                    <Label style="-fx-background-color: #08276B; -fx-padding: 2 8; -fx-background-radius: 5;" text="Officer" textFill="WHITE" />
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button style="-fx-background-color: #81d05f; -fx-text-fill: white; -fx-padding: 6 14; -fx-background-radius: 5;" text="✓" textFill="#5da83d" />
+               <Button layoutX="471.0" layoutY="10.0" style="-fx-background-color: #909090; -fx-text-fill: white; -fx-padding: 6 14; -fx-background-radius: 5;" text="✗" textFill="WHITE" />
+                </HBox>
+
+                <Label text="Department: XYZ County" />
+                <Label style="-fx-font-weight: bold;" text="See More &gt;" />
+                <Label style="-fx-text-fill: #666;" text="Applied On: 1/15/2024" />
+            </VBox>
+         <VBox layoutX="30.0" layoutY="85.0" spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
+            <children>
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <children>
+                     <Label style="-fx-font-weight: bold;" text="Jane Doe" />
+                     <Label style="-fx-background-color: #FE2857#FE2857; -fx-padding: 2 8; -fx-background-radius: 5;" text="Forensic Expert" textFill="WHITE" />
+                     <Pane HBox.hgrow="ALWAYS" />
+                     <Button style="-fx-background-color: #81d05f; -fx-text-fill: white; -fx-padding: 6 14; -fx-background-radius: 5;" text="✓" textFill="#5da83d" />
+                     <Button layoutX="471.0" layoutY="10.0" style="-fx-background-color: #909090; -fx-text-fill: white; -fx-padding: 6 14; -fx-background-radius: 5;" text="✗" textFill="WHITE" />
+                  </children>
+               </HBox>
+               <Label text="Department: ABC County" />
+               <Label style="-fx-font-weight: bold;" text="See More &gt;" />
+               <Label style="-fx-text-fill: #666;" text="Applied On: 11/19/2024" />
+            </children>
+         </VBox>
+         <VBox layoutX="30.0" layoutY="222.0" spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
+            <children>
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <children>
+                     <Label style="-fx-font-weight: bold;" text="Jane Doe" />
+                     <Label style="-fx-background-color: #ffa54f #ffa54f; -fx-padding: 2 8; -fx-background-radius: 5;" text="Court Official" textFill="WHITE" />
+                     <Pane HBox.hgrow="ALWAYS" />
+                     <Button style="-fx-background-color: #81d05f; -fx-text-fill: white; -fx-padding: 6 14; -fx-background-radius: 5;" text="✓" textFill="#5da83d" />
+                     <Button layoutX="471.0" layoutY="10.0" style="-fx-background-color: #909090; -fx-text-fill: white; -fx-padding: 6 14; -fx-background-radius: 5;" text="✗" textFill="WHITE" />
+                  </children>
+               </HBox>
+               <Label text="Department: ABC County" />
+               <Label style="-fx-font-weight: bold;" text="See More &gt;" />
+               <Label style="-fx-text-fill: #666;" text="Applied On: 11/19/2024" />
+            </children>
+         </VBox>
+        </VBox>
+
+
+
+
+        <!-- ====================== CASE HISTORY SECTION ====================== -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20;">
+
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Recent History" />
+
+
+            <!-- HISTORY CARD 1 -->
+            <VBox prefHeight="55.0" prefWidth="600.0" spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
+
+                <HBox alignment="CENTER_LEFT" spacing="10" />
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox prefHeight="63.0" prefWidth="336.0">
+                     <children>
+            
+                            <Label style="-fx-font-weight: bold;" text="Sam Reed" />
+                            <Label text="Added New User" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="BOTTOM_RIGHT" prefHeight="68.0" prefWidth="348.0">
+                     <children>
+                            <Label text="5 minutes ago" />
+                     </children></VBox>
+               </children>
+            </HBox>
+            </VBox>
+         <VBox layoutX="30.0" layoutY="65.0" prefHeight="55.0" prefWidth="600.0" spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
+            <children>
+               <HBox alignment="CENTER_LEFT" spacing="10" />
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="63.0" prefWidth="336.0">
+                        <children>
+                           <Label style="-fx-font-weight: bold;" text="Sam Reed" />
+                           <Label text="Added New User" />
+                        </children>
+                     </VBox>
+                     <VBox alignment="BOTTOM_RIGHT" prefHeight="68.0" prefWidth="348.0">
+                        <children>
+                           <Label text="5 minutes ago" />
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
+            </children>
+         </VBox>
+         <VBox layoutX="30.0" layoutY="146.0" prefHeight="55.0" prefWidth="600.0" spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
+            <children>
+               <HBox alignment="CENTER_LEFT" spacing="10" />
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="63.0" prefWidth="336.0">
+                        <children>
+                           <Label style="-fx-font-weight: bold;" text="Sam Reed" />
+                           <Label text="Added New User" />
+                        </children>
+                     </VBox>
+                     <VBox alignment="BOTTOM_RIGHT" prefHeight="68.0" prefWidth="348.0">
+                        <children>
+                           <Label text="5 minutes ago" />
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
+            </children>
+         </VBox>
+         <VBox layoutX="30.0" layoutY="227.0" prefHeight="55.0" prefWidth="600.0" spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
+            <children>
+               <HBox alignment="CENTER_LEFT" spacing="10" />
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="63.0" prefWidth="336.0">
+                        <children>
+                           <Label style="-fx-font-weight: bold;" text="Sam Reed" />
+                           <Label text="Added New User" />
+                        </children>
+                     </VBox>
+                     <VBox alignment="BOTTOM_RIGHT" prefHeight="68.0" prefWidth="348.0">
+                        <children>
+                           <Label text="5 minutes ago" />
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
+            </children>
+         </VBox>
+         <VBox layoutX="30.0" layoutY="308.0" prefHeight="55.0" prefWidth="600.0" spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
+            <children>
+               <HBox alignment="CENTER_LEFT" spacing="10" />
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="63.0" prefWidth="336.0">
+                        <children>
+                           <Label style="-fx-font-weight: bold;" text="Sam Reed" />
+                           <Label text="Added New User" />
+                        </children>
+                     </VBox>
+                     <VBox alignment="BOTTOM_RIGHT" prefHeight="68.0" prefWidth="348.0">
+                        <children>
+                           <Label text="5 minutes ago" />
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
+            </children>
+         </VBox>
+        </VBox>
+
+
+    </VBox>
+</ScrollPane>

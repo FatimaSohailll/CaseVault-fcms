@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.SearchCasesController">
+
+    <!-- Topbar -->
+    <top>
+        <fx:include source="../components/topbar.fxml"/>
+    </top>
+
+    <!-- Sidebar -->
+    <left>
+        <fx:include source="../components/sidebar.fxml"/>
+    </left>
+
+    <!-- Scrollable center -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="main-content">
+            <content>
+                <HBox spacing="32">
+                    <padding>
+                        <Insets top="26" right="26" bottom="26" left="26"/>
+                    </padding>
+                    <!-- Filters Panel -->
+                    <VBox spacing="18" prefWidth="280">
+                        <Label text="Search Filters" styleClass="section-title"/>
+
+                        <TextField fx:id="searchByIdField" promptText="Search by ID" styleClass="text-field"/>
+
+                        <ComboBox fx:id="caseTypeDropdown" promptText="Case Type" styleClass="combo-box"/>
+
+                        <Label text="Date Range" styleClass="stat-sub"/>
+                        <HBox spacing="12">
+                            <DatePicker fx:id="startDatePicker" promptText="Start Date" styleClass="date-picker"/>
+                            <DatePicker fx:id="endDatePicker" promptText="End Date" styleClass="date-picker"/>
+                        </HBox>
+
+                        <TextField fx:id="officerField" promptText="Officer" styleClass="text-field"/>
+                        <TextField fx:id="locationField" promptText="Location" styleClass="text-field"/>
+
+                        <Button text="Reset" onAction="#handleResetFilters" styleClass="nav-btn"/>
+                    </VBox>
+
+                    <!-- Results Panel -->
+                    <VBox spacing="18" VBox.vgrow="ALWAYS">
+                        <Label text="Search Results (7)" styleClass="section-title"/>
+                        <Label text="Sorting by: date (desc)" styleClass="stat-sub"/>
+
+                        <TableView fx:id="resultsTable" prefHeight="600" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="idColumn" text="Case ID" prefWidth="120"/>
+                                <TableColumn fx:id="titleColumn" text="Title" prefWidth="240"/>
+                                <TableColumn fx:id="typeColumn" text="Type" prefWidth="120"/>
+                                <TableColumn fx:id="dateColumn" text="Date" prefWidth="120"/>
+                                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                                <TableColumn fx:id="actionColumn" text="Actions" prefWidth="120"/>
+                            </columns>
+                        </TableView>
+
+                    </VBox>
+
+                </HBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

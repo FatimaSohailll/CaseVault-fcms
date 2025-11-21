@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" styleClass="root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.policeOfficer.ManageParticipantsController">
+
+    <VBox spacing="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+        <!-- Main Content -->
+        <ScrollPane fitToWidth="true" style="-fx-background-color: #f5f5f4;" VBox.vgrow="ALWAYS">
+            <VBox spacing="0.0" style="-fx-background-color: #f5f5f4;">
+
+                <!-- Page Title Bar -->
+                <HBox style="-fx-background-color: white; -fx-padding: 16 32; -fx-border-color: #e5e7eb; -fx-border-width: 0 0 1 0;">
+                    <VBox>
+                        <Button styleClass="view-button" text="← Back to Dashboard" onAction="#handleBackToDashboard"
+                                style="-fx-text-fill: #001440; -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 4 0;" />
+                        <Label text="Manage Case Participants" style="-fx-text-fill: #171617; -fx-font-size: 24px; -fx-font-weight: bold; -fx-padding: 8 0 0 0;" />
+                        <Label text="Add and manage suspects, victims, and witnesses" style="-fx-text-fill: #6b7280; -fx-font-size: 14px; -fx-padding: 4 0 0 0;" />
+                    </VBox>
+                </HBox>
+
+                <!-- Content Area -->
+                <VBox spacing="24.0" style="-fx-padding: 32; -fx-background-color: #f5f5f4;">
+
+                    <!-- Success Alert -->
+                    <VBox fx:id="successAlert" visible="false" styleClass="success-alert" style="-fx-padding: 12; -fx-background-color: #dcfce7; -fx-border-color: #bbf7d0; -fx-border-radius: 6; -fx-background-radius: 6;">
+                        <HBox spacing="8.0" alignment="CENTER_LEFT">
+                            <Label text="✓" style="-fx-text-fill: #16a34a; -fx-font-weight: bold;" />
+                            <Label fx:id="successMessageLabel" text="Participant added successfully!"
+                                   style="-fx-text-fill: #166534; -fx-font-size: 14px;" />
+                        </HBox>
+                    </VBox>
+
+                    <!-- Participants Card -->
+                    <VBox styleClass="card">
+                        <HBox alignment="CENTER_LEFT" style="-fx-padding: 0 0 16 0;">
+                            <Label styleClass="title-label" text="Case Participants" HBox.hgrow="ALWAYS" />
+                            <Button fx:id="addParticipantButton" styleClass="action-button" text="Add Participant" onAction="#handleAddParticipant">
+                                <graphic>
+                                    <Label text="👤" style="-fx-font-size: 14px;" />
+                                </graphic>
+                            </Button>
+                        </HBox>
+
+                        <!-- Participants Table -->
+                        <TableView fx:id="participantsTable" styleClass="data-table">
+                            <columns>
+                                <TableColumn fx:id="idColumn" text="ID" prefWidth="80" />
+                                <TableColumn fx:id="nameColumn" text="Full Name" prefWidth="150" />
+                                <TableColumn fx:id="roleColumn" text="Role" prefWidth="100" />
+                                <TableColumn fx:id="contactColumn" text="Contact Info" prefWidth="120" />
+                                <TableColumn fx:id="idTypeColumn" text="ID Type" prefWidth="120" />
+                                <TableColumn fx:id="idNumberColumn" text="ID Number" prefWidth="120" />
+                                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="100" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                    </VBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </VBox>
+</AnchorPane>

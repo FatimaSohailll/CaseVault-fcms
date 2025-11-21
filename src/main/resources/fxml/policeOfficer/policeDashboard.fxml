@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.RequestAnalysisController.PoliceDashboardController">
+
+    <top>
+        <fx:include source="../components/topbar.fxml"/>
+    </top>
+
+    <left>
+        <!-- Sidebar stays at min/pref width -->
+        <fx:include source="../components/sidebar.fxml"/>
+    </left>
+
+    <center>
+        <!-- Main content fills remaining space -->
+        <VBox spacing="22" styleClass="main-content" maxWidth="Infinity" maxHeight="Infinity">
+            <padding>
+                <Insets top="26" right="26" bottom="26" left="26"/>
+            </padding>
+
+            <!-- Stat boxes row -->
+            <HBox spacing="18" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                <VBox styleClass="stat-box" VBox.vgrow="ALWAYS">
+                    <Label text="Total Cases" styleClass="stat-title"/>
+                    <Label text="342" styleClass="stat-value"/>
+                    <Label text="+12 this month" styleClass="stat-sub"/>
+                </VBox>
+
+                <VBox styleClass="stat-box" VBox.vgrow="ALWAYS">
+                    <Label text="Open Cases" styleClass="stat-title"/>
+                    <Label text="87" styleClass="stat-value"/>
+                    <Label text="Requires attention" styleClass="stat-sub"/>
+                </VBox>
+
+                <VBox styleClass="stat-box" VBox.vgrow="ALWAYS">
+                    <Label text="Pending Analysis" styleClass="stat-title"/>
+                    <Label text="23" styleClass="stat-value"/>
+                    <Label text="Forensic reports" styleClass="stat-sub"/>
+                </VBox>
+
+                <VBox styleClass="stat-box" VBox.vgrow="ALWAYS">
+                    <Label text="Closed This Month" styleClass="stat-title"/>
+                    <Label text="45" styleClass="stat-value"/>
+                    <Label text="Resolution rate: 52%" styleClass="stat-sub"/>
+                </VBox>
+            </HBox>
+
+            <Label text="Recent Cases" styleClass="section-title"/>
+
+            <!-- ScrollPane grows with window -->
+            <ScrollPane fitToWidth="true" styleClass="case-scroll" VBox.vgrow="ALWAYS">
+                <VBox fx:id="recentCasesContainer" spacing="12" styleClass="case-list"/>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+</BorderPane>

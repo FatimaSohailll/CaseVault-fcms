@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/21.0.6"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.fcms.controllers.policeOfficer.CrimeAnalyticsController"
+            fitToWidth="true"
+            style="-fx-background-color: #f6f6f6;">
+
+    <VBox spacing="25">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- HEADER -->
+        <VBox spacing="5">
+            <Label text="Crime Analytics Dashboard"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+            <Label text="Visualize crime trends and generate reports"
+                   style="-fx-text-fill: #666;" />
+        </VBox>
+
+        <!-- FILTER BOX -->
+        <VBox spacing="20" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Filters" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+            <GridPane hgap="20" vgap="15">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="25"/>
+                    <ColumnConstraints percentWidth="25"/>
+                    <ColumnConstraints percentWidth="25"/>
+                    <ColumnConstraints percentWidth="25"/>
+                </columnConstraints>
+
+                <!-- Date From -->
+                <VBox spacing="5" GridPane.columnIndex="0">
+                    <Label text="Date From"/>
+                    <DatePicker fx:id="dateFrom"/>
+                </VBox>
+
+                <!-- Date To -->
+                <VBox spacing="5" GridPane.columnIndex="1">
+                    <Label text="Date To"/>
+                    <DatePicker fx:id="dateTo"/>
+                </VBox>
+
+                <!-- Location -->
+                <VBox spacing="5" GridPane.columnIndex="2">
+                    <Label text="Location"/>
+                    <ComboBox fx:id="locationCombo" promptText="All locations"/>
+                </VBox>
+
+                <!-- Crime Type -->
+                <VBox spacing="5" GridPane.columnIndex="3">
+                    <Label text="Crime Type"/>
+                    <ComboBox fx:id="crimeTypeCombo" promptText="All types"/>
+                </VBox>
+            </GridPane>
+
+            <HBox spacing="10">
+                <Button text="Generate Report"
+                        onAction="#requestAnalysis"
+                        style="-fx-background-color: #001845; -fx-text-fill: white; -fx-padding: 8 20;"/>
+
+                <Button text="Export PDF"
+                        onAction="#exportPDF"
+                        style="-fx-padding: 8 20;"/>
+
+                <Button text="Export CSV"
+                        onAction="#exportCSV"
+                        style="-fx-padding: 8 20;"/>
+            </HBox>
+        </VBox>
+
+        <!-- KEY INSIGHTS -->
+        <VBox spacing="15" style="-fx-background-color: #eaf1ff; -fx-background-radius: 10;">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <Label text="Key Insights"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+            <VBox spacing="8">
+                <Label fx:id="insight1" text="• Crime rates are increasing in recent months" />
+                <Label fx:id="insight2" text="• Average case closure rate is 87.4%" />
+                <Label fx:id="insight3" text="• Highest crime activity in Jul with 45 cases" />
+                <Label fx:id="insight4" text="• Average crime frequency: 36.82 cases/month" />
+            </VBox>
+        </VBox>
+
+        <!-- STAT CARDS -->
+        <HBox spacing="20">
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;" prefWidth="200">
+                <Label text="Total Cases (YTD)" style="-fx-text-fill: #666;"/>
+                <Label fx:id="totalCases" text="405" style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
+                <Label text="↑ 12% from last year" style="-fx-text-fill: green;"/>
+            </VBox>
+
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;" prefWidth="200">
+                <Label text="Avg Cases/Month" style="-fx-text-fill: #666;"/>
+                <Label fx:id="avgMonth" text="36.82" style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
+            </VBox>
+
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;" prefWidth="200">
+                <Label text="Closure Rate" style="-fx-text-fill: #666;"/>
+                <Label fx:id="closureRate" text="87%" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #ff8c00;"/>
+            </VBox>
+
+            <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;" prefWidth="200">
+                <Label text="Case Types Tracked" style="-fx-text-fill: #666;"/>
+                <Label fx:id="caseTypes" text="6" style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
+            </VBox>
+        </HBox>
+
+        <!-- CHARTS ROW 1 -->
+        <HBox spacing="20">
+            <VBox spacing="10" prefWidth="500">
+                <Label text="Monthly Crime Trends"/>
+                <LineChart fx:id="trendChart"
+                           prefHeight="300"
+                           title="">
+                    <xAxis>
+                        <CategoryAxis/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis/>
+                    </yAxis>
+                </LineChart>
+            </VBox>
+
+            <VBox spacing="10" prefWidth="500">
+                <Label text="Crime Type Distribution"/>
+                <PieChart fx:id="pieChart" prefHeight="300"/>
+            </VBox>
+        </HBox>
+
+        <!-- CHARTS ROW 2 -->
+        <VBox spacing="10">
+            <Label text="Cases by Location"/>
+            <BarChart fx:id="locationChart" prefHeight="300">
+                <xAxis><CategoryAxis/></xAxis>
+                <yAxis><NumberAxis/></yAxis>
+            </BarChart>
+        </VBox>
+
+    </VBox>
+</ScrollPane>

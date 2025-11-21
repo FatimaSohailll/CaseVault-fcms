@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.ManageCasesController">
+
+    <!-- Topbar -->
+    <top>
+        <fx:include source="../components/topbar.fxml"/>
+    </top>
+
+    <!-- Sidebar -->
+    <left>
+        <fx:include source="../components/sidebar.fxml"/>
+    </left>
+
+    <!-- Center -->
+    <center>
+        <HBox spacing="24">
+            <padding>
+                <Insets top="26" right="26" bottom="26" left="26"/>
+            </padding>
+
+            <!-- Left: scrollable case tiles -->
+            <ScrollPane fitToWidth="true" prefWidth="340" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                <content>
+                    <VBox fx:id="caseListContainer" spacing="12" fillWidth="true"/>
+                </content>
+            </ScrollPane>
+
+            <!-- Right: scrollable case details -->
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                <content>
+                    <VBox fx:id="caseDetailsRoot" spacing="18" fillWidth="true">
+                        <Label fx:id="caseTitle" text="Select a case from the list to view details" styleClass="section-title"/>
+
+                        <!-- Basic information -->
+                        <VBox spacing="10" styleClass="card">
+                            <Label text="Basic information" styleClass="card-title"/>
+                            <GridPane hgap="16" vgap="8">
+                                <columnConstraints>
+                                    <ColumnConstraints percentWidth="30"/>
+                                    <ColumnConstraints percentWidth="70"/>
+                                </columnConstraints>
+                                <children>
+                                    <Label text="Status:" styleClass="stat-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <Label fx:id="statusLabel" styleClass="stat-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                    <Label text="Priority:" styleClass="stat-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                    <Label fx:id="priorityLabel" styleClass="stat-value" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                    <Label text="Case type:" styleClass="stat-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                    <Label fx:id="typeLabel" styleClass="stat-value" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                    <Label text="Date reported:" styleClass="stat-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                    <Label fx:id="dateLabel" styleClass="stat-value" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                                    <Label text="Location:" styleClass="stat-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                                    <Label fx:id="locationLabel" styleClass="stat-value" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                                    <Label text="Assigned officer:" styleClass="stat-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                                    <Label fx:id="officerLabel" styleClass="stat-value" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                                </children>
+                            </GridPane>
+
+                            <Label text="Description" styleClass="card-subtitle"/>
+                            <Label fx:id="descriptionLabel" wrapText="true" styleClass="stat-value"/>
+                        </VBox>
+
+                        <!-- Evidence -->
+                        <VBox spacing="10" styleClass="card">
+                            <Label text="Evidence" styleClass="card-title"/>
+                            <VBox fx:id="evidenceContainer" spacing="8"/>
+                        </VBox>
+
+                        <!-- Participants -->
+                        <VBox spacing="10" styleClass="card">
+                            <Label text="Participants" styleClass="card-title"/>
+                            <VBox fx:id="participantsContainer" spacing="8"/>
+                        </VBox>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </HBox>
+    </center>
+</BorderPane>

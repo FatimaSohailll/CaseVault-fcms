@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" style="-fx-background: #f6f6f6; -fx-padding: 10;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+
+    <VBox spacing="25">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
+
+        <!-- ====================== PAGE TITLE ====================== -->
+        <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Search Cases" />
+
+
+        <!-- ====================== SEARCH PANEL ====================== -->
+        <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Search Cases" />
+            <Label style="-fx-text-fill: #777;" text="Find submitted cases using filters below" />
+
+            <GridPane hgap="40" vgap="15">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="33" />
+                    <ColumnConstraints percentWidth="33" />
+                    <ColumnConstraints percentWidth="33" />
+                </columnConstraints>
+
+                <VBox spacing="5" GridPane.columnIndex="0">
+                    <Label style="-fx-font-weight: bold;" text="Case ID / Defendant Name" />
+                    <TextField promptText="Enter case number or defendant" />
+                </VBox>
+
+                <VBox spacing="5" GridPane.columnIndex="1">
+                    <Label style="-fx-font-weight: bold;" text="Case Type" />
+                    <ComboBox promptText="All Types" />
+                </VBox>
+
+                <VBox spacing="5" GridPane.columnIndex="2">
+                    <Label style="-fx-font-weight: bold;" text="Status" />
+                    <ComboBox promptText="All Status" />
+                </VBox>
+            <rowConstraints>
+               <RowConstraints />
+            </rowConstraints>
+            </GridPane>
+
+            <HBox spacing="10">
+                <Button style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-padding: 6 20; -fx-background-radius: 5;" text="🔍 Search" />
+                <Button style="-fx-background-color: #ececec; -fx-padding: 6 20; -fx-background-radius: 5;" text="Reset Filters" />
+            </HBox>
+        </VBox>
+
+
+        <!-- ====================== SEARCH RESULTS ====================== -->
+        <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Search Results" />
+            <Label style="-fx-text-fill: #777;" text="6 cases found" />
+
+
+            <!-- CASE CARD 1 -->
+            <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #e0e0e0; -fx-border-radius: 10;">
+                <padding>
+                    <Insets bottom="15" left="15" right="15" top="15" />
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label style="-fx-font-weight: bold;" text="CR-2024-001" />
+                    <Label style="-fx-background-color: #ffc107; -fx-padding: 2 8; -fx-background-radius: 5;" text="Criminal" />
+                    <Label style="-fx-background-color: #ff9800; -fx-padding: 2 8; -fx-background-radius: 5;" text="Awaiting Verdict" />
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-padding: 6 14; -fx-background-radius: 5;" text="Record Verdict" />
+                </HBox>
+
+                <Label style="-fx-font-weight: bold;" text="Defendant: John Doe" />
+                <Label text="Description: Theft of property valued over $1,000" />
+                <Label style="-fx-text-fill: #666;" text="Filed: 1/15/2024" />
+            </VBox>
+
+
+            <!-- CASE CARD 2 -->
+            <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #e0e0e0; -fx-border-radius: 10;">
+                <padding>
+                    <Insets bottom="15" left="15" right="15" top="15" />
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label style="-fx-font-weight: bold;" text="CR-2024-002" />
+                    <Label style="-fx-background-color: #ffc107; -fx-padding: 2 8; -fx-background-radius: 5;" text="Criminal" />
+                    <Label style="-fx-background-color: #ff9800; -fx-padding: 2 8; -fx-background-radius: 5;" text="Awaiting Verdict" />
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-padding: 6 14;" text="Record Verdict" />
+                </HBox>
+
+                <Label style="-fx-font-weight: bold;" text="Defendant: Jane Smith" />
+                <Label text="Description: Fraud and identity theft" />
+                <Label style="-fx-text-fill: #666;" text="Filed: 2/20/2024" />
+            </VBox>
+         <VBox layoutX="30.0" layoutY="253.0" spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #e0e0e0; -fx-border-radius: 10;">
+            <padding>
+               <Insets bottom="15" left="15" right="15" top="15" />
+            </padding>
+            <children>
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <children>
+                     <Label style="-fx-font-weight: bold;" text="CR-2024-003" />
+                     <Label style="-fx-background-color: #ffc107; -fx-padding: 2 8; -fx-background-radius: 5;" text="Criminal" />
+                     <Label style="-fx-background-color: #ff9800; -fx-padding: 2 8; -fx-background-radius: 5;" text="Awaiting Verdict" />
+                     <Pane HBox.hgrow="ALWAYS" />
+                     <Button style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-padding: 6 14;" text="Record Verdict" />
+                  </children>
+               </HBox>
+               <Label style="-fx-font-weight: bold;" text="Defendant: ABC Corporation" />
+               <Label text="Description: Breach of contract" />
+               <Label style="-fx-text-fill: #666;" text="Filed: 3/10/2024" />
+            </children>
+         </VBox>
+         <VBox layoutX="30.0" layoutY="404.0" spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #e0e0e0; -fx-border-radius: 10;">
+            <padding>
+               <Insets bottom="15" left="15" right="15" top="15" />
+            </padding>
+            <children>
+               <HBox alignment="CENTER_LEFT" spacing="10">
+                  <children>
+                     <Label style="-fx-font-weight: bold;" text="CR-2024-003" />
+                     <Label style="-fx-background-color: #ffc107; -fx-padding: 2 8; -fx-background-radius: 5;" text="Criminal" />
+                     <Label style="-fx-background-color: #ff9800; -fx-padding: 2 8; -fx-background-radius: 5;" text="Awaiting Verdict" />
+                     <Pane HBox.hgrow="ALWAYS" />
+                     <Button style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-padding: 6 14;" text="Record Verdict" />
+                  </children>
+               </HBox>
+               <Label style="-fx-font-weight: bold;" text="Defendant: ABC Corporation" />
+               <Label text="Description: Breach of contract" />
+               <Label style="-fx-text-fill: #666;" text="Filed: 3/10/2024" />
+            </children>
+         </VBox>
+
+        </VBox>
+
+    </VBox>
+
+</ScrollPane>

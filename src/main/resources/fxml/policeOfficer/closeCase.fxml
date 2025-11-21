@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.CloseCaseController">
+    <top>
+        <fx:include source="../components/topbar.fxml"/>
+    </top>
+
+    <left>
+        <fx:include source="../components/sidebar.fxml"/>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="main-content">
+            <content>
+                <VBox spacing="24" styleClass="main-content">
+                    <padding>
+                        <Insets top="26" right="26" bottom="26" left="26"/>
+                    </padding>
+                <!-- Warning Banner -->
+                    <VBox spacing="6" styleClass="warning-banner">
+                        <Label text="Important Notice" styleClass="section-title"/>
+                        <Label text="Closing a case is a permanent action. Ensure all evidence has been logged, all participants have been interviewed, and all required documentation is complete."
+                               wrapText="true" styleClass="validation-message"/>
+                    </VBox>
+
+                    <!-- Case Selection -->
+                    <VBox spacing="12">
+                        <Label text="Select Case to Close" styleClass="section-title"/>
+                        <ComboBox fx:id="activeCaseDropdown" promptText="Active Case *" styleClass="combo-box"/>
+                    </VBox>
+
+                    <!-- Closure Details -->
+                    <VBox spacing="12">
+                        <Label text="Closure Details" styleClass="section-title"/>
+
+                        <ComboBox fx:id="closureReasonDropdown" promptText="Closure Reason *" styleClass="combo-box"/>
+
+                        <TextArea fx:id="finalReportSummary" promptText="Provide a detailed summary of the case outcome, actions taken, and final status..."
+                                  prefRowCount="6" wrapText="true" styleClass="text-area"/>
+                        <Label text="Include key findings, evidence collected, and outcome." styleClass="case-meta"/>
+                    </VBox>
+
+                    <!-- Pre-Closure Checklist -->
+                    <VBox spacing="10">
+                        <Label text="Pre-Closure Checklist" styleClass="section-title"/>
+                        <VBox spacing="6" fx:id="checklistContainer">
+                            <!-- Checklist items will be injected dynamically -->
+                        </VBox>
+                    </VBox>
+
+                    <!-- Action Buttons -->
+                    <HBox spacing="16" alignment="CENTER_RIGHT">
+                        <Button text="Cancel" onAction="#handleCancel" styleClass="nav-btn"/>
+                        <Button text="Close Case" onAction="#handleCloseCase" styleClass="nav-btn"/>
+                    </HBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

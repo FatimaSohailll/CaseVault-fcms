@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" styleClass="root" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.forensicExpert.ExpertDashboardController">
+
+    <!-- Header - spans entire width -->
+    <HBox alignment="CENTER_LEFT" prefWidth="1200.0" spacing="12.0" styleClass="header" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox alignment="TOP_CENTER" prefHeight="35.0" prefWidth="483.0" spacing="0.0">
+            <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="334.0" styleClass="header-title" text="CaseVault Forensics" />
+            <Label prefHeight="17.0" prefWidth="334.0" styleClass="header-subtitle" text="Forensic Expert Dashboard" />
+        </VBox>
+    </HBox>
+
+    <!-- Scrollable Content Area -->
+    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
+        <VBox spacing="24.0" style="-fx-padding: 48;">
+
+            <!-- Summary Panel -->
+            <VBox spacing="16.0">
+                <Label styleClass="title-label" text="Overview" />
+
+                <GridPane hgap="16.0" vgap="16.0">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50.0" />
+                        <ColumnConstraints percentWidth="50.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints percentHeight="50.0" />
+                        <RowConstraints percentHeight="50.0" />
+                    </rowConstraints>
+
+                    <!-- Row 1 -->
+                    <!-- Pending Requests Card -->
+                    <VBox styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <HBox alignment="CENTER_LEFT" spacing="16.0">
+                            <VBox prefHeight="71.0" prefWidth="164.0" spacing="4.0">
+                                <Label styleClass="stat-label" text="Pending Requests" />
+                                <Label fx:id="pendingCountLabel" styleClass="value-label" text="4" />
+                            </VBox>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <VBox alignment="CENTER" prefHeight="71.0" prefWidth="84.0" styleClass="stat-icon-warning">
+                                <Label styleClass="stat-icon" text="!" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- In Progress Card -->
+                    <VBox styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <HBox alignment="CENTER_LEFT" spacing="16.0">
+                            <VBox spacing="4.0">
+                                <Label styleClass="stat-label" text="In Progress" />
+                                <Label fx:id="inProgressCountLabel" styleClass="value-label" text="2" />
+                            </VBox>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <VBox alignment="CENTER" prefHeight="71.0" prefWidth="84.0" styleClass="stat-icon-info">
+                                <Label styleClass="stat-icon" text="↻" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Row 2 -->
+                    <!-- Completed Card -->
+                    <VBox styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <HBox alignment="CENTER_LEFT" spacing="16.0">
+                            <VBox spacing="4.0">
+                                <Label styleClass="stat-label" text="Completed" />
+                                <Label fx:id="completedCountLabel" styleClass="value-label" text="2" />
+                            </VBox>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <VBox alignment="CENTER" prefHeight="71.0" prefWidth="84.0" styleClass="stat-icon-success">
+                                <Label styleClass="stat-icon" text="✓" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Total Reports Card -->
+                    <VBox styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <HBox alignment="CENTER_LEFT" spacing="16.0">
+                            <VBox spacing="4.0">
+                                <Label styleClass="stat-label" text="Total Reports" />
+                                <Label fx:id="totalCountLabel" styleClass="value-label" text="8" />
+                            </VBox>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <VBox alignment="CENTER" prefHeight="71.0" prefWidth="84.0" styleClass="stat-icon-primary">
+                                <Label styleClass="stat-icon" text="📊" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <!-- Forensic Requests Table Section -->
+            <VBox spacing="16.0">
+                <VBox spacing="16.0" styleClass="card">
+                    <VBox spacing="4.0">
+                        <Label styleClass="title-label" text="Forensic Requests" />
+                        <Label styleClass="subtitle-label" text="Manage and track all forensic analysis requests" />
+                    </VBox>
+
+                    <!-- Search and Filter Row -->
+                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                        <Region HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" spacing="12.0">
+                            <HBox spacing="8.0" style="-fx-background-color: transparent;">
+                                <TextField fx:id="searchField" promptText="Search by Request ID or Case ID" styleClass="search-field" />
+                            </HBox>
+                            <ComboBox fx:id="statusFilter" promptText="Filter by Status" styleClass="filter-combo" />
+                        </HBox>
+                    </HBox>
+
+                    <!-- Requests Table -->
+                    <TableView fx:id="requestsTable" styleClass="data-table">
+                        <columns>
+                            <TableColumn fx:id="caseIdColumn" prefWidth="120.0" text="Case ID" />
+                            <TableColumn fx:id="evidenceTypeColumn" prefWidth="150.0" text="Evidence Type" />
+                            <TableColumn fx:id="requestedByColumn" prefWidth="150.0" text="Requested By" />
+                            <TableColumn fx:id="dateColumn" prefWidth="120.0" text="Date" />
+                            <TableColumn fx:id="statusColumn" prefWidth="100.0" text="Status" />
+                            <TableColumn fx:id="actionsColumn" prefWidth="120.0" text="Actions" />
+                            <TableColumn fx:id="requestIdColumn" prefWidth="120.0" text="Request ID" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

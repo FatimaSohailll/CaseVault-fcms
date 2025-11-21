@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.RegisterCaseController">
+
+    <top>
+        <fx:include source="../components/topbar.fxml"/>
+    </top>
+
+    <left>
+        <fx:include source="../components/sidebar.fxml"/>
+    </left>
+
+    <center>
+        <VBox spacing="22" styleClass="main-content">
+            <padding>
+                <Insets top="26" right="26" bottom="26" left="26"/>
+            </padding>
+
+            <Label text="Register New Case" styleClass="section-title"/>
+            <Label text="Add a new case to the system" styleClass="stat-sub"/>
+
+            <VBox spacing="16" styleClass="stat-box">
+                <Label text="Case Information" styleClass="stat-title"/>
+
+                <VBox spacing="8">
+                    <Label text="Case Title *"/>
+                    <TextField fx:id="caseTitleField" promptText="Enter case title"/>
+                    <Label fx:id="titleWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                </VBox>
+
+
+                <VBox spacing="8">
+                    <Label text="Case Type *"/>
+                    <ComboBox fx:id="caseTypeDropdown" promptText="Select case type"/>
+                    <Label fx:id="typeWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                </VBox>
+
+                <VBox spacing="8">
+                    <Label text="Description *"/>
+                    <TextArea fx:id="descriptionField" promptText="Enter case description" prefRowCount="4"/>
+                    <Label fx:id="descWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                </VBox>
+
+                <VBox spacing="8">
+                    <Label text="Date *"/>
+                    <DatePicker fx:id="datePicker"/>
+                    <Label fx:id="dateWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                </VBox>
+
+                <Label fx:id="validationMessage" styleClass="case-meta" wrapText="true"/>
+            </VBox>
+
+            <HBox spacing="12">
+                <Button text="Save Case" onAction="#handleSaveCase" styleClass="nav-btn"/>
+                <Button text="Cancel" onAction="#handleCancel" styleClass="nav-btn"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

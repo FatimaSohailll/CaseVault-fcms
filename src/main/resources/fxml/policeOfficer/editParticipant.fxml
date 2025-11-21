@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" style="-fx-padding: 24; -fx-pref-width: 500; -fx-pref-height: 580;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.policeOfficer.EditParticipantController">
+
+    <!-- Dialog Header -->
+    <VBox spacing="8">
+        <Label text="Edit Participant" style="-fx-text-fill: #171617; -fx-font-size: 20px; -fx-font-weight: bold;" />
+        <Separator />
+    </VBox>
+
+    <!-- Validation Error -->
+    <VBox fx:id="validationError" visible="false" style="-fx-padding: 12; -fx-background-color: #fef2f2; -fx-border-color: #fecaca; -fx-border-radius: 6; -fx-background-radius: 6;">
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <Label text="⚠" style="-fx-text-fill: #dc2626; -fx-font-weight: bold;" />
+            <Label fx:id="errorMessageLabel" text="All fields are required" style="-fx-text-fill: #991b1b; -fx-font-size: 14px;" />
+        </HBox>
+    </VBox>
+
+    <!-- Form -->
+    <VBox spacing="16">
+        <VBox spacing="8">
+            <Label text="Full Name *" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+            <TextField fx:id="nameField" promptText="Enter full name" styleClass="form-field" />
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="Role *" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+            <ComboBox fx:id="roleComboBox" promptText="Select role" styleClass="filter-combo" />
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="Contact Information *" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+            <TextField fx:id="contactField" promptText="Phone number or email" styleClass="form-field" />
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="Identification Type *" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+            <ComboBox fx:id="idTypeComboBox" promptText="Select ID type" styleClass="filter-combo" />
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="ID Number *" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+            <TextField fx:id="idNumberField" promptText="Enter ID number" styleClass="form-field" />
+        </VBox>
+    </VBox>
+
+    <!-- Dialog Buttons -->
+    <HBox spacing="12" style="-fx-padding: 16 0 0 0;">
+        <Button fx:id="submitButton" styleClass="action-button" text="Save Changes" onAction="#handleSubmit" HBox.hgrow="ALWAYS" />
+        <Button fx:id="cancelButton" styleClass="view-button" text="Cancel" onAction="#handleCancel" HBox.hgrow="ALWAYS" />
+    </HBox>
+</VBox>

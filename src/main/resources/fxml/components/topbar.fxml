@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.components.TopbarController"
+      styleClass="top-bar">
+
+    <padding>
+        <Insets top="14" right="20" bottom="14" left="20"/>
+    </padding>
+
+    <!-- Left side: app title -->
+    <VBox spacing="4">
+        <Label text="CaseVault" styleClass="app-title"/>
+        <Label text="Forensic Case Management System" styleClass="subtitle"/>
+    </VBox>
+
+    <!-- Spacer that grows to fill space -->
+    <Region HBox.hgrow="ALWAYS"/>
+
+    <!-- Right side: officer info + icon -->
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Pane fx:id="userIcon"/>
+        <VBox spacing="2" alignment="CENTER_RIGHT">
+            <Label text="Officer J. Smith" styleClass="user-info"/>
+            <Label text="Badge #46152" styleClass="user-info"/>
+        </VBox>
+    </HBox>
+</HBox>
