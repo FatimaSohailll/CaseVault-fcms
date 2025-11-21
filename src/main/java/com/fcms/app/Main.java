@@ -12,6 +12,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         SQLiteDatabase.initializeDatabase();
+
         //Parent root = FXMLLoader.load(getClass().getResource("/fxml/policeDashboard.fxml"));
         //Parent root = FXMLLoader.load(getClass().getResource("/fxml/registerCase.fxml"));
         //Parent root = FXMLLoader.load(getClass().getResource("/fxml/closeCase.fxml"));

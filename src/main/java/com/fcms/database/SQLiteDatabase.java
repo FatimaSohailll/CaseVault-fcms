@@ -48,6 +48,12 @@ public class SQLiteDatabase {
                 "managedBY TEXT NOT NULL, " +
                 "createdAt DATETIME DEFAULT CURRENT_TIMESTAMP)");
 
+        stmt.execute("CREATE TABLE IF NOT EXISTS UserHistory (" +
+                "historyID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "actor TEXT NOT NULL, " +            // who did it (Admin)
+                "action TEXT NOT NULL, " +           // what happened ("Added new user")
+                "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
+
         // POLICE OFFICER
         stmt.execute("CREATE TABLE IF NOT EXISTS PoliceOfficer (" +
                 "officerID TEXT PRIMARY KEY, " +
@@ -167,6 +173,13 @@ public class SQLiteDatabase {
     }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL);
+        Connection conn = DriverManager.getConnection(DB_URL);
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("PRAGMA foreign_keys = ON");
+        }
+
+        return conn;
     }
+
 }

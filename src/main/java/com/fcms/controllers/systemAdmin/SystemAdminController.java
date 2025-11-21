@@ -34,8 +34,7 @@ public class SystemAdminController {
     // Helper method – loads FXML into contentArea
     private void loadPage(String fxmlFile) {
         try {
-            // FIXED — MUST use absolute path starting with /fxml/
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin/" + fxmlFile));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/systemAdmin/" + fxmlFile));
             Node node = loader.load();
 
             contentArea.getChildren().clear();

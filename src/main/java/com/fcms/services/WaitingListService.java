@@ -1,53 +1,31 @@
 package com.fcms.services;
 
-import com.fcms.models.PendingUser;
+import com.fcms.models.users.UserAccount;
+import com.fcms.repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WaitingListService {
 
-    private final List<PendingUser> pendingUsers = new ArrayList<>();
-
-    public WaitingListService() {
-        loadDummyData();
+    public List<UserAccount> getPendingUsers() {
+        return UserRepository.getPendingUsers();
     }
 
-    // Business Logic -----------------------------------------
+    public void approve(UserAccount user) {
+        // Update status → user is now active
+        UserRepository.updateStatus(user.getUserID(), "System Admin");
 
-    public List<PendingUser> getPendingUsers() {
-        return new ArrayList<>(pendingUsers);
+        // Add history entry
+        UserRepository.addHistory("System Admin",
+                "Approved pending user: " + user.getName());
     }
 
-    public void approve(PendingUser user) {
-        pendingUsers.remove(user);
-    }
+    public void reject(UserAccount user) {
+        // Delete user from all related tables (CASCADE works)
+        UserRepository.deleteUser(user.getUserID());
 
-    public void reject(PendingUser user) {
-        pendingUsers.remove(user);
-    }
-
-    // Dummy data for now -------------------------------------
-    private void loadDummyData() {
-        pendingUsers.add(new PendingUser(
-                "John Smith", "Police Officer",
-                "john.smith@casevault.gov", "XYZ County",
-                "Requesting access for criminal investigation duties",
-                "1/15/2024"
-        ));
-
-        pendingUsers.add(new PendingUser(
-                "Jane Doe", "Forensic Expert",
-                "jane.doe@casevault.gov", "ABC County",
-                "Need access to forensic evidence database",
-                "11/19/2024"
-        ));
-
-        pendingUsers.add(new PendingUser(
-                "Adam Ray", "Court Official",
-                "adam.ray@casevault.gov", "Central Court",
-                "Managing pending case verdicts",
-                "9/10/2024"
-        ));
+        // Add history entry
+        UserRepository.addHistory("System Admin",
+                "Rejected and removed user: " + user.getName());
     }
 }

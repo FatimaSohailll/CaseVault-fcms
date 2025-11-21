@@ -1,6 +1,6 @@
 package com.fcms.controllers.systemAdmin;
 
-import com.fcms.models.PendingUser;
+import com.fcms.models.users.UserAccount;
 import com.fcms.services.WaitingListService;
 
 import javafx.fxml.FXML;
@@ -26,26 +26,29 @@ public class WaitingListController {
     private void refreshUI() {
         userListContainer.getChildren().clear();
 
-        for (PendingUser user : service.getPendingUsers()) {
+        for (UserAccount user : service.getPendingUsers()) {
             userListContainer.getChildren().add(createUserCard(user));
         }
 
-        countLabel.setText("Showing " + service.getPendingUsers().size() + " pending users");
+        countLabel.setText(
+                "Showing " + service.getPendingUsers().size() + " pending users"
+        );
     }
 
-    private VBox createUserCard(PendingUser user) {
+    private VBox createUserCard(UserAccount user) {
 
         VBox card = new VBox(10);
         card.setStyle("-fx-background-color: white; -fx-background-radius: 8; -fx-padding: 20;");
 
-        // Header
+        // HEADER
         HBox header = new HBox(10);
 
         Label name = new Label(user.getName());
         name.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
 
         Label role = new Label(user.getRole());
-        role.setStyle("-fx-background-color: #002b7f; -fx-text-fill: white; -fx-padding: 3 8; -fx-background-radius: 5; -fx-font-size: 12px;");
+        role.setStyle("-fx-background-color: #002b7f; -fx-text-fill: white; "
+                + "-fx-padding: 3 8; -fx-background-radius: 5; -fx-font-size: 12px;");
 
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -68,13 +71,13 @@ public class WaitingListController {
 
         header.getChildren().addAll(name, role, spacer, approve, reject);
 
-        // Details
+        // DETAILS
         VBox details = new VBox(5);
         details.getChildren().addAll(
                 new Label("Email: " + user.getEmail()),
-                new Label("Department: " + user.getDepartment()),
-                new Label("Reason: " + user.getReason()),
-                new Label("Applied On: " + user.getAppliedDate())
+                new Label("Applied By: " + user.getUsername()),
+                new Label("Requested Role: " + user.getRole()),
+                new Label("Status: " + user.getManagedBy())
         );
 
         card.getChildren().addAll(header, details);
