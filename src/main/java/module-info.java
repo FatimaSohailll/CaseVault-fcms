@@ -32,4 +32,6 @@ module com.fcms {
     opens com.fcms.repositories to javafx.fxml;
     exports com.fcms.database;
     opens com.fcms.database to javafx.fxml;
+    exports com.fcms.models.users;
+    opens com.fcms.models.users to javafx.fxml;
 }
