@@ -7,7 +7,8 @@
 <ScrollPane xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml"
             fitToWidth="true"
-            style="-fx-background:#f5f5f5;">
+            style="-fx-background:#f5f5f5;"
+            fx:controller="com.fcms.controller.systemAdmin.ManageUsersController">
 
     <VBox spacing="20" style="-fx-padding: 20;">
 
@@ -29,11 +30,13 @@
                        HBox.hgrow="ALWAYS" />
 
             <!-- Role Filter -->
-            <ComboBox prefWidth="150"
+            <ComboBox fx:id="roleFilter"
+                      prefWidth="150"
                       promptText="All Roles" />
 
             <!-- Status Filter -->
-            <ComboBox prefWidth="150"
+            <ComboBox fx:id="statusFilter"
+                      prefWidth="150"
                       promptText="All Status" />
 
             <!-- Add User Button -->
@@ -51,24 +54,13 @@
             <!-- USERS TABLE -->
             <TableView fx:id="usersTable" prefHeight="400">
 
-                <!-- COLUMN: Name -->
                 <columns>
-                    <TableColumn text="Name" prefWidth="150" />
-
-                    <!-- Email -->
-                    <TableColumn text="Email" prefWidth="200" />
-
-                    <!-- Role -->
-                    <TableColumn text="Role" prefWidth="140" />
-
-                    <!-- Department -->
-                    <TableColumn text="Department" prefWidth="200" />
-
-                    <!-- Status -->
-                    <TableColumn text="Status" prefWidth="100" />
-
-                    <!-- Actions -->
-                    <TableColumn text="Actions" prefWidth="120" />
+                    <TableColumn fx:id="nameColumn" text="Name" prefWidth="150" />
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="200" />
+                    <TableColumn fx:id="roleColumn" text="Role" prefWidth="140" />
+                    <TableColumn fx:id="deptColumn" text="Department" prefWidth="200" />
+                    <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" />
+                    <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="120" />
                 </columns>
 
             </TableView>

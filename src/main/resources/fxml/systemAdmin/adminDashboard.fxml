@@ -113,7 +113,7 @@
                <children>
                   <VBox prefHeight="63.0" prefWidth="336.0">
                      <children>
-            
+
                             <Label style="-fx-font-weight: bold;" text="Sam Reed" />
                             <Label text="Added New User" />
                      </children>

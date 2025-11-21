@@ -23,12 +23,13 @@ public class SystemAdminController {
     private Label toggleIcon;
 
     private boolean isCollapsed = false;
-
     @FXML
     private void initialize() {
-        // Load Dashboard by default when the layout loads
-        loadPage("adminDashboard.fxml");
+        javafx.application.Platform.runLater(() -> {
+            loadPage("adminDashboard.fxml");
+        });
     }
+
 
     // Helper method – loads FXML into contentArea
     private void loadPage(String fxmlFile) {
@@ -59,12 +60,12 @@ public class SystemAdminController {
 
     @FXML
     private void openManageUsers(MouseEvent event) {
-        loadPage("ManageUsers.fxml");
+        loadPage("manageUsers.fxml");
     }
 
     @FXML
     private void openWaitingList(MouseEvent event) {
-        loadPage("WaitingList.fxml");
+        loadPage("waitingList.fxml");
     }
 
     // ================= SIDEBAR COLLAPSE LOGIC =================
