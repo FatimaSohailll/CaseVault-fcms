@@ -8,7 +8,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fitToWidth="true"
             style="-fx-background:#f5f5f5;"
-            fx:controller="com.fcms.controller.systemAdmin.ManageUsersController">
+            fx:controller="com.fcms.controllers.systemAdmin.ManageUsersController">
 
     <VBox spacing="20" style="-fx-padding: 20;">
 
