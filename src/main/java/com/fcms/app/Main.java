@@ -5,26 +5,53 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import com.fcms.controllers.components.SidebarController;
+import com.fcms.controllers.policeOfficer.PoliceDashboardController;
 import com.fcms.controllers.forensicExpert.*;
 import com.fcms.database.SQLiteDatabase;
+
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         SQLiteDatabase.initializeDatabase();
-        //Parent root = FXMLLoader.load(getClass().getResource("/fxml/policeDashboard.fxml"));
-        //Parent root = FXMLLoader.load(getClass().getResource("/fxml/registerCase.fxml"));
-        //Parent root = FXMLLoader.load(getClass().getResource("/fxml/closeCase.fxml"));
-        //Parent root = FXMLLoader.load(getClass().getResource("/fxml/searchCases.fxml"));
-        //Parent root = FXMLLoader.load(getClass().getResource("/fxml/manageParticipants.fxml"));
-        //Scene scene = new Scene(root);
-        //Scene scene = new Scene(root);
-        // Load Expert Dashboard FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/forensicExpert/expertDashboard.fxml"));
+
+           // Create SceneManager
+        SceneManager sceneManager = new SceneManager(primaryStage);
+
+        // Prepare loader for dashboard
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/policeDashboard.fxml"));
+
+        // Controller factory: inject SceneManager into SidebarController when it's constructed
+        loader.setControllerFactory(type -> {
+            try {
+                if (type == SidebarController.class) {
+                    SidebarController sc = new SidebarController();
+                    sc.setSceneManager(sceneManager);
+                    return sc;
+                }
+                // default construction for other controllers (e.g., PoliceDashboardController)
+                return type.getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         Parent root = loader.load();
 
+        // Optional: get dashboard controller if you need it for other tasks
+        PoliceDashboardController dashboardController = loader.getController();
+
+        // Create scene and attach CSS
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+        // Load Expert Dashboard FXML
+        //FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/forensicExpert/expertDashboard.fxml"));
+        //Parent root = loader.load();
+
         // Get controller if you need to pass references
-        ExpertDashboardController controller = loader.getController();
+        //ExpertDashboardController controller = loader.getController();
         //RequestAnalysisController controller = loader.getController();
         //ManageParticipantsController controller = loader.getController();
         //UploadReportController controller = loader.getController();
@@ -33,8 +60,8 @@ public class Main extends Application {
         // Optionally: controller.setMainApp(this); if you want callbacks
 
         // Create scene and apply stylesheet
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
+        //Scene scene = new Scene(root);
+        //scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
 
         // Configure stage
         primaryStage.setTitle("CaseVault - Police Officer Dashboard");
