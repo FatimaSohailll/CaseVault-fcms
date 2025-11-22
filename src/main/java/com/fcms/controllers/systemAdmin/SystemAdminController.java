@@ -23,18 +23,18 @@ public class SystemAdminController {
     private Label toggleIcon;
 
     private boolean isCollapsed = false;
+
     @FXML
     private void initialize() {
-        javafx.application.Platform.runLater(() -> {
-            loadPage("adminDashboard.fxml");
-        });
+        // Load Dashboard by default when the layout loads
+        loadPage("adminDashboard.fxml");
     }
-
 
     // Helper method – loads FXML into contentArea
     private void loadPage(String fxmlFile) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/systemAdmin/" + fxmlFile));
+            // FIXED — MUST use absolute path starting with /fxml/
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/admin/" + fxmlFile));
             Node node = loader.load();
 
             contentArea.getChildren().clear();
@@ -59,12 +59,12 @@ public class SystemAdminController {
 
     @FXML
     private void openManageUsers(MouseEvent event) {
-        loadPage("manageUsers.fxml");
+        loadPage("ManageUsers.fxml");
     }
 
     @FXML
     private void openWaitingList(MouseEvent event) {
-        loadPage("waitingList.fxml");
+        loadPage("WaitingList.fxml");
     }
 
     // ================= SIDEBAR COLLAPSE LOGIC =================

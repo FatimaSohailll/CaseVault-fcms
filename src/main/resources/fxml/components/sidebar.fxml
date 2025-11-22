@@ -5,7 +5,8 @@
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.components.SidebarController"
-      fx:id="sidebarContainer" spacing="8" styleClass="sidebar">
+      spacing="8" styleClass="sidebar" fx:id="sidebarContainer"
+      minWidth="80" prefWidth="200" maxWidth="250">
 
     <padding>
         <Insets top="24" right="8" bottom="24" left="8"/>
@@ -48,12 +49,6 @@
     <HBox fx:id="closeCaseRow" spacing="10" styleClass="nav-row">
         <Pane fx:id="closeCaseIcon"/>
         <Button fx:id="closeCaseBtn" text="Close Case" onAction="#handleCloseCase" styleClass="nav-btn"/>
-    </HBox>
-
-    <HBox fx:id="searchCasesRow" spacing="10" styleClass="nav-row">
-        <Pane fx:id="searchCasesIcon"/>
-        <Button fx:id="searchCasesBtn" text="Search and Filter Cases"
-                onAction="#handleSearchCases" styleClass="nav-btn"/>
     </HBox>
 
     <HBox fx:id="submitToCourtRow" spacing="10" styleClass="nav-row">

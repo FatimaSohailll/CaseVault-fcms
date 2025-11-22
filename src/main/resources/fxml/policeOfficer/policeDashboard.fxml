@@ -4,20 +4,20 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.PoliceDashboardController">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.fcms.controllers.policeOfficer.PoliceDashboardController"
+            fx:id="mainBorderPane">
 
     <top>
         <fx:include source="../components/topbar.fxml"/>
     </top>
 
     <left>
-        <!-- Sidebar stays at min/pref width -->
         <fx:include source="../components/sidebar.fxml"/>
-
     </left>
 
     <center>
-        <!-- Main content fills remaining space -->
+        <!-- This is the original dashboard content that will be replaced -->
         <VBox spacing="22" styleClass="main-content" maxWidth="Infinity" maxHeight="Infinity">
             <padding>
                 <Insets top="26" right="26" bottom="26" left="26"/>
@@ -52,7 +52,6 @@
 
             <Label text="Recent Cases" styleClass="section-title"/>
 
-            <!-- ScrollPane grows with window -->
             <ScrollPane fitToWidth="true" styleClass="case-scroll" VBox.vgrow="ALWAYS">
                 <VBox fx:id="recentCasesContainer" spacing="12" styleClass="case-list"/>
             </ScrollPane>

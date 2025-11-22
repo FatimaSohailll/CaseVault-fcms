@@ -1,0 +1,246 @@
+/* ===== ROOT VARIABLES ===== */
+.root {
+    -fx-primary-color: #001440;
+    -fx-secondary-color: #eb8928;
+    -fx-text-color: #171617;
+    -fx-background-color: #f8fafc;
+    -fx-card-background: white;
+    -fx-border-color: #d1d5db;
+    -fx-success-color: #16a34a;
+    -fx-warning-color: #ea580c;
+    -fx-error-color: #dc2626;
+}
+
+/* ===== AUTH CONTAINER ===== */
+.auth-container {
+    -fx-background-color: -fx-background-color;
+}
+
+/* ===== LOGO SECTION ===== */
+.logo-section {
+    -fx-alignment: center;
+}
+
+.logo-container {
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 8;
+}
+
+.logo-icon {
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+}
+
+.app-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary-color;
+}
+
+.app-subtitle {
+    -fx-text-fill: -fx-text-color;
+    -fx-opacity: 0.7;
+    -fx-font-size: 12px;
+}
+
+/* ===== AUTH CARD ===== */
+.auth-card {
+    -fx-background-color: -fx-card-background;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.auth-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary-color;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.field-label {
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 14px;
+}
+
+.input-container {
+    -fx-border-color: -fx-border-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-border-width: 1px;
+}
+
+.input-icon {
+    -fx-text-fill: -fx-primary-color;
+    -fx-opacity: 0.6;
+}
+
+.auth-input {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0 0 0 8px;
+    -fx-font-size: 14px;
+}
+
+.auth-combobox {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0 0 0 8px;
+    -fx-font-size: 14px;
+}
+
+/* ===== BUTTONS ===== */
+.primary-button {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-pref-height: 40px;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #002a70;
+}
+
+.link-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-primary-color;
+    -fx-font-size: 12px;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.link-button:hover {
+    -fx-text-fill: -fx-secondary-color;
+    -fx-underline: true;
+}
+
+.link-text {
+    -fx-text-fill: -fx-text-color;
+    -fx-opacity: 0.7;
+    -fx-font-size: 12px;
+}
+
+/* ===== PASSWORD STRENGTH ===== */
+.strength-container {
+    -fx-alignment: center-left;
+    -fx-spacing: 8px;
+}
+
+.strength-bar {
+    -fx-arc-width: 4px;
+    -fx-arc-height: 4px;
+    -fx-height: 4px;
+}
+
+.strength-label {
+    -fx-font-size: 11px;
+}
+
+.strength-weak {
+    -fx-text-fill: -fx-error-color;
+}
+
+.strength-medium {
+    -fx-text-fill: -fx-warning-color;
+}
+
+.strength-strong {
+    -fx-text-fill: -fx-success-color;
+}
+
+/* ===== PASSWORD MATCH ICON ===== */
+.match-icon {
+    -fx-font-size: 16px;
+    -fx-padding: 0 4px 0 0;
+}
+
+.match-success {
+    -fx-text-fill: -fx-success-color;
+}
+
+.match-error {
+    -fx-text-fill: -fx-error-color;
+}
+
+/* ===== NOTICE CONTAINER ===== */
+.notice-container {
+    -fx-background-color: #f5f5f4;
+    -fx-border-color: -fx-border-color;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-border-width: 1px;
+}
+
+.notice-text {
+    -fx-text-fill: -fx-text-color;
+    -fx-opacity: 0.7;
+    -fx-font-size: 11px;
+    -fx-wrap-text: true;
+}
+
+/* ===== FOOTER ===== */
+.footer-text {
+    -fx-text-fill: -fx-text-color;
+    -fx-opacity: 0.5;
+    -fx-font-size: 10px;
+}
+
+/* ===== FOCUS EFFECTS ===== */
+.auth-input:focused {
+    -fx-border-color: -fx-primary-color;
+    -fx-border-width: 0 0 2px 0;
+}
+
+.auth-combobox:focused {
+    -fx-border-color: -fx-primary-color;
+    -fx-border-width: 0 0 2px 0;
+}
+
+.input-container:focused {
+    -fx-border-color: -fx-primary-color;
+}
+
+/* ===== COMBOBOX STYLING ===== */
+.combo-box-base {
+    -fx-background-color: transparent;
+}
+
+.combo-box-base .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box-base .list-cell {
+    -fx-background-color: transparent;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: -fx-border-color;
+    -fx-border-radius: 4px;
+}
+
+.combo-box-popup .list-cell {
+    -fx-padding: 8px 12px;
+    -fx-background-color: white;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: white;
+}
+
+/* ===== TEXT FIELD AND PASSWORD FIELD STYLING ===== */
+.text-field, .password-field {
+    -fx-font-size: 14px;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: -fx-primary-color;
+    -fx-border-width: 0 0 2px 0;
+}

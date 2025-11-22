@@ -26,11 +26,9 @@ public class CourtOfficialController {
 
     @FXML
     private void initialize() {
-        javafx.application.Platform.runLater(() -> {
-            loadPage("courtDashboard.fxml");
-        });
+        // Load Dashboard by default when the layout loads
+        loadPage("courtDashboard.fxml");
     }
-
 
     // Helper method – loads FXML into contentArea
     private void loadPage(String fxmlFile) {
@@ -61,17 +59,17 @@ public class CourtOfficialController {
 
     @FXML
     private void openCaseList(MouseEvent event) {
-        loadPage("searchCases.fxml");
+        loadPage("SearchCases.fxml");
     }
 
     @FXML
     private void openRecordVerdict(MouseEvent event) {
-        loadPage("recordVerdict.fxml");
+        loadPage("RecordVerdict.fxml");
     }
 
     @FXML
     private void goToRecordVerdict() {
-        loadPage("recordVerdict.fxml");
+        loadPage("RecordVerdict.fxml");
     }
 
     // ================= SIDEBAR COLLAPSE LOGIC =================

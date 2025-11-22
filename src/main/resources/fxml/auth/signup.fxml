@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.fcms.controllers.auth.SignupController"
+      alignment="CENTER" spacing="0" style="-fx-background-color: #f8fafc;"
+      prefWidth="400" prefHeight="650">
+
+    <padding>
+        <Insets top="20" right="25" bottom="20" left="25"/>
+    </padding>
+
+    <!-- Fixed Header Section -->
+    <VBox alignment="CENTER" spacing="10">
+        <StackPane style="-fx-background-color: #001440; -fx-background-radius: 10;" prefWidth="50" prefHeight="50">
+            <Label text="🔒" style="-fx-font-size: 18; -fx-text-fill: white;"/>
+        </StackPane>
+        <Label text="CaseVault" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #001440;"/>
+        <Label text="Account Registration Portal" style="-fx-text-fill: #6b7280; -fx-font-size: 12;"/>
+    </VBox>
+
+    <!-- Scrollable Form Section -->
+    <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent; -fx-padding: 20 0 0 0;"
+                VBox.vgrow="ALWAYS">
+        <content>
+            <VBox alignment="CENTER" spacing="20" style="-fx-background-color: transparent;">
+                <!-- Signup Form Card -->
+                <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 4);"
+                      spacing="16" prefWidth="350">
+                    <padding>
+                        <Insets top="25" right="25" bottom="20" left="25"/>
+                    </padding>
+
+                    <Label text="Request Account" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #001440;"
+                           alignment="CENTER" maxWidth="Infinity"/>
+
+                    <VBox spacing="14">
+                        <!-- Full Name -->
+                        <VBox spacing="6">
+                            <Label text="Full Name *" style="-fx-text-fill: #374151; -fx-font-size: 13; -fx-font-weight: bold;"/>
+                            <TextField fx:id="fullNameField" promptText="Enter your full name"
+                                       style="-fx-background-color: #f9fafb; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-font-size: 14; -fx-padding: 10 12;"/>
+                        </VBox>
+
+                        <!-- Email -->
+                        <VBox spacing="6">
+                            <Label text="Email *" style="-fx-text-fill: #374151; -fx-font-size: 13; -fx-font-weight: bold;"/>
+                            <TextField fx:id="emailField" promptText="Enter your email"
+                                       style="-fx-background-color: #f9fafb; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-font-size: 14; -fx-padding: 10 12;"/>
+                        </VBox>
+
+                        <VBox spacing="6">
+                            <Label text="User name *" style="-fx-text-fill: #374151; -fx-font-size: 13; -fx-font-weight: bold;"/>
+                            <TextField fx:id="userField" promptText="Enter a username"
+                                       style="-fx-background-color: #f9fafb; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-font-size: 14; -fx-padding: 10 12;"/>
+                        </VBox>
+
+                        <!-- Password -->
+                        <VBox spacing="6">
+                            <Label text="Password *" style="-fx-text-fill: #374151; -fx-font-size: 13; -fx-font-weight: bold;"/>
+                            <PasswordField fx:id="passwordField" promptText="Create a password"
+                                           style="-fx-background-color: #f9fafb; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-font-size: 14; -fx-padding: 10 12;"/>
+
+                            <!-- Password Strength -->
+                            <HBox fx:id="passwordStrengthContainer" alignment="CENTER_LEFT" spacing="8" visible="false">
+                                <HBox fx:id="strengthBars" spacing="2">
+                                    <Rectangle fx:id="strengthBar1" arcWidth="4" arcHeight="4" width="25" height="4" fill="#d1d5db"/>
+                                    <Rectangle fx:id="strengthBar2" arcWidth="4" arcHeight="4" width="25" height="4" fill="#d1d5db"/>
+                                    <Rectangle fx:id="strengthBar3" arcWidth="4" arcHeight="4" width="25" height="4" fill="#d1d5db"/>
+                                </HBox>
+                                <Label fx:id="strengthLabel" style="-fx-font-size: 11; -fx-text-fill: #6b7280;"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Confirm Password -->
+                        <VBox spacing="6">
+                            <Label text="Confirm Password *" style="-fx-text-fill: #374151; -fx-font-size: 13; -fx-font-weight: bold;"/>
+
+                                <PasswordField fx:id="confirmPasswordField" promptText="Confirm your password" HBox.hgrow="ALWAYS"
+                                               style="-fx-background-color: #f9fafb; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-font-size: 14; -fx-padding: 10 12;"/>
+                                <Label fx:id="passwordMatchIcon" style="-fx-font-size: 16;" visible="false" prefWidth="20"/>
+
+                        </VBox>
+
+                        <!-- Role Selection -->
+                        <VBox spacing="6">
+                            <Label text="Sign up as *" style="-fx-text-fill: #374151; -fx-font-size: 13; -fx-font-weight: bold;"/>
+                            <ComboBox fx:id="roleComboBox" promptText="Select your role"
+                                      style="-fx-background-color: #f9fafb; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-font-size: 14;"/>
+                        </VBox>
+
+                        <!-- Dynamic Role-Specific Fields Container -->
+                        <VBox fx:id="roleSpecificContainer" spacing="6" visible="false">
+                            <!-- This container will be populated dynamically based on role selection -->
+                        </VBox>
+
+                        <!-- Submit Button -->
+                        <Button fx:id="signupBtn" text="Request Account"
+                                style="-fx-background-color: #001440; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 8; -fx-pref-height: 44; -fx-cursor: hand;"
+                                onAction="#handleSignup" maxWidth="Infinity"/>
+
+                        <!-- Admin Notice -->
+                        <VBox style="-fx-background-color: #f3f4f6; -fx-background-radius: 6;" spacing="4">
+                            <padding>
+                                <Insets top="10" right="12" bottom="10" left="12"/>
+                            </padding>
+                            <Label text="Administrator Review Required" style="-fx-text-fill: #374151; -fx-font-size: 11; -fx-font-weight: bold;"/>
+                            <Label text="Your account will be activated after administrator approval."
+                                   style="-fx-text-fill: #6b7280; -fx-font-size: 10; -fx-wrap-text: true;"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Back to Login -->
+                    <HBox alignment="CENTER">
+                        <Button fx:id="backToLoginBtn" text="← Back to Login"
+                                style="-fx-background-color: transparent; -fx-text-fill: #001440; -fx-font-size: 12; -fx-padding: 5; -fx-cursor: hand;"
+                                onAction="#handleBackToLogin"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Footer -->
+                <Label text="© 2025 CaseVault. All rights reserved."
+                       style="-fx-text-fill: #9ca3af; -fx-font-size: 10;"/>
+            </VBox>
+        </content>
+
+        <!-- ScrollPane styling -->
+        <style>
+            <![CDATA[
+                .scroll-pane {
+                    -fx-background-color: transparent;
+                    -fx-border-color: transparent;
+                }
+                .scroll-pane .viewport {
+                    -fx-background-color: transparent;
+                }
+                .scroll-bar:vertical {
+                    -fx-background-color: transparent;
+                }
+                .scroll-bar:vertical .track {
+                    -fx-background-color: transparent;
+                    -fx-border-color: transparent;
+                }
+                .scroll-bar:vertical .thumb {
+                    -fx-background-color: #c1c1c1;
+                    -fx-background-radius: 4px;
+                }
+                .scroll-bar:vertical .thumb:hover {
+                    -fx-background-color: #a1a1a1;
+                }
+                .scroll-bar:vertical .increment-button,
+                .scroll-bar:vertical .decrement-button {
+                    -fx-background-color: transparent;
+                    -fx-border-color: transparent;
+                    -fx-padding: 0 5 0 0;
+                }
+            ]]>
+        </style>
+    </ScrollPane>
+</VBox>

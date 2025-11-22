@@ -47,72 +47,11 @@
                                 <VBox spacing="16.0" style="-fx-padding: 16 0 0 0;">
                                     <Label styleClass="form-label" text="Select Evidence for Analysis *" />
 
-                                    <!-- Evidence List -->
-                                    <VBox spacing="8.0">
-                                        <!-- EV-001 -->
-                                        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-padding: 12; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-width: 1;">
-                                            <CheckBox fx:id="ev001Checkbox" />
-                                            <VBox spacing="4.0">
-                                                <HBox spacing="8.0" alignment="CENTER_LEFT">
-                                                    <Label text="📄" style="-fx-font-size: 14px;" />
-                                                    <Label text="EV-001" style="-fx-text-fill: #001440; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                                                    <Label text="Digital" style="-fx-background-color: #f3f4f6; -fx-text-fill: #6b7280; -fx-padding: 2 6; -fx-font-size: 11px; -fx-background-radius: 4;" />
-                                                </HBox>
-                                                <Label text="Security camera footage from bank entrance" style="-fx-text-fill: #171617; -fx-font-size: 14px;" />
-                                            </VBox>
-                                        </HBox>
-
-                                        <!-- EV-002 -->
-                                        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-padding: 12; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-width: 1;">
-                                            <CheckBox fx:id="ev002Checkbox" />
-                                            <VBox spacing="4.0">
-                                                <HBox spacing="8.0" alignment="CENTER_LEFT">
-                                                    <Label text="📄" style="-fx-font-size: 14px;" />
-                                                    <Label text="EV-002" style="-fx-text-fill: #001440; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                                                    <Label text="Digital" style="-fx-background-color: #f3f4f6; -fx-text-fill: #6b7280; -fx-padding: 2 6; -fx-font-size: 11px; -fx-background-radius: 4;" />
-                                                </HBox>
-                                                <Label text="Transaction records and access logs" style="-fx-text-fill: #171617; -fx-font-size: 14px;" />
-                                            </VBox>
-                                        </HBox>
-
-                                        <!-- EV-003 -->
-                                        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-padding: 12; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-width: 1;">
-                                            <CheckBox fx:id="ev003Checkbox" />
-                                            <VBox spacing="4.0">
-                                                <HBox spacing="8.0" alignment="CENTER_LEFT">
-                                                    <Label text="📄" style="-fx-font-size: 14px;" />
-                                                    <Label text="EV-003" style="-fx-text-fill: #001440; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                                                    <Label text="Physical" style="-fx-background-color: #f3f4f6; -fx-text-fill: #6b7280; -fx-padding: 2 6; -fx-font-size: 11px; -fx-background-radius: 4;" />
-                                                </HBox>
-                                                <Label text="Fingerprints lifted from door handle" style="-fx-text-fill: #171617; -fx-font-size: 14px;" />
-                                            </VBox>
-                                        </HBox>
-
-                                        <!-- EV-004 -->
-                                        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-padding: 12; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-width: 1;">
-                                            <CheckBox fx:id="ev004Checkbox" />
-                                            <VBox spacing="4.0">
-                                                <HBox spacing="8.0" alignment="CENTER_LEFT">
-                                                    <Label text="📄" style="-fx-font-size: 14px;" />
-                                                    <Label text="EV-004" style="-fx-text-fill: #001440; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                                                    <Label text="Biological" style="-fx-background-color: #f3f4f6; -fx-text-fill: #6b7280; -fx-padding: 2 6; -fx-font-size: 11px; -fx-background-radius: 4;" />
-                                                </HBox>
-                                                <Label text="Blood sample collected at scene" style="-fx-text-fill: #171617; -fx-font-size: 14px;" />
-                                            </VBox>
-                                        </HBox>
-
-                                        <!-- EV-005 -->
-                                        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-padding: 12; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-width: 1;">
-                                            <CheckBox fx:id="ev005Checkbox" />
-                                            <VBox spacing="4.0">
-                                                <HBox spacing="8.0" alignment="CENTER_LEFT">
-                                                    <Label text="📄" style="-fx-font-size: 14px;" />
-                                                    <Label text="EV-005" style="-fx-text-fill: #001440; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                                                    <Label text="Physical" style="-fx-background-color: #f3f4f6; -fx-text-fill: #6b7280; -fx-padding: 2 6; -fx-font-size: 11px; -fx-background-radius: 4;" />
-                                                </HBox>
-                                                <Label text="Clothing fibers found on vault floor" style="-fx-text-fill: #171617; -fx-font-size: 14px;" />
-                                            </VBox>
-                                        </HBox>
+                                    <!-- Dynamic Evidence List Container -->
+                                    <VBox fx:id="evidenceCheckboxContainer" spacing="8.0">
+                                        <!-- Dynamic evidence items will be loaded here from database -->
+                                        <Label text="Select a case to view available evidence"
+                                               style="-fx-text-fill: #6b7280; -fx-font-style: italic; -fx-padding: 20; -fx-alignment: center;" />
                                     </VBox>
 
                                     <!-- Analysis Type -->
@@ -144,12 +83,13 @@
                             </VBox>
                         </VBox>
 
-                        <!-- Right Column - Case Summary -->
-                        <VBox spacing="16.0" prefWidth="300.0">
+                        <!-- Right Column - Case Summary and Experts -->
+                        <VBox spacing="16.0" prefWidth="320.0">
+                            <!-- Case Summary Card -->
                             <VBox styleClass="card">
                                 <Label styleClass="title-label" text="Case Summary" />
 
-                                <VBox fx:id="noCaseSelected" spacing="4.0" style="-fx-padding: 32 0; -fx-alignment: center;">
+                                <VBox fx:id="noCaseSelected" spacing="4.0" style="-fx-padding: 16 0; -fx-alignment: center;">
                                     <Label text="No case selected" style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" />
                                     <Label text="Select a case from the dashboard" style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;" />
                                 </VBox>
@@ -192,6 +132,17 @@
                                             <Label fx:id="analysisTypeSummaryLabel" text="Not selected" style="-fx-text-fill: #001440; -fx-font-size: 14px;" />
                                         </VBox>
                                     </VBox>
+                                </VBox>
+                            </VBox>
+
+                            <!-- Available Forensic Experts Card -->
+                            <VBox styleClass="card">
+                                <Label styleClass="title-label" text="Available Forensic Experts" />
+
+                                <VBox fx:id="expertsContainer" spacing="12.0" style="-fx-padding: 16 0 0 0;">
+                                    <!-- Dynamic expert cards will be loaded here from database -->
+                                    <Label text="Loading available experts..."
+                                           style="-fx-text-fill: #6b7280; -fx-font-style: italic; -fx-padding: 20; -fx-alignment: center;" />
                                 </VBox>
                             </VBox>
                         </VBox>
