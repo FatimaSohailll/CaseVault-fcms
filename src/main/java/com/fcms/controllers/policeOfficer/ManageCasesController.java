@@ -18,21 +18,34 @@ public class ManageCasesController {
     @FXML private VBox caseDetailsRoot, evidenceContainer, participantsContainer;
     @FXML private Label caseTitle, statusLabel, priorityLabel, typeLabel, dateLabel, locationLabel, officerLabel, descriptionLabel;
 
-    private final CaseService manageCasesService = new CaseService();
+    private final CaseService caseService = new CaseService();
 
     @FXML
     public void initialize() {
         showPlaceholder();
+        loadCases();
+    }
 
-        for (Case c : manageCasesService.getAllCases()) {
-            List<Evidence> evidence = manageCasesService.getEvidenceForCase(c.getId());
-            List<Participant> participants = manageCasesService.getParticipantsForCase(c.getId());
+    private void loadCases() {
+        caseListContainer.getChildren().clear();
+
+        List<Case> cases = caseService.getAllCases();
+        for (Case c : cases) {
+            List<Evidence> evidence = caseService.getEvidenceForCase(c.getId());
+            List<Participant> participants = caseService.getParticipantsForCase(c.getId());
 
             addCaseTile(
-                    c.getId(), c.getTitle(), c.getStatus(), "High", c.getDate().toString(),
-                    c.getType(), c.getLocation(), c.getOfficer(),
-                    "Description not stored in model",
-                    evidence, participants
+                    c.getId(),
+                    c.getTitle(),
+                    c.getStatus() != null ? c.getStatus() : "Unknown",
+                    c.getPriority() != null ? c.getPriority() : "medium",
+                    c.getDateRegistered() != null ? c.getDateRegistered().toString() : "",
+                    c.getType(),
+                    c.getLocation(),
+                    c.getAssignedOfficer(),
+                    c.getDescription() != null ? c.getDescription() : "No description available",
+                    evidence,
+                    participants
             );
         }
     }
@@ -72,13 +85,24 @@ public class ManageCasesController {
 
         Label statusLabel = new Label(status);
         statusLabel.getStyleClass().add("status-pill");
-        if (status.toLowerCase().contains("investigation")) statusLabel.getStyleClass().add("status-investigation");
-        else if (status.toLowerCase().contains("analysis")) statusLabel.getStyleClass().add("status-analysis");
+        String normalizedStatus = status.toLowerCase();
+        if (normalizedStatus.contains("investigation")) {
+            statusLabel.getStyleClass().add("status-investigation");
+        } else if (normalizedStatus.contains("analysis")) {
+            statusLabel.getStyleClass().add("status-analysis");
+        } else if (normalizedStatus.contains("open")) {
+            statusLabel.getStyleClass().add("status-open");
+        } else if (normalizedStatus.contains("closed")) {
+            statusLabel.getStyleClass().add("status-closed");
+        }
 
         Label priorityLabel = new Label(priority);
         priorityLabel.getStyleClass().add("priority-pill");
-        if (priority.equalsIgnoreCase("High")) priorityLabel.getStyleClass().add("priority-high");
-        else if (priority.equalsIgnoreCase("Medium")) priorityLabel.getStyleClass().add("priority-medium");
+        if (priority.equalsIgnoreCase("High")) {
+            priorityLabel.getStyleClass().add("priority-high");
+        } else if (priority.equalsIgnoreCase("Medium")) {
+            priorityLabel.getStyleClass().add("priority-medium");
+        }
 
         Label dateLabel = new Label(date);
         dateLabel.getStyleClass().add("case-date");
@@ -107,26 +131,34 @@ public class ManageCasesController {
             this.descriptionLabel.setText(description);
 
             evidenceContainer.getChildren().clear();
-            for (Evidence ev : evidence) {
-                VBox item = new VBox(2);
-                item.getStyleClass().add("list-item");
-                item.getChildren().addAll(
-                        new Label(ev.getId() + " — " + ev.getDescription()),
-                        new Label("Collected: " + ev.getCollectionDateTime()),
-                        new Label("Location: " + ev.getLocation())
-                );
-                evidenceContainer.getChildren().add(item);
+            if (evidence.isEmpty()) {
+                evidenceContainer.getChildren().add(new Label("No evidence linked"));
+            } else {
+                for (Evidence ev : evidence) {
+                    VBox item = new VBox(2);
+                    item.getStyleClass().add("list-item");
+                    item.getChildren().addAll(
+                            new Label(ev.getId() + " — " + ev.getDescription()),
+                            new Label("Collected: " + ev.getCollectionDateTime()),
+                            new Label("Location: " + ev.getLocation())
+                    );
+                    evidenceContainer.getChildren().add(item);
+                }
             }
 
             participantsContainer.getChildren().clear();
-            for (Participant p : participants) {
-                VBox item = new VBox(2);
-                item.getStyleClass().add("list-item");
-                item.getChildren().addAll(
-                        new Label(p.getName() + " — " + p.getRole()),
-                        new Label("Contact: " + p.getContact())
-                );
-                participantsContainer.getChildren().add(item);
+            if (participants.isEmpty()) {
+                participantsContainer.getChildren().add(new Label("No participants linked"));
+            } else {
+                for (Participant p : participants) {
+                    VBox item = new VBox(2);
+                    item.getStyleClass().add("list-item");
+                    item.getChildren().addAll(
+                            new Label(p.getName() + " — " + p.getRole()),
+                            new Label("Contact: " + p.getContact())
+                    );
+                    participantsContainer.getChildren().add(item);
+                }
             }
         });
 

@@ -8,17 +8,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class SceneManager {
+
     private final Stage stage;
 
     public SceneManager(Stage stage) {
         this.stage = stage;
     }
 
-    /**
-     * Switch only the center content of the main BorderPane.
-     *
-     * @param fxmlPath Path to the FXML file (e.g. "/fxml/policeOfficer/manageCases.fxml")
-     */
     public void switchContent(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

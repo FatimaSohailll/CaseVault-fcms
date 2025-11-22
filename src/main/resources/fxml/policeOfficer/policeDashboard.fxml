@@ -6,16 +6,6 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.PoliceDashboardController">
 
-    <top>
-        <fx:include source="../components/topbar.fxml"/>
-    </top>
-
-    <left>
-        <!-- Sidebar stays at min/pref width -->
-        <fx:include source="../components/sidebar.fxml"/>
-
-    </left>
-
     <center>
         <!-- Main content fills remaining space -->
         <VBox spacing="22" styleClass="main-content" maxWidth="Infinity" maxHeight="Infinity">
@@ -56,6 +46,7 @@
             <ScrollPane fitToWidth="true" styleClass="case-scroll" VBox.vgrow="ALWAYS">
                 <VBox fx:id="recentCasesContainer" spacing="12" styleClass="case-list"/>
             </ScrollPane>
+
         </VBox>
     </center>
 

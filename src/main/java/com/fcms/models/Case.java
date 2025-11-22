@@ -6,21 +6,31 @@ public class Case {
     private String id;
     private String title;
     private String type;
-    private String officer;
+    private String assignedOfficer;
     private String location;
-    private LocalDate date;
+    private LocalDate dateRegistered;
     private String status;
+
+    // Extended fields
+    private String description;
+    private String priority;
+    private String time; // NEW: time of incident
 
     public Case() {}
 
-    public Case(String id, String title, String type, String officer, String location, LocalDate date, String status) {
+    public Case(String id, String title, String type, String assignedOfficer,
+                String location, LocalDate dateRegistered, String status,
+                String description, String priority, String time) {
         this.id = id;
         this.title = title;
         this.type = type;
-        this.officer = officer;
+        this.assignedOfficer = assignedOfficer;
         this.location = location;
-        this.date = date;
+        this.dateRegistered = dateRegistered;
         this.status = status;
+        this.description = description;
+        this.priority = priority;
+        this.time = time;
     }
 
     // Getters and setters
@@ -33,15 +43,24 @@ public class Case {
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
 
-    public String getOfficer() { return officer; }
-    public void setOfficer(String officer) { this.officer = officer; }
+    public String getAssignedOfficer() { return assignedOfficer; }
+    public void setAssignedOfficer(String assignedOfficer) { this.assignedOfficer = assignedOfficer; }
 
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
 
-    public LocalDate getDate() { return date; }
-    public void setDate(LocalDate date) { this.date = date; }
+    public LocalDate getDateRegistered() { return dateRegistered; }
+    public void setDateRegistered(LocalDate dateRegistered) { this.dateRegistered = dateRegistered; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getPriority() { return priority; }
+    public void setPriority(String priority) { this.priority = priority; }
+
+    public String getTime() { return time; }
+    public void setTime(String time) { this.time = time; }
 }

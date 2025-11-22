@@ -19,7 +19,6 @@
                         <Label text="Closing a case is a permanent action. Ensure all evidence has been logged, all participants have been interviewed, and all required documentation is complete."
                                wrapText="true" styleClass="validation-message"/>
                     </VBox>
-
                     <!-- Case Selection -->
                     <VBox spacing="12">
                         <Label text="Select Case to Close" styleClass="section-title"/>

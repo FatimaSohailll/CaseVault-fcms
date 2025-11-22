@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class RegisterCaseController {
 
@@ -14,14 +15,25 @@ public class RegisterCaseController {
     @FXML private TextArea descriptionField;
     @FXML private DatePicker datePicker;
     @FXML private Label validationMessage;
+    @FXML private ComboBox<String> priorityDropdown;
 
     @FXML private Label titleWarning, typeWarning, descWarning, dateWarning;
+    @FXML private TextField timeField;
+    @FXML private TextField locationField;
+    @FXML private ComboBox<String> officerDropdown;
 
     private final CaseService caseService = new CaseService();
 
     @FXML
     public void initialize() {
-        caseTypeDropdown.getItems().addAll("Robbery", "Burglary", "Fraud", "Assault", "Vehicle Theft");
+        caseTypeDropdown.getItems().addAll(
+                "Robbery", "Burglary", "Fraud", "Assault", "Vehicle Theft", "Cybercrime", "Domestic Violence"
+        );
+
+        priorityDropdown.getItems().addAll("High", "Medium", "Low");
+        priorityDropdown.setValue("Low"); // default selection
+        officerDropdown.getItems().addAll("PO-001"); // Later: fetch from DB
+
         validationMessage.setVisible(false);
     }
 
@@ -41,14 +53,33 @@ public class RegisterCaseController {
             return;
         }
 
+        // Generate a unique case ID (UUID or custom format)
+        String caseId = "CS-" + LocalDate.now().getYear() + "-" + UUID.randomUUID().toString().substring(0, 4);
+
         // Create and save case
-        Case newCase = new Case("AUTO-ID", title, type, "Officer Placeholder", "Unknown", date, "Open");
+        Case newCase = new Case(
+                caseId,
+                title,
+                type,
+                officerDropdown.getValue(),           // dynamically selected officer
+                locationField.getText().trim(),       // user-entered location
+                date,
+                "open",                               // normalized status
+                descriptionField.getText().trim(),    // case description
+                priorityDropdown.getValue(),          // selected priority
+                timeField.getText().trim()            // time of incident
+        );
+
+
+        newCase.setDescription(descriptionField.getText().trim());
+        newCase.setPriority(priorityDropdown.getValue());
+
         caseService.registerCase(newCase);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Case Registered");
         alert.setHeaderText(null);
-        alert.setContentText("Case has been successfully registered.");
+        alert.setContentText("Case " + caseId + " has been successfully registered.");
         alert.showAndWait();
 
         clearForm();

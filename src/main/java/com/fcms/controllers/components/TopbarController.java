@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
 
 public class TopbarController {
-
     @FXML private Pane userIcon;
 
     @FXML

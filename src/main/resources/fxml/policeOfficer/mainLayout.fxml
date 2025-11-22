@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.fcms.controllers.policeOfficer.MainLayoutController"
+            fx:id="rootLayout">
+
+    <!-- Top bar stays fixed -->
+    <top>
+        <fx:include source="../components/topbar.fxml"/>
+    </top>
+
+    <!-- Sidebar stays fixed -->
+    <left>
+        <fx:include source="../components/sidebar.fxml"/>
+    </left>
+
+    <!-- Center content is dynamic -->
+    <center>
+        <!-- Use a container so SceneManager can swap content -->
+        <StackPane fx:id="centerContainer">
+            <!-- Initial dashboard content -->
+            <fx:include source="../policeOfficer/policeDashboard.fxml"/>
+        </StackPane>
+    </center>
+
+</BorderPane>

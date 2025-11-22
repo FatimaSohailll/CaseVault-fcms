@@ -117,6 +117,7 @@ public class SidebarController {
         setActiveSidebar("Register New Case");
         sceneManager.switchContent(
                 "/fxml/policeOfficer/registerCase.fxml");
+
     }
 
     @FXML

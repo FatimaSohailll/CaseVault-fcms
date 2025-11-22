@@ -1,6 +1,7 @@
 package com.fcms.controllers.policeOfficer;
 
 import com.fcms.models.Case;
+import com.fcms.services.CaseService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,33 +22,29 @@ public class SearchCasesController {
     @FXML private TableColumn<Case, LocalDate> dateColumn;
     @FXML private TableColumn<Case, Void> actionColumn;
 
-    private final ObservableList<Case> dummyCases = FXCollections.observableArrayList();
+    private final CaseService caseService = new CaseService();
+    private ObservableList<Case> allCases = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        caseTypeDropdown.getItems().addAll("Robbery", "Burglary", "Assault", "Fraud", "Cybercrime", "Theft", "Domestic Violence");
+        caseTypeDropdown.getItems().addAll(
+                "Robbery", "Burglary", "Assault", "Fraud", "Cybercrime", "Theft", "Domestic Violence"
+        );
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("dateRegistered"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         addActionButtons();
-        loadDummyCases();
-        resultsTable.setItems(dummyCases);
+        loadCasesFromDb();
     }
 
-    private void loadDummyCases() {
-        dummyCases.setAll(
-                new Case("CS-2025-0087", "Armed Robbery at Central Bank", "Robbery", "Det. Johnson", "Central Bank", LocalDate.of(2025, 11, 8), "Open"),
-                new Case("CS-2025-0086", "Residential Burglary - Oak Street", "Burglary", "Det. Martinez", "Oak Street", LocalDate.of(2025, 11, 6), "Open"),
-                new Case("CS-2025-0085", "Vehicle Theft Investigation", "Theft", "Det. Johnson", "Mall Lot", LocalDate.of(2025, 11, 5), "Open"),
-                new Case("CS-2025-0084", "Assault Case - Downtown", "Assault", "Det. Smith", "Downtown", LocalDate.of(2025, 11, 3), "Closed"),
-                new Case("CS-2025-0083", "Fraud Investigation", "Fraud", "Det. Williams", "Finance District", LocalDate.of(2025, 11, 3), "Pending"),
-                new Case("CS-2025-0082", "Cybercrime - Data Breach", "Cybercrime", "Det. Patel", "Tech Park", LocalDate.of(2025, 11, 3), "Closed"),
-                new Case("CS-2025-0081", "Domestic Violence Report", "Domestic Violence", "Det. Khan", "Maple Street", LocalDate.of(2025, 11, 2), "Pending")
-        );
+    private void loadCasesFromDb() {
+        List<Case> cases = caseService.getAllCases();
+        allCases.setAll(cases);
+        resultsTable.setItems(allCases);
     }
 
     private void addActionButtons() {
@@ -79,7 +76,7 @@ public class SearchCasesController {
         caseTypeDropdown.getSelectionModel().clearSelection();
         startDatePicker.setValue(null);
         endDatePicker.setValue(null);
-        resultsTable.setItems(dummyCases);
+        resultsTable.setItems(allCases); // reset to full DB list
     }
 
     @FXML
@@ -91,13 +88,15 @@ public class SearchCasesController {
         LocalDate start = startDatePicker.getValue();
         LocalDate end = endDatePicker.getValue();
 
-        List<Case> filtered = dummyCases.stream()
+        List<Case> filtered = allCases.stream()
                 .filter(c -> id.isEmpty() || c.getId().contains(id))
-                .filter(c -> officer.isEmpty() || c.getOfficer().toLowerCase().contains(officer.toLowerCase()))
-                .filter(c -> location.isEmpty() || c.getLocation().toLowerCase().contains(location.toLowerCase()))
-                .filter(c -> type == null || c.getType().equalsIgnoreCase(type))
-                .filter(c -> start == null || !c.getDate().isBefore(start))
-                .filter(c -> end == null || !c.getDate().isAfter(end))
+                .filter(c -> officer.isEmpty() ||
+                        (c.getAssignedOfficer() != null && c.getAssignedOfficer().toLowerCase().contains(officer.toLowerCase())))
+                .filter(c -> location.isEmpty() ||
+                        (c.getLocation() != null && c.getLocation().toLowerCase().contains(location.toLowerCase())))
+                .filter(c -> type == null || (c.getType() != null && c.getType().equalsIgnoreCase(type)))
+                .filter(c -> start == null || (c.getDateRegistered() != null && !c.getDateRegistered().isBefore(start)))
+                .filter(c -> end == null || (c.getDateRegistered() != null && !c.getDateRegistered().isAfter(end)))
                 .collect(Collectors.toList());
 
         resultsTable.setItems(FXCollections.observableArrayList(filtered));

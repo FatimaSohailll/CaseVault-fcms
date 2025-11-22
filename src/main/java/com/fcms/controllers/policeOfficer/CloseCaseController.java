@@ -6,6 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class CloseCaseController {
 
     @FXML private ComboBox<Case> activeCaseDropdown;
@@ -13,12 +16,11 @@ public class CloseCaseController {
     @FXML private TextArea finalReportSummary;
     @FXML private VBox checklistContainer;
 
-    private final CaseService caseService = new CaseService(); // unified service
+    private final CaseService caseService = new CaseService();
 
     @FXML
     public void initialize() {
-        // Populate dropdowns with active cases from service
-        activeCaseDropdown.getItems().addAll(caseService.getAllCases());
+        loadActiveCases();
 
         closureReasonDropdown.getItems().addAll(
                 "Resolved", "Transferred", "Insufficient Evidence", "Other"
@@ -40,6 +42,14 @@ public class CloseCaseController {
             }
         });
         activeCaseDropdown.setButtonCell(activeCaseDropdown.getCellFactory().call(null));
+    }
+
+    private void loadActiveCases() {
+        List<Case> openCases = caseService.getAllCases().stream()
+                .filter(c -> c.getStatus() != null && c.getStatus().equalsIgnoreCase("open"))
+                .collect(Collectors.toList());
+
+        activeCaseDropdown.getItems().setAll(openCases);
     }
 
     private void addChecklistItem(String text) {
@@ -67,14 +77,21 @@ public class CloseCaseController {
             return;
         }
 
+        // Persist closure
         caseService.closeCase(selectedCase.getId(), reason, report);
+
         showAlert("Case " + selectedCase.getId() + " closed successfully with reason: " + reason);
+
+        // Refresh dropdown to remove closed case
+        loadActiveCases();
+        activeCaseDropdown.getSelectionModel().clearSelection();
+        closureReasonDropdown.getSelectionModel().clearSelection();
+        finalReportSummary.clear();
     }
 
     @FXML
     private void handleCancel() {
-        // Logic to return to dashboard or previous screen
-        showAlert("Case closure cancelled. Returning to dashboard...");
+        showAlert("Case closure cancelled.");
     }
 
     private void showAlert(String message) {
