@@ -1,16 +1,10 @@
 package com.fcms.controllers.policeOfficer;
 
-import com.fcms.models.Case;
-import com.fcms.models.Evidence;
-import com.fcms.models.Participant;
-import com.fcms.services.CaseService;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import java.util.List;
 
 public class ManageCasesController {
 
@@ -52,6 +46,7 @@ public class ManageCasesController {
 
     private void showPlaceholder() {
         caseTitle.setText("Select a case from the list to view details");
+
         statusLabel.setText("");
         priorityLabel.setText("");
         typeLabel.setText("");
@@ -71,7 +66,7 @@ public class ManageCasesController {
 
     private void addCaseTile(String id, String title, String status, String priority, String date,
                              String type, String location, String officer, String description,
-                             List<Evidence> evidence, List<Participant> participants) {
+                             String[][] evidence, String[][] participants) {
 
         VBox tile = new VBox(6);
         tile.getStyleClass().add("case-tile");

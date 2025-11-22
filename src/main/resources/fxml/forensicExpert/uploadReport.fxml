@@ -27,8 +27,8 @@
 
                         <VBox spacing="12.0">
                             <VBox spacing="4.0">
-                                <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Case ID" />
-                                <Label fx:id="caseIdLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                                <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Evidence ID" />
+                                <Label fx:id="evidenceIdLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
                             </VBox>
 
                             <VBox spacing="4.0">

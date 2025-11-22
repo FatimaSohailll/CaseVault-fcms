@@ -7,10 +7,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class SearchCasesController {
 
@@ -54,16 +52,20 @@ public class SearchCasesController {
             {
                 viewBtn.getStyleClass().add("nav-btn");
                 viewBtn.setOnAction(e -> {
-                    Case selected = getTableView().getItems().get(getIndex());
-                    System.out.println("Viewing case: " + selected.getId());
-                    // TODO: Navigate to ManageCase or open modal
+                    CaseEntry caseEntry = getTableView().getItems().get(getIndex());
+                    System.out.println("Viewing case: " + caseEntry.getId());
+                    // TODO: Navigate to case detail screen or open modal
                 });
             }
 
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : viewBtn);
+                if (empty || getIndex() >= getTableView().getItems().size()) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(viewBtn);
+                }
             }
         });
     }

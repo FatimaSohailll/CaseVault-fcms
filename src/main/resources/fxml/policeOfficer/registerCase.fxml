@@ -6,6 +6,14 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.RegisterCaseController">
 
+    <top>
+        <fx:include source="../components/topbar.fxml"/>
+    </top>
+
+    <left>
+        <fx:include source="../components/sidebar.fxml"/>
+    </left>
+
     <center>
         <ScrollPane fitToWidth="true">
             <VBox spacing="22" styleClass="main-content">

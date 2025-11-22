@@ -1,7 +1,5 @@
 package com.fcms.controllers.policeOfficer;
 
-import com.fcms.models.Case;
-import com.fcms.services.CaseService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -11,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class CloseCaseController {
 
-    @FXML private ComboBox<Case> activeCaseDropdown;
+    @FXML private ComboBox<String> activeCaseDropdown;
     @FXML private ComboBox<String> closureReasonDropdown;
     @FXML private TextArea finalReportSummary;
     @FXML private VBox checklistContainer;
@@ -32,16 +30,6 @@ public class CloseCaseController {
         addChecklistItem("Forensic analysis completed (if applicable)");
         addChecklistItem("Case documentation is complete");
         addChecklistItem("Supervisor has reviewed the case");
-
-        // Show case titles in dropdown
-        activeCaseDropdown.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(Case c, boolean empty) {
-                super.updateItem(c, empty);
-                setText(empty || c == null ? null : c.getId() + " — " + c.getTitle());
-            }
-        });
-        activeCaseDropdown.setButtonCell(activeCaseDropdown.getCellFactory().call(null));
     }
 
     private void loadActiveCases() {

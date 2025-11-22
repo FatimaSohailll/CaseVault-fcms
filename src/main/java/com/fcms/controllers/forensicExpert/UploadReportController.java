@@ -5,6 +5,7 @@ import com.fcms.services.ForensicRequestService;
 import com.fcms.services.BusinessException;
 import com.fcms.models.ForensicRequest;
 import com.fcms.models.ForensicReport;
+import com.fcms.models.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -20,10 +21,11 @@ import java.util.ResourceBundle;
 public class UploadReportController implements Initializable {
 
     @FXML private Label requestIdLabel;
-    @FXML private Label caseIdLabel;
+    @FXML private Label evidenceIdLabel;
     @FXML private Label evidenceTypeLabel;
     @FXML private Label requestedByLabel;
     @FXML private Label requestDateLabel;
+    @FXML private Label descriptionLabel;
     @FXML private TextField titleField;
     @FXML private DatePicker completionDatePicker;
     @FXML private Button chooseFileButton;
@@ -37,11 +39,25 @@ public class UploadReportController implements Initializable {
     private Runnable onSuccessCallback;
     private ReportService reportService;
     private ForensicRequestService requestService;
+    private UserSession userSession; // Add UserSession reference
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.reportService = new ReportService();
-        this.requestService = new ForensicRequestService();
+        // Get the current user session
+        this.userSession = UserSession.getInstance();
+
+        // Validate that user is logged in and is a forensic expert
+        if (!userSession.isLoggedIn() || !userSession.isForensicExpert()) {
+            showErrorAlert("Access Denied", "You must be logged in as a Forensic Expert to upload reports.");
+            closeWindow();
+            return;
+        }
+
+        this.reportService = new ReportService(userSession.getUserID());
+        this.requestService = new ForensicRequestService(userSession.getUserID());
+
+        System.out.println("DEBUG: UploadReportController initialized for expert: " + userSession.getUserID());
+
         setupStyles();
         setupEventHandlers();
     }
@@ -68,14 +84,20 @@ public class UploadReportController implements Initializable {
         completionDatePicker.setValue(LocalDate.now());
     }
 
+
     private void populateRequestData() {
         if (currentRequest != null) {
             requestIdLabel.setText(currentRequest.getRequestId());
-            caseIdLabel.setText(currentRequest.getCaseId());
+            evidenceIdLabel.setText(currentRequest.getEvidenceId());
             evidenceTypeLabel.setText(currentRequest.getEvidenceType());
             requestedByLabel.setText(currentRequest.getRequestedBy());
-            requestDateLabel.setText(currentRequest.getDate().format(DateTimeFormatter.ofPattern("MMM d, yyyy")));
-            titleField.setText(currentRequest.getEvidenceType() + " Report - " + currentRequest.getCaseId());
+            requestDateLabel.setText(currentRequest.getRequestedDate().format(DateTimeFormatter.ofPattern("MMM d, yyyy")));
+            titleField.setText(currentRequest.getEvidenceType() + " Report - " + currentRequest.getEvidenceId());
+
+            // Debug information
+            System.out.println("DEBUG: Processing request: " + currentRequest.getRequestId());
+            System.out.println("DEBUG: Evidence: " + currentRequest.getEvidenceId());
+            System.out.println("DEBUG: Requested by: " + currentRequest.getRequestedBy());
         }
     }
 
@@ -108,7 +130,14 @@ public class UploadReportController implements Initializable {
 
         try {
             ForensicReport report = createReport();
+
+            System.out.println("DEBUG: Uploading report for request: " + currentRequest.getRequestId());
+            System.out.println("DEBUG: Expert ID from session: " + userSession.getUserID());
+
+            // Upload report to database and file system
             reportService.uploadReport(report, selectedFile);
+
+            // Link report to request (this also updates request status)
             reportService.linkReportToRequest(report.getReportId(), currentRequest.getRequestId());
 
             showSuccessAlert("Report submitted successfully for " + currentRequest.getRequestId());
@@ -120,6 +149,10 @@ public class UploadReportController implements Initializable {
             closeWindow();
         } catch (BusinessException e) {
             showErrorAlert("Failed to submit report: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            showErrorAlert("Unexpected error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -162,6 +195,9 @@ public class UploadReportController implements Initializable {
         report.setTitle(titleField.getText());
         report.setCompletionDate(completionDatePicker.getValue());
         report.setNotes(notesArea.getText());
+        report.setUploadedBy(userSession.getUserID());
+        System.out.println("DEBUG: Creating report with expert ID: " + report.getUploadedBy());
+
         return report;
     }
 
@@ -176,6 +212,14 @@ public class UploadReportController implements Initializable {
     private void showErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showErrorAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

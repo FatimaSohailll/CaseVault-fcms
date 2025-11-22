@@ -1,12 +1,13 @@
 package com.fcms.controllers.components;
 
-import com.fcms.app.SceneManager;
 import com.fcms.models.Icons;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import com.fcms.controllers.policeOfficer.PoliceDashboardController;
+import com.fcms.controllers.policeOfficer.RequestAnalysisController;
 
 import java.util.List;
 
@@ -15,22 +16,15 @@ public class SidebarController {
     @FXML private VBox sidebarContainer;
 
     @FXML private Button dashboardBtn, registerBtn, manageCasesBtn, forensicAnalysisBtn,
-            manageParticipantsBtn, crimeAnalyticsBtn, closeCaseBtn, submitToCourtBtn, searchCasesBtn;
+            manageParticipantsBtn, crimeAnalyticsBtn, closeCaseBtn, submitToCourtBtn;
 
     @FXML private HBox dashboardRow, registerRow, manageCasesRow, forensicAnalysisRow,
-            manageParticipantsRow, crimeAnalyticsRow, closeCaseRow, submitToCourtRow, searchCasesRow;
+            manageParticipantsRow, crimeAnalyticsRow, closeCaseRow, submitToCourtRow;
 
     @FXML private Pane dashboardIcon, registerIcon, manageCasesIcon, forensicAnalysisIcon,
-            manageParticipantsIcon, crimeAnalyticsIcon, closeCaseIcon, submitToCourtIcon, searchCasesIcon;
+            manageParticipantsIcon, crimeAnalyticsIcon, closeCaseIcon, submitToCourtIcon;
 
     private boolean collapsed = false;
-
-    // Reference to SceneManager injected from Main
-    private SceneManager sceneManager;
-
-    public void setSceneManager(SceneManager sceneManager) {
-        this.sceneManager = sceneManager;
-    }
 
     @FXML
     public void initialize() {
@@ -46,7 +40,6 @@ public class SidebarController {
         crimeAnalyticsIcon.getChildren().add(createIcon("barchart3"));
         closeCaseIcon.getChildren().add(createIcon("foldercheck"));
         submitToCourtIcon.getChildren().add(createIcon("scale"));
-        searchCasesIcon.getChildren().add(createIcon("search"));
     }
 
     private Icons createIcon(String name) {
@@ -69,7 +62,7 @@ public class SidebarController {
             closeCaseBtn.setText("");
             submitToCourtBtn.setText("");
 
-            sidebarContainer.setPrefWidth(80);
+            sidebarContainer.setPrefWidth(60);
         } else {
             dashboardBtn.setText("Dashboard");
             registerBtn.setText("Register New Case");
@@ -84,10 +77,18 @@ public class SidebarController {
         }
     }
 
+    @FXML
+    private void handleRequestAnalysis() {
+        // Get reference to the main controller
+        PoliceDashboardController mainController = (PoliceDashboardController)
+                forensicAnalysisBtn.getScene().lookup("#mainBorderPane").getParent().getUserData();
+        mainController.loadRequestAnalysis();
+    }
+
     private void setActiveSidebar(String name) {
         List<HBox> allRows = List.of(
                 dashboardRow, registerRow, manageCasesRow, forensicAnalysisRow,
-                manageParticipantsRow, crimeAnalyticsRow, closeCaseRow, submitToCourtRow, searchCasesRow
+                manageParticipantsRow, crimeAnalyticsRow, closeCaseRow, submitToCourtRow
         );
         for (HBox row : allRows) row.getStyleClass().remove("active");
 
@@ -100,7 +101,6 @@ public class SidebarController {
             case "Crime Analytics" -> crimeAnalyticsRow.getStyleClass().add("active");
             case "Close Case" -> closeCaseRow.getStyleClass().add("active");
             case "Submit to Court" -> submitToCourtRow.getStyleClass().add("active");
-            case "Search Cases" -> searchCasesRow.getStyleClass().add("active");
         }
     }
 

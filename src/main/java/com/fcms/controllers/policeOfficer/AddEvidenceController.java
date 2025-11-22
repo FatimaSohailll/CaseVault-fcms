@@ -40,22 +40,30 @@ public class AddEvidenceController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.evidenceService = new EvidenceService();
+        // Initialize with a default case ID for now
+        this.evidenceService = new EvidenceService("CS00001"); // Default case ID
         initializeExistingEvidence();
         initializeComboBoxes();
         setupEventHandlers();
         setupFormDefaults();
+        populateCaseDetails();
     }
 
     public void setSelectedCase(Case selectedCase) {
         this.selectedCase = selectedCase;
+        // Update EvidenceService with the actual case ID if available
+        if (selectedCase != null) {
+            this.evidenceService = new EvidenceService(selectedCase.getId());
+        }
         populateCaseDetails();
+        // Refresh existing evidence for this case
+        initializeExistingEvidence();
     }
 
     private void initializeExistingEvidence() {
         try {
             // Load existing evidence through service
-            existingEvidence.setAll(evidenceService.getAllEvidence());
+            existingEvidence.setAll(evidenceService.getEvidenceByCase("CS00001"));
             existingEvidenceList.setItems(existingEvidence);
             existingEvidenceList.setCellFactory(param -> new EvidenceListCell());
         } catch (Exception e) {
@@ -84,6 +92,8 @@ public class AddEvidenceController implements Initializable {
     private void populateCaseDetails() {
         if (selectedCase != null) {
             selectedCaseLabel.setText("Selected Case: " + selectedCase.getId() + " • " + selectedCase.getTitle());
+        } else {
+            selectedCaseLabel.setText("Selected Case: CASE-001 (Default)");
         }
     }
 
@@ -170,11 +180,16 @@ public class AddEvidenceController implements Initializable {
                 evidenceTypeCombo.getValue()
         );
 
-        evidence.setCollectionDateTime(collectionDatePicker.getValue().toString());
+        // Combine date and time for collectionDateTime
+        String dateTime = collectionDatePicker.getValue().toString() + " " + collectionTimeField.getText();
+        evidence.setCollectionDateTime(dateTime);
         evidence.setLocation(locationField.getText());
 
+        // Set case ID - use selected case if available, otherwise use default
         if (selectedCase != null) {
             evidence.setCaseId(selectedCase.getId());
+        } else {
+            evidence.setCaseId("CS00001"); // Default case ID
         }
 
         return evidence;

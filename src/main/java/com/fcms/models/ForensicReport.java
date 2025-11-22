@@ -137,6 +137,13 @@ public class ForensicReport {
         return "pdf".equalsIgnoreCase(getFileExtension());
     }
 
+    public void setFileData(File file) {
+        if (file != null) {
+            this.file = file;
+            this.fileName = file.getName();
+        }
+    }
+
     public boolean isWordDocument() {
         String ext = getFileExtension();
         return "doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext);

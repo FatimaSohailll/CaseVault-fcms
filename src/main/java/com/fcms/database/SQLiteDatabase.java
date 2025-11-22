@@ -44,15 +44,10 @@ public class SQLiteDatabase {
                 "email TEXT NOT NULL UNIQUE, " +
                 "name TEXT NOT NULL, " +
                 "password TEXT NOT NULL, " +
-                "role TEXT NOT NULL CHECK (role IN ('Police','Court Official','Forensic Expert')), " +
+                "role TEXT NOT NULL CHECK (role IN ('Police Officer','Court Official','Forensic Expert')), " +
                 "managedBY TEXT NOT NULL, " +
+                "approved  BOOL NOT NULL, " +
                 "createdAt DATETIME DEFAULT CURRENT_TIMESTAMP)");
-
-        stmt.execute("CREATE TABLE IF NOT EXISTS UserHistory (" +
-                "historyID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "actor TEXT NOT NULL, " +            // who did it (Admin)
-                "action TEXT NOT NULL, " +           // what happened ("Added new user")
-                "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
 
         // POLICE OFFICER
         stmt.execute("CREATE TABLE IF NOT EXISTS PoliceOfficer (" +
@@ -94,7 +89,9 @@ public class SQLiteDatabase {
                 "participantID TEXT PRIMARY KEY, " +
                 "name TEXT NOT NULL, " +
                 "role TEXT NOT NULL CHECK (role IN ('victim', 'suspect')), " +
-                "contact TEXT)");
+                "contact TEXT,"+
+                "idType TEXT, " +
+                        "idNumber TEXT)");
 
         // CASE PARTICIPANTS (Junction table)
         stmt.execute("CREATE TABLE IF NOT EXISTS CaseParticipants (" +
@@ -133,8 +130,8 @@ public class SQLiteDatabase {
         // FORENSIC REQUEST
         stmt.execute("CREATE TABLE IF NOT EXISTS ForensicRequest (" +
                 "requestID TEXT PRIMARY KEY, " +
+                "expertID TEXT NOT NULL, "+
                 "status TEXT DEFAULT 'pending' CHECK (status IN ('pending','completed')), " +
-                "caseID TEXT NOT NULL, " +
                 "requestedBy TEXT NOT NULL, " +
                 "evidenceType TEXT, " +
                 "requestedDate DATE, " +
@@ -142,7 +139,7 @@ public class SQLiteDatabase {
                 "analysisType TEXT, " +
                 "priority TEXT NOT NULL CHECK (priority IN ('Urgent', 'High', 'Medium', 'low')), " +
                 "FOREIGN KEY (evidenceID) REFERENCES Evidence(evidenceID), " +
-                "FOREIGN KEY (caseID) REFERENCES CaseFile(caseID), " +
+                "FOREIGN KEY (expertID) REFERENCES ForensicExpert(expertID), "+
                 "FOREIGN KEY (requestedBy) REFERENCES PoliceOfficer(officerID))");
 
         // FORENSIC REPORT
@@ -173,13 +170,6 @@ public class SQLiteDatabase {
     }
 
     public static Connection getConnection() throws SQLException {
-        Connection conn = DriverManager.getConnection(DB_URL);
-
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute("PRAGMA foreign_keys = ON");
-        }
-
-        return conn;
+        return DriverManager.getConnection(DB_URL);
     }
-
 }
