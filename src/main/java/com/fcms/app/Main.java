@@ -5,17 +5,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import com.fcms.controllers.components.SidebarController;
-import com.fcms.controllers.policeOfficer.MainLayoutController;
-import com.fcms.database.SQLiteDatabase;
 import com.fcms.controllers.auth.LoginController;
 import com.fcms.controllers.auth.SignupController;
 import com.fcms.database.*;
-import com.fcms.controllers.policeOfficer.PoliceDashboardController;
-import com.fcms.controllers.forensicExpert.ExpertDashboardController;
+import com.fcms.controllers.components.SidebarController;
+import com.fcms.controllers.policeOfficer.MainLayoutController;
 import com.fcms.models.UserSession;
 
 import java.io.IOException;
+import java.util.Locale;
 
 public class Main extends Application {
 
@@ -23,67 +21,35 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Initialize DB
-        SQLiteDatabase.initializeDatabase();
-
-        // Create SceneManager
-        SceneManager sceneManager = new SceneManager(primaryStage);
-
-        // Prepare loader for dashboard
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/mainLayout.fxml"));
-
-        // Controller factory: inject SceneManager into SidebarController when it's constructed
-        loader.setControllerFactory(type -> {
-            try {
-                if (type == SidebarController.class) {
-                    SidebarController sc = new SidebarController();
-                    sc.setSceneManager(sceneManager);
-                    return sc;
-                }
-                // default construction for other controllers (e.g., PoliceDashboardController)
-                return type.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        Parent root = loader.load();
-
-        // Optional: get dashboard controller if you need it for other tasks
-        MainLayoutController dashboardController = loader.getController();
-
-        // Create scene and attach CSS
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
-        scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
-
-        // Configure stage
-        primaryStage.setTitle("CaseVault - Police Officer Dashboard");
-        //primaryStage.setResizable(true);
-        primaryStage.setMinWidth(900);
-        primaryStage.setMinHeight(600);
-        primaryStage.setMaximized(true);
-        primaryStage.setScene(scene);
-        primaryStage.show();
         this.primaryStage = primaryStage;
         SQLiteDatabase.initializeDatabase();
-        //TestDataInserter.insertTestData();
-
         showLoginScreen();
     }
 
     private void showDashboard() {
         UserSession session = UserSession.getInstance();
-        String role = session.getRole();
+        String rawRole = session.getRole();
+        String role = (rawRole == null) ? "" : rawRole.trim();
 
-        System.out.println("Navigating to dashboard for role: " + role);
+        System.out.println("Navigating to dashboard for role (raw): " + rawRole);
+        System.out.println("Navigating to dashboard for role (normalized): " + role);
 
+        // Normalize common variants to avoid mismatches
+        String roleLower = role.toLowerCase(Locale.ROOT);
+
+        if (roleLower.equals("police") || roleLower.equals("police officer")) {
+            loadPoliceMainLayout();
+            return;
+        }
+
+        // Other roles use partner dashboards
         try {
             String fxmlFile = getDashboardFXML(role);
+            System.out.println("Loading FXML for role: " + role + " -> " + fxmlFile);
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
 
-            // Set up the dashboard controller
             setupDashboardController(loader.getController());
 
             Scene scene = new Scene(root);
@@ -93,7 +59,7 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(900);
             primaryStage.setMinHeight(600);
-            primaryStage.setMaximized(true); // Dashboard can be maximized
+            primaryStage.setMaximized(true);
             primaryStage.show();
 
         } catch (IOException e) {
@@ -102,23 +68,67 @@ public class Main extends Application {
         }
     }
 
+    private void loadPoliceMainLayout() {
+        try {
+            SceneManager sceneManager = new SceneManager(primaryStage);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/mainLayout.fxml"));
+
+            // Inject SceneManager into SidebarController
+            loader.setControllerFactory(type -> {
+                try {
+                    if (type == SidebarController.class) {
+                        SidebarController sc = new SidebarController();
+                        sc.setSceneManager(sceneManager);
+                        return sc;
+                    }
+                    return type.getDeclaredConstructor().newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            Parent root = loader.load();
+            MainLayoutController dashboardController = loader.getController();
+            System.out.println("Loaded controller: " + dashboardController.getClass().getSimpleName());
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+
+            primaryStage.setTitle("CaseVault - Police Officer Dashboard");
+            primaryStage.setScene(scene);
+            primaryStage.setMinWidth(900);
+            primaryStage.setMinHeight(600);
+            primaryStage.setMaximized(true);
+            primaryStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load Police Officer main layout.");
+        }
+    }
+
     private String getDashboardFXML(String role) {
+        // Police is handled by loadPoliceMainLayout(), so no police case here
         switch (role) {
-            case "Police Officer":
-                return "/fxml/policeOfficer/policeDashboard.fxml";
             case "Forensic Expert":
+            case "forensic expert":
                 return "/fxml/forensicExpert/expertDashboard.fxml";
             case "Court Official":
+            case "court official":
                 return "/fxml/courtOfficial/courtDashboard.fxml"; // Adjust path as needed
             default:
-                return "/fxml/policeOfficer/policeDashboard.fxml"; // fallback
+                // Fallback to policeOfficer dashboard if an unknown role sneaks in
+                return "/fxml/policeOfficer/policeDashboard.fxml";
         }
     }
 
     private void setupDashboardController(Object controller) {
-        // You can set up logout handlers or other common dashboard setup here
-        // For now, we'll just log the controller type
-        System.out.println("Dashboard controller type: " + controller.getClass().getSimpleName());
+        if (controller != null) {
+            System.out.println("Dashboard controller type: " + controller.getClass().getSimpleName());
+        } else {
+            System.out.println("Dashboard controller is null for this FXML.");
+        }
     }
 
     public void showLoginScreen() {
@@ -127,8 +137,6 @@ public class Main extends Application {
             Parent root = loader.load();
 
             LoginController loginController = loader.getController();
-
-            // Set up navigation callbacks
             loginController.setOnNavigateToSignup(this::showSignupScreen);
             loginController.setOnNavigateToForgotPassword(this::showForgotPasswordScreen);
             loginController.setOnLoginSuccess(this::showDashboard);
@@ -140,7 +148,7 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(400);
             primaryStage.setMinHeight(600);
-            primaryStage.setMaximized(false); // Login screen should not be maximized
+            primaryStage.setMaximized(false);
             primaryStage.show();
 
         } catch (Exception e) {
@@ -164,8 +172,9 @@ public class Main extends Application {
             Scene scene = new Scene(root);
             primaryStage.setTitle("CaseVault - Sign Up");
             primaryStage.setScene(scene);
-            primaryStage.setMinWidth(420);  // Reduced from 450
-            primaryStage.setMinHeight(650); // Reduced from 700
+            scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
+            primaryStage.setMinWidth(420);
+            primaryStage.setMinHeight(650);
             primaryStage.setMaximized(false);
             primaryStage.show();
 
@@ -175,8 +184,6 @@ public class Main extends Application {
     }
 
     private void showForgotPasswordScreen() {
-        System.out.println("Navigate to forgot password screen");
-        // TODO: Implement forgot password screen
         showAlert("Info", "Forgot password feature coming soon!");
     }
 
