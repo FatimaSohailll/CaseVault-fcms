@@ -33,11 +33,13 @@ public class CaseService {
 
     // ---------------- Case Management ----------------
     public void registerCase(Case newCase) {
+        // Persist case to DB
         caseRepository.save(newCase);
         System.out.println("Case registered: " + newCase.getTitle());
     }
 
     public List<Case> getAllCases() {
+        // Fetch all cases from DB
         return caseRepository.findAll();
     }
 
@@ -45,14 +47,25 @@ public class CaseService {
         return caseRepository.findById(id);
     }
 
-    public void closeCase(String caseId, String reason, String finalReport) {
-        Case c = caseRepository.findById(caseId);
-        if (c != null) {
-            c.setStatus("Closed - " + reason);
-            caseRepository.update(c); // persist change
-            System.out.println("Case " + caseId + " closed. Reason: " + reason);
-            System.out.println("Final Report: " + finalReport);
-        }
+    public void updateCase(Case updatedCase) {
+        caseRepository.update(updatedCase);
+        System.out.println("Case updated: " + updatedCase.getId());
+    }
+
+    public void closeCase(String caseId, String reason, String report) {
+        caseRepository.closeCase(caseId, reason, report);
+        System.out.println("Case " + caseId + " closed. Reason: " + reason);
+        System.out.println("Final Report: " + report);
+    }
+
+
+    public void deleteCase(String caseId) {
+        caseRepository.delete(caseId);
+        System.out.println("Case deleted: " + caseId);
+    }
+
+    public boolean caseExists(String caseId) {
+        return caseRepository.exists(caseId);
     }
 
     // ---------------- Evidence Management ----------------
@@ -67,13 +80,14 @@ public class CaseService {
 
     // ---------------- Participant Management ----------------
     public void addParticipantToCase(String caseId, Participant participant) {
-        // You may need a junction table CaseParticipants in DB
+        // Save participant
         participantRepository.save(participant);
+        // TODO: also insert into CaseParticipants junction table
         System.out.println("Linked participant " + participant.getId() + " to case " + caseId);
     }
 
     public List<Participant> getParticipantsForCase(String caseId) {
-        // If you implement CaseParticipants table, query it here
+        // TODO: query CaseParticipants junction table
         return participantRepository.findAll(); // placeholder
     }
 }

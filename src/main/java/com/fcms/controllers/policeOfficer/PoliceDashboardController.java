@@ -27,10 +27,13 @@ public class PoliceDashboardController {
     }
 
     private void loadRecentCases() {
+        // Clear old cards before reloading
+        recentCasesContainer.getChildren().clear();
+
         List<Case> cases = caseService.getAllCases();
         recentCasesContainer.getChildren().clear();
         cases.stream()
-                .sorted((a, b) -> b.getDate().compareTo(a.getDate()))
+                .sorted((a, b) -> b.getDateRegistered().compareTo(a.getDateRegistered()))
                 .limit(5)
                 .forEach(this::createCaseCard);
     }
@@ -48,9 +51,11 @@ public class PoliceDashboardController {
         Label status = new Label(c.getStatus());
         status.getStyleClass().add("case-status");
 
-        switch (c.getStatus()) {
-            case "Open" -> status.getStyleClass().add("status-open");
-            case "Closed" -> status.getStyleClass().add("status-closed");
+        // Normalize status values to match DB schema
+        String normalizedStatus = c.getStatus() == null ? "" : c.getStatus().toLowerCase();
+        switch (normalizedStatus) {
+            case "open" -> status.getStyleClass().add("status-open");
+            case "closed" -> status.getStyleClass().add("status-closed");
             default -> status.getStyleClass().add("status-pending");
         }
 
@@ -60,8 +65,8 @@ public class PoliceDashboardController {
         title.getStyleClass().add("case-title");
 
         Label category = new Label("Category: " + c.getType());
-        Label officer = new Label("Officer: " + c.getOfficer());
-        Label date = new Label("Date: " + c.getDate().toString());
+        Label officer = new Label("Officer: " + c.getAssignedOfficer());
+        Label date = new Label("Date: " + (c.getDateRegistered() != null ? c.getDateRegistered().toString() : ""));
 
         category.getStyleClass().add("case-meta");
         officer.getStyleClass().add("case-meta");
@@ -75,6 +80,7 @@ public class PoliceDashboardController {
 
     private void openCaseDetails(String caseId) {
         System.out.println("Opening details for case: " + caseId);
+        // TODO: navigate to case detail screen
     }
 
     // Method to load Request Analysis view

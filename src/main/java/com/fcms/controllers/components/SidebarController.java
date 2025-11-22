@@ -104,12 +104,65 @@ public class SidebarController {
         }
     }
 
-    public void handleDashboard() { setActiveSidebar("Dashboard"); }
-    public void handleRegisterCase() { setActiveSidebar("Register New Case"); }
-    public void handleManageCases() { setActiveSidebar("Manage Cases"); }
-    public void handleForensicAnalysis() { setActiveSidebar("Forensic Analysis"); }
-    public void handleManageParticipants() { setActiveSidebar("Manage Participants"); }
-    public void handleCrimeAnalytics() { setActiveSidebar("Crime Analytics"); }
-    public void handleCloseCase() { setActiveSidebar("Close Case"); }
-    public void handleSubmitToCourt() { setActiveSidebar("Submit to Court"); }
+    // ---------------- Navigation Handlers ----------------
+    @FXML
+    public void handleDashboard() {
+        setActiveSidebar("Dashboard");
+        sceneManager.switchContent(
+                "/fxml/policeOfficer/policeDashboard.fxml");
+    }
+
+    @FXML
+    public void handleRegisterCase() {
+        setActiveSidebar("Register New Case");
+        sceneManager.switchContent(
+                "/fxml/policeOfficer/registerCase.fxml");
+
+    }
+
+    @FXML
+    public void handleManageCases() {
+        setActiveSidebar("Manage Cases");
+        sceneManager.switchContent("/fxml/policeOfficer/manageCases.fxml");
+    }
+
+    @FXML
+    public void handleForensicAnalysis() {
+        setActiveSidebar("Forensic Analysis");
+        sceneManager.switchContent(
+                "/fxml/policeOfficer/requestAnalysis.fxml");
+    }
+
+    @FXML
+    public void handleManageParticipants() {
+        setActiveSidebar("Manage Participants");
+        sceneManager.switchContent(
+                "/fxml/policeOfficer/manageCaseParticipants.fxml");
+    }
+
+    @FXML
+    public void handleCrimeAnalytics() {
+        setActiveSidebar("Crime Analytics");
+        sceneManager.switchContent(
+                "/fxml/policeOfficer/crimeAnalytics.fxml");
+    }
+
+    @FXML
+    public void handleCloseCase() {
+        setActiveSidebar("Close Case");
+        sceneManager.switchContent(
+                "/fxml/policeOfficer/closeCase.fxml");
+    }
+    @FXML
+    public void handleSearchCases() {
+        setActiveSidebar("Search Cases");
+        sceneManager.switchContent(
+                "/fxml/policeOfficer/searchCases.fxml");
+    }
+    @FXML
+    public void handleSubmitToCourt() {
+        setActiveSidebar("Submit to Court");
+        sceneManager.switchContent(
+                "/fxml/policeOfficer/submitToCourt.fxml");
+    }
 }

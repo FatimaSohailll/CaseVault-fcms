@@ -4,6 +4,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class CloseCaseController {
 
     @FXML private ComboBox<String> activeCaseDropdown;
@@ -11,11 +14,15 @@ public class CloseCaseController {
     @FXML private TextArea finalReportSummary;
     @FXML private VBox checklistContainer;
 
+    private final CaseService caseService = new CaseService();
+
     @FXML
     public void initialize() {
-        // Populate dropdowns
-        activeCaseDropdown.getItems().addAll("Case #1021", "Case #1043", "Case #1099");
-        closureReasonDropdown.getItems().addAll("Resolved", "Transferred", "Insufficient Evidence", "Other");
+        loadActiveCases();
+
+        closureReasonDropdown.getItems().addAll(
+                "Resolved", "Transferred", "Insufficient Evidence", "Other"
+        );
 
         // Inject checklist items
         addChecklistItem("All evidence has been logged and stored");
@@ -23,6 +30,14 @@ public class CloseCaseController {
         addChecklistItem("Forensic analysis completed (if applicable)");
         addChecklistItem("Case documentation is complete");
         addChecklistItem("Supervisor has reviewed the case");
+    }
+
+    private void loadActiveCases() {
+        List<Case> openCases = caseService.getAllCases().stream()
+                .filter(c -> c.getStatus() != null && c.getStatus().equalsIgnoreCase("open"))
+                .collect(Collectors.toList());
+
+        activeCaseDropdown.getItems().setAll(openCases);
     }
 
     private void addChecklistItem(String text) {
@@ -33,11 +48,44 @@ public class CloseCaseController {
 
     @FXML
     private void handleCloseCase() {
-        // Logic to finalize case closure
+        Case selectedCase = activeCaseDropdown.getValue();
+        String reason = closureReasonDropdown.getValue();
+        String report = finalReportSummary.getText();
+
+        if (selectedCase == null) {
+            showAlert("Please select a case to close.");
+            return;
+        }
+        if (reason == null || reason.isEmpty()) {
+            showAlert("Please select a closure reason.");
+            return;
+        }
+        if (report == null || report.isBlank()) {
+            showAlert("Please provide a final report summary.");
+            return;
+        }
+
+        // Persist closure
+        caseService.closeCase(selectedCase.getId(), reason, report);
+
+        showAlert("Case " + selectedCase.getId() + " closed successfully with reason: " + reason);
+
+        // Refresh dropdown to remove closed case
+        loadActiveCases();
+        activeCaseDropdown.getSelectionModel().clearSelection();
+        closureReasonDropdown.getSelectionModel().clearSelection();
+        finalReportSummary.clear();
     }
 
     @FXML
     private void handleCancel() {
-        // Logic to return to dashboard or previous screen
+        showAlert("Case closure cancelled.");
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

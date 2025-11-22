@@ -15,49 +15,80 @@
     </left>
 
     <center>
-        <VBox spacing="22" styleClass="main-content">
-            <padding>
-                <Insets top="26" right="26" bottom="26" left="26"/>
-            </padding>
+        <ScrollPane fitToWidth="true">
+            <VBox spacing="22" styleClass="main-content">
+                <padding>
+                    <Insets top="26" right="26" bottom="26" left="26"/>
+                </padding>
 
-            <Label text="Register New Case" styleClass="section-title"/>
-            <Label text="Add a new case to the system" styleClass="stat-sub"/>
+                <Label text="Register New Case" styleClass="section-title"/>
+                <Label text="Add a new case to the system" styleClass="stat-sub"/>
 
-            <VBox spacing="16" styleClass="stat-box">
-                <Label text="Case Information" styleClass="stat-title"/>
+                <VBox spacing="16" styleClass="stat-box">
+                    <Label text="Case Information" styleClass="stat-title"/>
 
-                <VBox spacing="8">
-                    <Label text="Case Title *"/>
-                    <TextField fx:id="caseTitleField" promptText="Enter case title"/>
-                    <Label fx:id="titleWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                    <!-- Case Title -->
+                    <VBox spacing="8">
+                        <Label text="Case Title *"/>
+                        <TextField fx:id="caseTitleField" promptText="Enter case title"/>
+                        <Label fx:id="titleWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                    </VBox>
+
+                    <!-- Case Type -->
+                    <VBox spacing="8">
+                        <Label text="Case Type *"/>
+                        <ComboBox fx:id="caseTypeDropdown" promptText="Select case type"/>
+                        <Label fx:id="typeWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                    </VBox>
+
+                    <!-- Priority -->
+                    <VBox spacing="8">
+                        <Label text="Priority *"/>
+                        <ComboBox fx:id="priorityDropdown" promptText="Select priority"/>
+                        <Label fx:id="priorityWarning" text="⚠ Please select a priority" visible="false" styleClass="field-warning"/>
+                    </VBox>
+
+                    <!-- Description -->
+                    <VBox spacing="8">
+                        <Label text="Description *"/>
+                        <TextArea fx:id="descriptionField" promptText="Enter case description" prefRowCount="4"/>
+                        <Label fx:id="descWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                    </VBox>
+
+                    <!-- Date -->
+                    <VBox spacing="8">
+                        <Label text="Date *"/>
+                        <DatePicker fx:id="datePicker" promptText="dd/mm/yyyy"/>
+                        <Label fx:id="dateWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                    </VBox>
+
+                    <!-- Time -->
+                    <VBox spacing="8">
+                        <Label text="Time *"/>
+                        <TextField fx:id="timeField" promptText="--:-- --"/>
+                    </VBox>
+
+                    <!-- Location -->
+                    <VBox spacing="8">
+                        <Label text="Location *"/>
+                        <TextField fx:id="locationField" promptText="Enter location"/>
+                    </VBox>
+
+                    <!-- Assigned Officer -->
+                    <VBox spacing="8">
+                        <Label text="Assigned Officer *"/>
+                        <ComboBox fx:id="officerDropdown" promptText="Select assigned officer"/>
+                    </VBox>
+
+                    <Label fx:id="validationMessage" styleClass="case-meta" wrapText="true"/>
                 </VBox>
 
-
-                <VBox spacing="8">
-                    <Label text="Case Type *"/>
-                    <ComboBox fx:id="caseTypeDropdown" promptText="Select case type"/>
-                    <Label fx:id="typeWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
-                </VBox>
-
-                <VBox spacing="8">
-                    <Label text="Description *"/>
-                    <TextArea fx:id="descriptionField" promptText="Enter case description" prefRowCount="4"/>
-                    <Label fx:id="descWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
-                </VBox>
-
-                <VBox spacing="8">
-                    <Label text="Date *"/>
-                    <DatePicker fx:id="datePicker"/>
-                    <Label fx:id="dateWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
-                </VBox>
-
-                <Label fx:id="validationMessage" styleClass="case-meta" wrapText="true"/>
+                <!-- Action Buttons -->
+                <HBox spacing="12">
+                    <Button text="Save Case" onAction="#handleSaveCase" styleClass="nav-btn"/>
+                    <Button text="Cancel" onAction="#handleCancel" styleClass="nav-btn"/>
+                </HBox>
             </VBox>
-
-            <HBox spacing="12">
-                <Button text="Save Case" onAction="#handleSaveCase" styleClass="nav-btn"/>
-                <Button text="Cancel" onAction="#handleCancel" styleClass="nav-btn"/>
-            </HBox>
-        </VBox>
+        </ScrollPane>
     </center>
 </BorderPane>

@@ -8,14 +8,6 @@
             fx:controller="com.fcms.controllers.policeOfficer.PoliceDashboardController"
             fx:id="mainBorderPane">
 
-    <top>
-        <fx:include source="../components/topbar.fxml"/>
-    </top>
-
-    <left>
-        <fx:include source="../components/sidebar.fxml"/>
-    </left>
-
     <center>
         <!-- This is the original dashboard content that will be replaced -->
         <VBox spacing="22" styleClass="main-content" maxWidth="Infinity" maxHeight="Infinity">
@@ -55,6 +47,7 @@
             <ScrollPane fitToWidth="true" styleClass="case-scroll" VBox.vgrow="ALWAYS">
                 <VBox fx:id="recentCasesContainer" spacing="12" styleClass="case-list"/>
             </ScrollPane>
+
         </VBox>
     </center>
 

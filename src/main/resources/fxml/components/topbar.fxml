@@ -10,7 +10,6 @@
     <padding>
         <Insets top="14" right="20" bottom="14" left="20"/>
     </padding>
-
     <!-- Left side: app title -->
     <VBox spacing="4">
         <Label text="CaseVault" styleClass="app-title"/>
