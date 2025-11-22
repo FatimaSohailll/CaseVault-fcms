@@ -3,15 +3,20 @@ package com.fcms.controllers.policeOfficer;
 import com.fcms.models.Case;
 import com.fcms.services.CaseService;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 
+import java.io.IOException;
 import java.util.List;
 
 public class PoliceDashboardController {
 
+    @FXML private BorderPane mainBorderPane;
     @FXML private VBox recentCasesContainer;
 
     private final CaseService caseService = new CaseService();
@@ -23,6 +28,7 @@ public class PoliceDashboardController {
 
     private void loadRecentCases() {
         List<Case> cases = caseService.getAllCases();
+        recentCasesContainer.getChildren().clear();
         cases.stream()
                 .sorted((a, b) -> b.getDate().compareTo(a.getDate()))
                 .limit(5)
@@ -69,5 +75,29 @@ public class PoliceDashboardController {
 
     private void openCaseDetails(String caseId) {
         System.out.println("Opening details for case: " + caseId);
+    }
+
+    // Method to load Request Analysis view
+    public void loadRequestAnalysis() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fcms/views/policeOfficer/requestAnalysis.fxml"));
+            Node requestAnalysisView = loader.load();
+            mainBorderPane.setCenter(requestAnalysisView);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Failed to load request analysis view: " + e.getMessage());
+        }
+    }
+
+    // Method to return to dashboard (reload the original center content)
+    public void loadDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/fcms/views/policeOfficer/policeDashboard.fxml"));
+            Node dashboardContent = loader.load();
+            mainBorderPane.setCenter(dashboardContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Failed to load dashboard view: " + e.getMessage());
+        }
     }
 }

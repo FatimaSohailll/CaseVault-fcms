@@ -10,6 +10,12 @@ import java.util.List;
 public class EvidenceService {
     private EvidenceRepository evidenceRepository;
 
+    // Updated constructor to accept case ID
+    public EvidenceService(String caseId) {
+        this.evidenceRepository = new EvidenceRepository(caseId);
+    }
+
+    // Alternative constructor for cases where no specific case is selected
     public EvidenceService() {
         this.evidenceRepository = new EvidenceRepository();
     }
@@ -31,9 +37,9 @@ public class EvidenceService {
         }
 
         // Business rule: Collection date cannot be in future
-//        if (evidence.getCollectionDateTime().isAfter(LocalDateTime.now())) {
-//            throw new BusinessException("Collection date cannot be in the future");
-//        }
+        // if (evidence.getCollectionDateTime().isAfter(LocalDateTime.now())) {
+        //     throw new BusinessException("Collection date cannot be in the future");
+        // }
 
         // Business rule: Generate evidence ID
         evidence.setId(generateEvidenceId());
@@ -69,8 +75,8 @@ public class EvidenceService {
     }
 
     // Business logic for getting evidence by case
-    public List<Evidence> getEvidenceByCase(Case caseObj) {
-        return evidenceRepository.findByCaseId(caseObj.getId());
+    public List<Evidence> getEvidenceByCase(String caseId) {
+        return evidenceRepository.findByCaseId(caseId);
     }
 
     // Business rule: Validate file type
@@ -86,6 +92,6 @@ public class EvidenceService {
     private String generateEvidenceId() {
         List<Evidence> evidenceList = evidenceRepository.findAll();
         int nextId = evidenceList.size() + 1;
-        return "EV-" + String.format("%03d", nextId);
+        return "EV" + String.format("%04d", nextId);
     }
 }

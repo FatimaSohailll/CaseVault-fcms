@@ -35,17 +35,19 @@ public class ManageParticipantsController implements Initializable {
     @FXML private Button addParticipantButton;
 
     private ObservableList<Participant> participants;
-    private ParticipantService participantService; // Business layer
+    private ParticipantService participantService;
+    private String currentOfficerId = "PO00001"; // This should come from your authentication system
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.participantService = new ParticipantService(); // Initialize service
+        // Pass the officer ID to the service
+        this.participantService = new ParticipantService(currentOfficerId);
         setupTable();
-        loadParticipants(); // Load data through service
+        loadParticipants(); // This will now load only participants from this officer's cases
     }
 
     private void setupTable() {
-        // UI configuration only
+        // Configure cell value factories
         idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         roleColumn.setCellValueFactory(cellData -> cellData.getValue().roleProperty());
@@ -53,14 +55,48 @@ public class ManageParticipantsController implements Initializable {
         idTypeColumn.setCellValueFactory(cellData -> cellData.getValue().idTypeProperty());
         idNumberColumn.setCellValueFactory(cellData -> cellData.getValue().idNumberProperty());
 
-        participantsTable.setStyle("-fx-font-size: 14px;");
+        // Style the entire table
+        participantsTable.setStyle("-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-width: 1; -fx-border-radius: 6;");
+        participantsTable.setPrefHeight(400);
 
-        // Actions column with edit button (UI only)
+        // Remove grid lines
+        participantsTable.setStyle("-fx-table-cell-border-color: transparent; -fx-background-color: white;");
+
+        // Style columns
+        styleColumn(idColumn);
+        styleColumn(nameColumn);
+        styleColumn(contactColumn);
+        styleColumn(idTypeColumn);
+        styleColumn(idNumberColumn);
+        styleColumn(actionsColumn);
+
+        // Special styling for role column - updated for database roles
+        roleColumn.setCellFactory(column -> new TableCell<Participant, String>() {
+            @Override
+            protected void updateItem(String role, boolean empty) {
+                super.updateItem(role, empty);
+                if (empty || role == null) {
+                    setText(null);
+                    setStyle("-fx-background-color: transparent; -fx-alignment: center; -fx-padding: 8;");
+                } else {
+                    setText(role);
+                    if ("Suspect".equalsIgnoreCase(role)) {
+                        setStyle("-fx-background-color: #fef2f2; -fx-text-fill: #991b1b; -fx-background-radius: 12; -fx-padding: 4 8; -fx-font-size: 12px; -fx-alignment: center; -fx-font-weight: bold; -fx-border-color: #fecaca; -fx-border-width: 1;");
+                    } else if ("Victim".equalsIgnoreCase(role)) {
+                        setStyle("-fx-background-color: #dbeafe; -fx-text-fill: #1e40af; -fx-background-radius: 12; -fx-padding: 4 8; -fx-font-size: 12px; -fx-alignment: center; -fx-font-weight: bold; -fx-border-color: #93c5fd; -fx-border-width: 1;");
+                    } else {
+                        setStyle("-fx-background-color: #f3f4f6; -fx-text-fill: #374151; -fx-background-radius: 12; -fx-padding: 4 8; -fx-font-size: 12px; -fx-alignment: center; -fx-font-weight: bold;");
+                    }
+                }
+            }
+        });
+
+        // Actions column
         actionsColumn.setCellFactory(param -> new TableCell<Participant, String>() {
             private final Button editButton = new Button("Edit");
 
             {
-                editButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #001440; -fx-border-color: #001440; -fx-border-radius: 4; -fx-padding: 4 8; -fx-font-size: 12px;");
+                editButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #001440; -fx-border-color: #001440; -fx-border-radius: 4; -fx-padding: 4 12; -fx-font-size: 12px; -fx-cursor: hand;");
                 editButton.setOnAction(event -> {
                     Participant participant = getTableView().getItems().get(getIndex());
                     handleEditParticipant(participant);
@@ -72,33 +108,47 @@ public class ManageParticipantsController implements Initializable {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
+                    setStyle("-fx-alignment: center; -fx-padding: 8;");
                 } else {
                     setGraphic(editButton);
+                    setStyle("-fx-alignment: center; -fx-padding: 8;");
                 }
             }
         });
 
-        // Style role column cells with badges (UI only)
-        roleColumn.setCellFactory(column -> new TableCell<Participant, String>() {
+        // Add row factory for alternating colors
+        participantsTable.setRowFactory(tv -> new TableRow<Participant>() {
             @Override
-            protected void updateItem(String role, boolean empty) {
-                super.updateItem(role, empty);
-                if (empty || role == null) {
-                    setText(null);
-                    setStyle("");
+            protected void updateItem(Participant item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("-fx-background-color: white; -fx-border-color: #f1f5f9; -fx-border-width: 0 0 1 0;");
                 } else {
-                    setText(role);
-                    // UI styling logic
-                    switch (role) {
-                        case "Suspect":
-                            setStyle("-fx-background-color: #fef2f2; -fx-text-fill: #991b1b; -fx-background-radius: 12; -fx-padding: 4 8; -fx-font-size: 12px; -fx-alignment: center;");
-                            break;
-                        case "Victim":
-                            setStyle("-fx-background-color: #dbeafe; -fx-text-fill: #1e40af; -fx-background-radius: 12; -fx-padding: 4 8; -fx-font-size: 12px; -fx-alignment: center;");
-                            break;
-                        case "Witness":
-                            setStyle("-fx-background-color: #f3f4f6; -fx-text-fill: #374151; -fx-background-radius: 12; -fx-padding: 4 8; -fx-font-size: 12px; -fx-alignment: center;");
-                            break;
+                    if (getIndex() % 2 == 0) {
+                        setStyle("-fx-background-color: #fafafa; -fx-border-color: #f1f5f9; -fx-border-width: 0 0 1 0;");
+                    } else {
+                        setStyle("-fx-background-color: white; -fx-border-color: #f1f5f9; -fx-border-width: 0 0 1 0;");
+                    }
+                }
+            }
+        });
+    }
+
+    private void styleColumn(TableColumn<Participant, String> column) {
+        column.setStyle("-fx-alignment: CENTER_LEFT; -fx-font-size: 14px; -fx-text-fill: #374151;");
+        column.setCellFactory(tc -> new TableCell<Participant, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("-fx-background-color: transparent; -fx-padding: 8;");
+                } else {
+                    setText(item);
+                    if (column == idColumn) {
+                        setStyle("-fx-background-color: transparent; -fx-padding: 8; -fx-font-weight: bold; -fx-text-fill: #001440;");
+                    } else {
+                        setStyle("-fx-background-color: transparent; -fx-padding: 8;");
                     }
                 }
             }
@@ -107,24 +157,29 @@ public class ManageParticipantsController implements Initializable {
 
     private void loadParticipants() {
         try {
-            // Delegate to business layer
             java.util.List<Participant> participantList = participantService.getAllParticipants();
             participants = FXCollections.observableArrayList(participantList);
             participantsTable.setItems(participants);
+
+            System.out.println("Loaded " + participants.size() + " participants for officer: " + currentOfficerId);
+
         } catch (Exception e) {
             showErrorAlert("Failed to load participants: " + e.getMessage());
+            e.printStackTrace(); // Add this to see detailed error
         }
     }
+
+    // REMOVED addSampleData() method - no more dummy data
 
     @FXML
     private void handleAddParticipant() {
         try {
-            // UI navigation only
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/police/addParticipant.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/addParticipant.fxml"));
             Parent root = loader.load();
 
             AddParticipantController controller = loader.getController();
             controller.setMainController(this);
+            controller.setCurrentOfficerId(currentOfficerId); // Pass officer ID to add controller
 
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -136,19 +191,20 @@ public class ManageParticipantsController implements Initializable {
 
         } catch (Exception e) {
             showErrorAlert("Cannot open participant form: " + e.getMessage());
+            e.printStackTrace(); // Add this to see detailed error
         }
     }
 
     @FXML
     private void handleEditParticipant(Participant participant) {
         try {
-            // UI navigation only
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/police/editParticipant.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/editParticipant.fxml"));
             Parent root = loader.load();
 
             EditParticipantController controller = loader.getController();
             controller.setMainController(this);
             controller.setParticipantData(participant);
+            //controller.setCurrentOfficerId(currentOfficerId); // Pass officer ID to edit controller
 
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -160,16 +216,15 @@ public class ManageParticipantsController implements Initializable {
 
         } catch (Exception e) {
             showErrorAlert("Cannot open edit form: " + e.getMessage());
+            e.printStackTrace(); // Add this to see detailed error
         }
     }
 
     @FXML
     private void handleBackToDashboard() {
         // UI navigation only
-        // Main.getSceneManager().showDashboard();
     }
 
-    // UI methods only
     public void showSuccessAlert(String message) {
         successMessageLabel.setText(message);
         successAlert.setVisible(true);
@@ -193,12 +248,10 @@ public class ManageParticipantsController implements Initializable {
         alert.showAndWait();
     }
 
-    // Called by child dialogs
     public void addNewParticipant(Participant participant) {
         try {
-            // Delegate to business layer
             participantService.addParticipant(participant);
-            loadParticipants(); // Refresh UI
+            loadParticipants();
             showSuccessAlert("Participant added successfully!");
         } catch (BusinessException e) {
             showErrorAlert(e.getMessage());
@@ -207,9 +260,8 @@ public class ManageParticipantsController implements Initializable {
 
     public void updateParticipant(Participant updatedParticipant) {
         try {
-            // Delegate to business layer
             participantService.updateParticipant(updatedParticipant);
-            loadParticipants(); // Refresh UI
+            loadParticipants();
             showSuccessAlert("Participant updated successfully!");
         } catch (BusinessException e) {
             showErrorAlert(e.getMessage());
@@ -218,5 +270,18 @@ public class ManageParticipantsController implements Initializable {
 
     public ObservableList<Participant> getParticipants() {
         return participants;
+    }
+
+    // Getter for officer ID
+    public String getCurrentOfficerId() {
+        return currentOfficerId;
+    }
+
+    // Setter for officer ID (if you need to change it dynamically)
+    public void setCurrentOfficerId(String currentOfficerId) {
+        this.currentOfficerId = currentOfficerId;
+        // Re-initialize service with new officer ID
+        this.participantService = new ParticipantService(currentOfficerId);
+        loadParticipants(); // Reload data for the new officer
     }
 }

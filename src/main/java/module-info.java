@@ -28,10 +28,10 @@ module com.fcms {
     opens com.fcms.controllers.systemAdmin to javafx.fxml;
     exports com.fcms.controllers.components;
     opens com.fcms.controllers.components to javafx.fxml;
+    opens com.fcms.controllers.auth to javafx.fxml;
+    exports com.fcms.controllers.auth;
     opens com.fcms.services to javafx.fxml;
     opens com.fcms.repositories to javafx.fxml;
     exports com.fcms.database;
     opens com.fcms.database to javafx.fxml;
-    exports com.fcms.models.users;
-    opens com.fcms.models.users to javafx.fxml;
 }

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" styleClass="root" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.policeOfficer.AddEvidenceController">
+
+    <VBox spacing="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+        <!-- Header -->
+        <HBox styleClass="header" style="-fx-padding: 16 32;">
+            <Button styleClass="view-button" text="← Back to Dashboard" />
+            <VBox HBox.hgrow="ALWAYS">
+                <Label styleClass="header-title" text="Add Evidence" />
+                <Label styleClass="header-subtitle" text="Log evidence for case investigation" />
+            </VBox>
+        </HBox>
+
+        <!-- Main Content -->
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+            <VBox spacing="24.0" style="-fx-padding: 32;">
+
+                <!-- Selected Case Banner -->
+                <VBox styleClass="card" style="-fx-background-color: #e9ebef; -fx-border-color: #001440; -fx-border-width: 1;">
+                    <Label fx:id="selectedCaseLabel" styleClass="value-label" style="-fx-font-size: 14px; -fx-text-fill: #001440;" />
+                </VBox>
+
+                <HBox spacing="24.0">
+
+                    <!-- Left Column - Add Evidence Form -->
+                    <VBox spacing="24.0" HBox.hgrow="ALWAYS">
+
+                        <!-- Add Evidence Form Card -->
+                        <VBox styleClass="card">
+                            <Label styleClass="title-label" text="Log New Evidence" />
+
+                            <VBox spacing="16.0" style="-fx-padding: 16 0 0 0;">
+
+                                <!-- Evidence Type -->
+                                <VBox spacing="8.0">
+                                    <Label styleClass="form-label" text="Evidence Type *" />
+                                    <ComboBox fx:id="evidenceTypeCombo" promptText="Select evidence type" styleClass="filter-combo" />
+                                </VBox>
+
+                                <!-- Description -->
+                                <VBox spacing="8.0">
+                                    <Label styleClass="form-label" text="Description *" />
+                                    <TextArea fx:id="descriptionArea" styleClass="form-textarea" promptText="Detailed description of the evidence" prefRowCount="4" wrapText="true" />
+                                </VBox>
+
+                                <!-- Collection Date and Time -->
+                                <HBox spacing="12.0">
+                                    <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="form-label" text="Collection Date *" />
+                                        <DatePicker fx:id="collectionDatePicker" styleClass="filter-combo" />
+                                    </VBox>
+                                    <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="form-label" text="Collection Time *" />
+                                        <TextField fx:id="collectionTimeField" styleClass="search-field" promptText="HH:MM" />
+                                    </VBox>
+                                </HBox>
+
+                                <!-- Collection Location -->
+                                <VBox spacing="8.0">
+                                    <Label styleClass="form-label" text="Collection Location *" />
+                                    <TextField fx:id="locationField" styleClass="search-field" promptText="Where the evidence was collected" />
+                                </VBox>
+
+                                <!-- File Upload -->
+                                <VBox spacing="8.0">
+                                    <Label styleClass="form-label" text="File Upload" />
+                                    <VBox style="-fx-border-color: #d1d5db; -fx-border-style: dashed; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 24; -fx-alignment: center;">
+                                        <Label text="📎" style="-fx-font-size: 24; -fx-text-fill: #9ca3af;" />
+                                        <Label text="Click to upload or drag and drop" style="-fx-text-fill: #6b7280; -fx-font-size: 13px; -fx-padding: 8 0 4 0;" />
+                                        <Label text="PDF, Images, Videos (MAX. 50MB)" style="-fx-text-fill: #9ca3af; -fx-font-size: 11px;" />
+                                        <Button fx:id="fileUploadButton" styleClass="secondary-button" text="Choose File" style="-fx-margin: 16 0 0 0;" />
+                                        <Label fx:id="fileNameLabel" style="-fx-font-size: 13px; -fx-padding: 8 0 0 0;" />
+                                    </VBox>
+                                </VBox>
+
+                                <!-- Action Buttons -->
+                                <HBox spacing="12.0" style="-fx-padding: 16 0 0 0;">
+                                    <Button fx:id="saveButton" styleClass="action-button" text="Save Evidence" />
+                                    <Button fx:id="cancelButton" styleClass="secondary-button" text="Cancel" />
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Right Column - Existing Evidence -->
+                    <VBox spacing="16.0" prefWidth="400.0">
+                        <VBox styleClass="card">
+                            <Label styleClass="title-label" text="Existing Evidence" />
+                            <ListView fx:id="existingEvidenceList" style="-fx-background-color: transparent; -fx-border-color: transparent;" />
+                        </VBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </VBox>
+</AnchorPane>

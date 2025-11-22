@@ -1,6 +1,7 @@
 package com.fcms.controllers.forensicExpert;
 
 import com.fcms.models.ForensicRequest;
+import com.fcms.models.UserSession; // Add this import
 import com.fcms.services.ForensicRequestService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -20,7 +21,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -29,11 +29,12 @@ public class ExpertDashboardController implements Initializable {
 
     @FXML private TableView<ForensicRequest> requestsTable;
     @FXML private TableColumn<ForensicRequest, String> requestIdColumn;
-    @FXML private TableColumn<ForensicRequest, String> caseIdColumn;
+    @FXML private TableColumn<ForensicRequest, String> evidenceIdColumn;
     @FXML private TableColumn<ForensicRequest, String> evidenceTypeColumn;
     @FXML private TableColumn<ForensicRequest, String> requestedByColumn;
     @FXML private TableColumn<ForensicRequest, String> dateColumn;
     @FXML private TableColumn<ForensicRequest, String> statusColumn;
+    @FXML private TableColumn<ForensicRequest, String> priorityColumn;
     @FXML private TableColumn<ForensicRequest, Void> actionsColumn;
 
     @FXML private TextField searchField;
@@ -44,13 +45,34 @@ public class ExpertDashboardController implements Initializable {
     @FXML private Label completedCountLabel;
     @FXML private Label totalCountLabel;
 
+    @FXML private Label welcomeLabel; // Add this to show logged-in user info
+    @FXML private Label userRoleLabel; // Add this to show user role
+
     private ObservableList<ForensicRequest> allRequests = FXCollections.observableArrayList();
     private FilteredList<ForensicRequest> filteredRequests;
     private ForensicRequestService requestService;
+    private UserSession userSession; // Add UserSession reference
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.requestService = new ForensicRequestService();
+        // Get the current user session
+        userSession = UserSession.getInstance();
+
+        // Validate that user is logged in and is a forensic expert
+        if (!userSession.isLoggedIn() || !userSession.isForensicExpert()) {
+            showAlert("Access Denied", "You must be logged in as a Forensic Expert to access this dashboard.");
+            return;
+        }
+
+        String currentUserId = userSession.getUserID();
+        System.out.println("DEBUG: Initializing Expert Dashboard for user: " + currentUserId);
+
+        // Use the actual logged-in user ID instead of hardcoded value
+        this.requestService = new ForensicRequestService(currentUserId);
+
+        // Display user information
+        //displayUserInfo();
+
         initializeData();
         initializeTable();
         initializeFilters();
@@ -60,36 +82,12 @@ public class ExpertDashboardController implements Initializable {
 
     private void initializeData() {
         try {
-            // Load data from service layer
+            // Load data from service layer - service talks to repo which gets from DB
             allRequests.setAll(requestService.getAllRequests());
         } catch (Exception e) {
             showAlert("Error", "Failed to load requests: " + e.getMessage());
-            // Fallback to sample data if service fails
-            initializeSampleData();
+            e.printStackTrace();
         }
-    }
-
-    private void initializeSampleData() {
-        // Sample data using the updated ForensicRequest model
-        allRequests.addAll(
-                new ForensicRequest("1", "FR-001", "CASE-4521", "DNA", "Det. Sarah Johnson",
-                        LocalDate.of(2025, 11, 8), "Pending", "Blood sample", "DNA Analysis", "High"),
-                new ForensicRequest("2", "FR-002", "CASE-4518", "Fingerprint", "Det. Michael Chen",
-                        LocalDate.of(2025, 11, 7), "In Progress", "Latent prints", "Fingerprint Analysis", "Urgent"),
-                new ForensicRequest("3", "FR-003", "CASE-4522", "Ballistics", "Det. Emily Rodriguez",
-                        LocalDate.of(2025, 11, 9), "Pending", "9mm bullet", "Ballistics Analysis", "Normal"),
-                new ForensicRequest("4", "FR-004", "CASE-4515", "Toxicology", "Det. James Wilson",
-                        LocalDate.of(2025, 11, 5), "Completed", "Blood samples", "Toxicology Screening", "Normal"),
-                new ForensicRequest("5", "FR-005", "CASE-4520", "Digital", "Det. Sarah Johnson",
-                        LocalDate.of(2025, 11, 6), "In Progress", "Mobile device", "Digital Forensics", "High")
-        );
-
-        // Add sample evidence IDs
-        allRequests.get(0).setEvidenceIds(java.util.List.of("EV-001", "EV-002"));
-        allRequests.get(1).setEvidenceIds(java.util.List.of("EV-003"));
-        allRequests.get(2).setEvidenceIds(java.util.List.of("EV-004", "EV-005"));
-        allRequests.get(3).setEvidenceIds(java.util.List.of("EV-006"));
-        allRequests.get(4).setEvidenceIds(java.util.List.of("EV-007", "EV-008", "EV-009"));
     }
 
     private void initializeTable() {
@@ -97,20 +95,23 @@ public class ExpertDashboardController implements Initializable {
         requestIdColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getRequestId()));
 
-        caseIdColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getCaseId()));
+        evidenceIdColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getEvidenceId()));
 
         evidenceTypeColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getAnalysisType()));
+                new SimpleStringProperty(cellData.getValue().getEvidenceType()));
 
         requestedByColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getRequestedBy()));
 
         dateColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDate().format(DateTimeFormatter.ofPattern("MMM d, yyyy"))));
+                new SimpleStringProperty(cellData.getValue().getRequestedDate().format(DateTimeFormatter.ofPattern("MMM d, yyyy"))));
 
         statusColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getStatus()));
+
+        priorityColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getPriority()));
 
         // Status column with styling
         statusColumn.setCellFactory(column -> new TableCell<ForensicRequest, String>() {
@@ -127,19 +128,15 @@ public class ExpertDashboardController implements Initializable {
                     statusLabel.getStyleClass().clear();
                     statusLabel.getStyleClass().add("status-badge");
 
-                    switch (item) {
-                        case "Pending":
+                    switch (item.toLowerCase()) {
+                        case "pending":
                             statusLabel.getStyleClass().add("status-pending");
                             break;
-                        case "In Progress":
-                            statusLabel.getStyleClass().add("status-in-progress");
-                            break;
-                        case "Completed":
+                        case "completed":
                             statusLabel.getStyleClass().add("status-completed");
                             break;
-                        case "Cancelled":
-                            statusLabel.getStyleClass().add("status-cancelled");
-                            break;
+                        default:
+                            statusLabel.getStyleClass().add("status-pending");
                     }
                     setGraphic(statusLabel);
                     setText(null);
@@ -177,7 +174,7 @@ public class ExpertDashboardController implements Initializable {
                             actionButton.setText("View Report");
                             actionButton.getStyleClass().setAll("view-button");
                             actionButton.setDisable(false);
-                        } else if (request.isInProgress() || request.isPending()) {
+                        } else if (request.isPending()) {
                             actionButton.setText("Upload Report");
                             actionButton.getStyleClass().setAll("action-button");
                             actionButton.setDisable(false);
@@ -204,7 +201,7 @@ public class ExpertDashboardController implements Initializable {
     private void initializeFilters() {
         // Status filter
         statusFilter.setItems(FXCollections.observableArrayList(
-                "All Status", "Pending", "In Progress", "Completed", "Cancelled"
+                "All Status", "pending", "completed"
         ));
         statusFilter.setValue("All Status");
 
@@ -240,11 +237,10 @@ public class ExpertDashboardController implements Initializable {
                 String lowerCaseFilter = searchText.toLowerCase();
                 boolean matchesSearch =
                         request.getRequestId().toLowerCase().contains(lowerCaseFilter) ||
-                                request.getCaseId().toLowerCase().contains(lowerCaseFilter) ||
-                                request.getAnalysisType().toLowerCase().contains(lowerCaseFilter) ||
+                                request.getEvidenceId().toLowerCase().contains(lowerCaseFilter) ||
+                                request.getEvidenceType().toLowerCase().contains(lowerCaseFilter) ||
                                 request.getRequestedBy().toLowerCase().contains(lowerCaseFilter) ||
-                                (request.getEvidenceDetails() != null &&
-                                        request.getEvidenceDetails().toLowerCase().contains(lowerCaseFilter));
+                                request.getAnalysisType().toLowerCase().contains(lowerCaseFilter);
 
                 if (!matchesSearch) {
                     return false;
@@ -264,11 +260,11 @@ public class ExpertDashboardController implements Initializable {
 
     private void updateStats() {
         try {
-            // Use filtered data for statistics
-            long pendingCount = filteredRequests.stream().filter(req -> req.isPending()).count();
-            long inProgressCount = filteredRequests.stream().filter(req -> req.isInProgress()).count();
-            long completedCount = filteredRequests.stream().filter(req -> req.isCompleted()).count();
-            long totalCount = filteredRequests.size();
+            // Get counts from SERVICE, not from filtered list
+            int pendingCount = requestService.getPendingCount();
+            int inProgressCount = 0;
+            int completedCount = requestService.getCompletedCount();
+            int totalCount = requestService.getTotalCount();
 
             pendingCountLabel.setText(String.valueOf(pendingCount));
             inProgressCountLabel.setText(String.valueOf(inProgressCount));
@@ -276,6 +272,12 @@ public class ExpertDashboardController implements Initializable {
             totalCountLabel.setText(String.valueOf(totalCount));
         } catch (Exception e) {
             showAlert("Error", "Failed to update statistics: " + e.getMessage());
+            e.printStackTrace();
+            // Set default values
+            pendingCountLabel.setText("0");
+            inProgressCountLabel.setText("0");
+            completedCountLabel.setText("0");
+            totalCountLabel.setText("0");
         }
     }
 
@@ -283,7 +285,7 @@ public class ExpertDashboardController implements Initializable {
         try {
             if (request.isCompleted()) {
                 viewReport(request);
-            } else if (request.isInProgress() || request.isPending()) {
+            } else if (request.isPending()) {
                 uploadReport(request);
             } else {
                 showAlert("Information", "No action available for " + request.getStatus() + " requests");
@@ -295,7 +297,7 @@ public class ExpertDashboardController implements Initializable {
 
     private void uploadReport(ForensicRequest request) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/expert/uploadReport.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/forensicExpert/uploadReport.fxml"));
             Parent root = loader.load();
 
             UploadReportController controller = loader.getController();
@@ -330,7 +332,7 @@ public class ExpertDashboardController implements Initializable {
     private void viewReport(ForensicRequest request) {
         showAlert("View Report",
                 "Viewing report for: " + request.getRequestId() +
-                        "\nCase: " + request.getCaseId() +
+                        "\nEvidence: " + request.getEvidenceId() +
                         "\nAnalysis Type: " + request.getAnalysisType() +
                         "\nStatus: " + request.getStatus());
     }
@@ -347,6 +349,7 @@ public class ExpertDashboardController implements Initializable {
     @FXML
     private void handleRefresh() {
         refreshData();
+        updateStats();
         showAlert("Refresh", "Data refreshed successfully");
     }
 
