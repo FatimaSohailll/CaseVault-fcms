@@ -49,7 +49,10 @@
         <Pane fx:id="closeCaseIcon"/>
         <Button fx:id="closeCaseBtn" text="Close Case" onAction="#handleCloseCase" styleClass="nav-btn"/>
     </HBox>
-
+    <HBox fx:id="searchCasesRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="searchCasesIcon"/>
+        <Button fx:id="searchCasesBtn" text="Search and Filter Cases" onAction="#handleSearchCases" styleClass="nav-btn"/>
+    </HBox>
     <HBox fx:id="submitToCourtRow" spacing="10" styleClass="nav-row">
         <Pane fx:id="submitToCourtIcon"/>
         <Button fx:id="submitToCourtBtn" text="Submit to Court" onAction="#handleSubmitToCourt" styleClass="nav-btn"/>
