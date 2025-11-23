@@ -34,7 +34,7 @@ public class SignupService {
             String userID = userRepository.getNextUserID(role);
 
             // Start transaction (simulated with multiple repository calls)
-            boolean userSaved = userRepository.saveUser(userID, username, email, fullName, password, role, "A00001", false);
+            boolean userSaved = userRepository.saveUser(userID, username, email, fullName, password, role, "A00001", true);
 
             if (userSaved) {
                 boolean roleDataSaved = saveRoleSpecificData(userID, role, roleSpecificData);

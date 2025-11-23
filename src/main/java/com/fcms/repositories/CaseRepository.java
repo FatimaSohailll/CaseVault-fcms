@@ -327,4 +327,35 @@ public class CaseRepository {
         }
     }
 
+    public List<Case> getCasesByOfficer(String officerId) {
+        List<Case> cases = new ArrayList<>();
+        String query = "SELECT caseID, title, type, assignedOfficer, location, dateRegistered, status, priority FROM CaseFile WHERE assignedOfficer = ?";
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, officerId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Case c = new Case();
+                    c.setId(rs.getString("caseID"));
+                    c.setTitle(rs.getString("title"));
+                    c.setType(rs.getString("type"));
+                    c.setAssignedOfficer(rs.getString("assignedOfficer"));
+                    c.setLocation(rs.getString("location"));
+
+                    String dr = rs.getString("dateRegistered");
+                    c.setDateRegistered(dr != null ? LocalDate.parse(dr) : null);
+
+                    c.setStatus(rs.getString("status"));
+                    c.setPriority(rs.getString("priority"));
+                    cases.add(c);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error fetching cases for officer: " + officerId, e);
+        }
+        return cases;
+    }
 }

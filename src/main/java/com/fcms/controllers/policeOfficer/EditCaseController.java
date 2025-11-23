@@ -13,6 +13,13 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -132,23 +139,21 @@ public class EditCaseController {
         if (evidence == null || evidence.isEmpty()) {
             // Row showing "No evidence linked" plus an Edit button
             HBox row = new HBox(8);
-            row.getStyleClass().add("list-item");
+            row.setStyle("-fx-padding: 12; -fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-radius: 6;");
 
             Label none = new Label("No evidence linked");
-            none.getStyleClass().add("placeholder-text");
+            none.setStyle("-fx-text-fill: #6b7280; -fx-font-style: italic;");
 
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            Button editBtn = new Button("Edit");
-            // Force visible and clickable while debugging; remove inline style later if desired
-            editBtn.setStyle("-fx-opacity:1; -fx-min-width:64; -fx-min-height:28;");
-            editBtn.getStyleClass().add("primary-btn");
+            Button editBtn = new Button("Manage Evidence");
+            editBtn.setStyle("-fx-background-color: #2563eb; -fx-text-fill: white; -fx-font-weight: bold; -fx-min-width: 120; -fx-min-height: 32;");
             editBtn.setDisable(!editable);
 
             editBtn.setOnAction(evt -> {
-                System.out.println("Edit evidence (empty) clicked for case: " + (caseToEdit == null ? "null" : caseToEdit.getId()));
-                showAlert(Alert.AlertType.INFORMATION, "Not implemented", "Can't open edit page for evidence yet.");
+                System.out.println("Manage evidence clicked for case: " + (caseToEdit == null ? "null" : caseToEdit.getId()));
+                openAddEvidenceDialog();
             });
 
             row.getChildren().addAll(none, spacer, editBtn);
@@ -159,32 +164,97 @@ public class EditCaseController {
 
         for (Evidence ev : evidence) {
             HBox row = new HBox(8);
-            row.getStyleClass().add("list-item");
+            row.setStyle("-fx-padding: 12; -fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-radius: 6;");
 
             VBox left = new VBox(2);
             Label title = new Label(safe(ev.getId()) + " — " + safe(ev.getDescription()));
-            title.getStyleClass().add("item-title");
+            title.setStyle("-fx-text-fill: #001440; -fx-font-size: 14px; -fx-font-weight: bold;");
             Label meta = new Label("Collected: " + safe(String.valueOf(ev.getCollectionDateTime())) + " • " + safe(ev.getLocation()));
-            meta.getStyleClass().add("item-meta");
+            meta.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 12px;");
             left.getChildren().addAll(title, meta);
 
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            Button editBtn = new Button("Edit");
-            editBtn.setStyle("-fx-opacity:1; -fx-min-width:64; -fx-min-height:28;");
-            editBtn.getStyleClass().add("primary-btn");
+            Button editBtn = new Button("Manage Evidence");
+            editBtn.setStyle("-fx-background-color: #001440; -fx-text-fill: white; -fx-font-weight: bold; -fx-min-width: 120; -fx-min-height: 32;");
             editBtn.setDisable(!editable);
 
             editBtn.setOnAction(evt -> {
                 System.out.println("Edit evidence clicked: " + safe(ev.getId()));
-                showAlert(Alert.AlertType.INFORMATION, "Not implemented", "Can't open edit page for evidence yet.");
+                openAddEvidenceDialog();
             });
 
             row.getChildren().addAll(left, spacer, editBtn);
             evidenceContainer.getChildren().add(row);
         }
         System.out.println("evidenceContainer children after populate: " + evidenceContainer.getChildren().size());
+    }
+
+    /**
+     * Opens the Add Evidence page in a new dialog window
+     */
+    private void openAddEvidenceDialog() {
+        try {
+            System.out.println("Opening Add Evidence dialog for case: " + (caseToEdit == null ? "null" : caseToEdit.getId()));
+
+            // Load the FXML for add evidence
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/addEvidence.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller and pass the current case
+            Object controller = loader.getController();
+            if (controller instanceof AddEvidenceController) {
+                AddEvidenceController evidenceController = (AddEvidenceController) controller;
+                evidenceController.setSelectedCase(caseToEdit);
+                    refreshEvidenceList();
+            }
+
+            // Create and setup the dialog stage
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Manage Evidence - Case: " + (caseToEdit != null ? caseToEdit.getId() : "Unknown"));
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(caseIdField.getScene().getWindow());
+            dialogStage.initStyle(StageStyle.DECORATED);
+
+            Scene scene = new Scene(root);
+
+            // Apply stylesheet to the Scene
+            try {
+                scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
+            } catch (Exception e) {
+                System.out.println("Could not load global.css: " + e.getMessage());
+            }
+
+            dialogStage.setScene(scene);
+
+            // Set reasonable size
+            dialogStage.setMinWidth(500);
+            dialogStage.setMinHeight(500);
+            dialogStage.setResizable(true);
+
+            // Show the dialog and wait for it to close
+            dialogStage.showAndWait();
+
+            // Refresh the evidence list after the dialog closes
+            refreshEvidenceList();
+
+        } catch (Exception e) {
+            System.err.println("Error opening Add Evidence dialog: " + e.getMessage());
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open Evidence management: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Refreshes the evidence list after changes
+     */
+    private void refreshEvidenceList() {
+        if (caseToEdit != null) {
+            System.out.println("Refreshing evidence list for case: " + caseToEdit.getId());
+            List<Evidence> updatedEvidence = caseService.getEvidenceForCase(caseToEdit.getId());
+            populateEvidence(updatedEvidence);
+        }
     }
 
     private void populateParticipants(List<Participant> participants) {
@@ -206,17 +276,6 @@ public class EditCaseController {
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            Button editBtn = new Button("Edit");
-            editBtn.setStyle("-fx-opacity:1; -fx-min-width:64; -fx-min-height:28;");
-            editBtn.getStyleClass().add("primary-btn");
-            editBtn.setDisable(!editable);
-
-            editBtn.setOnAction(evt -> {
-                System.out.println("Edit participant (empty) clicked for case: " + (caseToEdit == null ? "null" : caseToEdit.getId()));
-                showAlert(Alert.AlertType.INFORMATION, "Not implemented", "Can't open edit page for participant yet.");
-            });
-
-            row.getChildren().addAll(none, spacer, editBtn);
             participantsContainer.getChildren().add(row);
             System.out.println("Added empty-participant row with Edit button");
             return;

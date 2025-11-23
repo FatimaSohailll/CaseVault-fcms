@@ -4,13 +4,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" styleClass="root" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.policeOfficer.AddEvidenceController">
-
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" styleClass="root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.policeOfficer.AddEvidenceController">
     <VBox spacing="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <!-- Header -->
         <HBox styleClass="header" style="-fx-padding: 16 32;">
-            <Button styleClass="view-button" text="← Back to Dashboard" />
             <VBox HBox.hgrow="ALWAYS">
                 <Label styleClass="header-title" text="Add Evidence" />
                 <Label styleClass="header-subtitle" text="Log evidence for case investigation" />
@@ -89,7 +87,7 @@
                     </VBox>
 
                     <!-- Right Column - Existing Evidence -->
-                    <VBox spacing="16.0" prefWidth="400.0">
+                    <VBox spacing="16.0" prefWidth="400.0" prefHeight="800">
                         <VBox styleClass="card">
                             <Label styleClass="title-label" text="Existing Evidence" />
                             <ListView fx:id="existingEvidenceList" style="-fx-background-color: transparent; -fx-border-color: transparent;" />
