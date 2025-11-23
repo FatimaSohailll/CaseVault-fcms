@@ -6,7 +6,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ForensicRequestRepository {
     private String expertId;
@@ -64,7 +63,10 @@ public class ForensicRequestRepository {
     }
 
     public List<ForensicRequest> findAll() throws SQLException {
-        String sql = "SELECT * FROM ForensicRequest WHERE expertID = ?";
+        String sql = "SELECT fr.*, ua.name as officerName " +
+                "FROM ForensicRequest fr " +
+                "LEFT JOIN UserAccount ua ON fr.requestedBy = ua.userID " +
+                "WHERE fr.expertID = ?";
         List<ForensicRequest> requests = new ArrayList<>();
 
         try (Connection conn = SQLiteDatabase.getConnection();
@@ -81,7 +83,10 @@ public class ForensicRequestRepository {
     }
 
     public ForensicRequest findById(String requestId) throws SQLException {
-        String sql = "SELECT * FROM ForensicRequest WHERE requestID = ? AND expertID = ?";
+        String sql = "SELECT fr.*, ua.name as officerName " +
+                "FROM ForensicRequest fr " +
+                "LEFT JOIN UserAccount ua ON fr.requestedBy = ua.userID " +
+                "WHERE fr.requestID = ? AND fr.expertID = ?";
 
         try (Connection conn = SQLiteDatabase.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -98,7 +103,10 @@ public class ForensicRequestRepository {
     }
 
     public List<ForensicRequest> findByStatus(String status) throws SQLException {
-        String sql = "SELECT * FROM ForensicRequest WHERE status = ? AND expertID = ?";
+        String sql = "SELECT fr.*, ua.name as officerName " +
+                "FROM ForensicRequest fr " +
+                "LEFT JOIN UserAccount ua ON fr.requestedBy = ua.userID " +
+                "WHERE fr.status = ? AND fr.expertID = ?";
         List<ForensicRequest> requests = new ArrayList<>();
 
         try (Connection conn = SQLiteDatabase.getConnection();
@@ -148,6 +156,22 @@ public class ForensicRequestRepository {
         }
     }
 
+    public int getUrgentCount() throws SQLException {
+        String sql = "SELECT COUNT(*) as count FROM ForensicRequest WHERE priority = 'Urgent' AND expertID = ?";
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, expertId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+            return 0;
+        }
+    }
+
     public int getTotalCount() throws SQLException {
         String sql = "SELECT COUNT(*) as count FROM ForensicRequest WHERE expertID = ?";
 
@@ -166,7 +190,10 @@ public class ForensicRequestRepository {
 
     // Method to get requests by expert ID (for service layer flexibility)
     public List<ForensicRequest> findByExpertId(String specificExpertId) throws SQLException {
-        String sql = "SELECT * FROM ForensicRequest WHERE expertID = ?";
+        String sql = "SELECT fr.*, ua.name as officerName " +
+                "FROM ForensicRequest fr " +
+                "LEFT JOIN UserAccount ua ON fr.requestedBy = ua.userID " +
+                "WHERE fr.expertID = ?";
         List<ForensicRequest> requests = new ArrayList<>();
 
         try (Connection conn = SQLiteDatabase.getConnection();
@@ -187,7 +214,7 @@ public class ForensicRequestRepository {
         request.setRequestId(rs.getString("requestID"));
         request.setExpertId(rs.getString("expertID"));
         request.setStatus(rs.getString("status"));
-        request.setRequestedBy(rs.getString("requestedBy"));
+        request.setRequestedBy("DET. "+rs.getString("officerName"));
         request.setEvidenceType(rs.getString("evidenceType"));
 
         // Handle date parsing safely
@@ -266,6 +293,7 @@ public class ForensicRequestRepository {
         long timestamp = System.currentTimeMillis() % 100000;
         return "FR" + String.format("%05d", timestamp);
     }
+
     // Getter for expert ID
     public String getExpertId() {
         return expertId;
@@ -275,5 +303,4 @@ public class ForensicRequestRepository {
     public void setExpertId(String expertId) {
         this.expertId = expertId;
     }
-
 }

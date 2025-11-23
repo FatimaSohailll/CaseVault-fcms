@@ -16,6 +16,15 @@ public class CaseService {
     private final EvidenceRepository evidenceRepository;
     private final ParticipantRepository participantRepository;
 
+    private String caseID;
+
+    public CaseService(String caseID) {
+        this.caseID = caseID;
+        this.caseRepository = new CaseRepository();
+        this.evidenceRepository = new EvidenceRepository();
+        this.participantRepository = new ParticipantRepository();
+    }
+
     public CaseService() {
         this.caseRepository = new CaseRepository();
         this.evidenceRepository = new EvidenceRepository();
@@ -33,13 +42,11 @@ public class CaseService {
 
     // ---------------- Case Management ----------------
     public void registerCase(Case newCase) {
-        // Persist case to DB
         caseRepository.save(newCase);
         System.out.println("Case registered: " + newCase.getTitle());
     }
 
     public List<Case> getAllCases() {
-        // Fetch all cases from DB
         return caseRepository.findAll();
     }
 
@@ -57,7 +64,6 @@ public class CaseService {
         System.out.println("Case " + caseId + " closed. Reason: " + reason);
         System.out.println("Final Report: " + report);
     }
-
 
     public void deleteCase(String caseId) {
         caseRepository.delete(caseId);
@@ -80,14 +86,32 @@ public class CaseService {
 
     // ---------------- Participant Management ----------------
     public void addParticipantToCase(String caseId, Participant participant) {
-        // Save participant
         participantRepository.save(participant);
         // TODO: also insert into CaseParticipants junction table
         System.out.println("Linked participant " + participant.getId() + " to case " + caseId);
     }
 
     public List<Participant> getParticipantsForCase(String caseId) {
-        // TODO: query CaseParticipants junction table
-        return participantRepository.findAll(); // placeholder
+        // TODO: Actually query junction table
+        return participantRepository.findAll();
     }
+
+    public void submitCaseToCourt(String caseId, String courtOfficialId) {
+        caseRepository.submitCaseToCourt(caseId, courtOfficialId);
+    }
+
+
+    /* ============================================================
+       NEW METHODS — USED BY SubmitToCourtController
+       ============================================================ */
+
+    public int countEvidenceForCase(String caseId) {
+        return caseRepository.countEvidence(caseId);
+    }
+
+    public int countForensicReportsForCase(String caseId) {
+        return caseRepository.countForensicReports(caseId);
+    }
+
+
 }

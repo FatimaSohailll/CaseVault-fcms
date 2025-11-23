@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import java.util.List;
+
 public class ManageCasesController {
 
     @FXML private VBox caseListContainer;

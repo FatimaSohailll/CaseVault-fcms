@@ -1,7 +1,7 @@
 package com.fcms.controllers.forensicExpert;
 
 import com.fcms.models.ForensicRequest;
-import com.fcms.models.UserSession; // Add this import
+import com.fcms.models.UserSession;
 import com.fcms.services.ForensicRequestService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -41,7 +41,7 @@ public class ExpertDashboardController implements Initializable {
     @FXML private ComboBox<String> statusFilter;
 
     @FXML private Label pendingCountLabel;
-    @FXML private Label inProgressCountLabel;
+    @FXML private Label urgentCountLabel;
     @FXML private Label completedCountLabel;
     @FXML private Label totalCountLabel;
 
@@ -262,12 +262,12 @@ public class ExpertDashboardController implements Initializable {
         try {
             // Get counts from SERVICE, not from filtered list
             int pendingCount = requestService.getPendingCount();
-            int inProgressCount = 0;
+            int urgentCount = requestService.getUrgentCount();
             int completedCount = requestService.getCompletedCount();
             int totalCount = requestService.getTotalCount();
 
             pendingCountLabel.setText(String.valueOf(pendingCount));
-            inProgressCountLabel.setText(String.valueOf(inProgressCount));
+            urgentCountLabel.setText(String.valueOf(urgentCount));
             completedCountLabel.setText(String.valueOf(completedCount));
             totalCountLabel.setText(String.valueOf(totalCount));
         } catch (Exception e) {
@@ -275,7 +275,7 @@ public class ExpertDashboardController implements Initializable {
             e.printStackTrace();
             // Set default values
             pendingCountLabel.setText("0");
-            inProgressCountLabel.setText("0");
+            urgentCountLabel.setText("0");
             completedCountLabel.setText("0");
             totalCountLabel.setText("0");
         }

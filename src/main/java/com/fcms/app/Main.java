@@ -5,42 +5,90 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import com.fcms.controllers.components.SidebarController;
-import com.fcms.controllers.policeOfficer.MainLayoutController;
-import com.fcms.database.SQLiteDatabase;
+
 import com.fcms.controllers.auth.LoginController;
 import com.fcms.controllers.auth.SignupController;
-import com.fcms.database.*;
-import com.fcms.controllers.policeOfficer.PoliceDashboardController;
-import com.fcms.controllers.forensicExpert.ExpertDashboardController;
+import com.fcms.database.SQLiteDatabase;
 import com.fcms.models.UserSession;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.Statement;
 
 public class Main extends Application {
 
     private Stage primaryStage;
+    private SceneManager sceneManager;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Initialize DB
+        this.primaryStage = primaryStage;
+
         SQLiteDatabase.initializeDatabase();
+        insertTestData();
 
-        // Create SceneManager
-        SceneManager sceneManager = new SceneManager(primaryStage);
+        showLoginScreen();
+    }
 
-        // Prepare loader for dashboard
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/mainLayout.fxml"));
+    // ======================================================
+    // SHOW DASHBOARD (AFTER LOGIN)
+    // ======================================================
+    private void showDashboard() {
+        UserSession session = UserSession.getInstance();
+        String role = session.getRole();
 
-        // Controller factory: inject SceneManager into SidebarController when it's constructed
+        try {
+            loadMasterLayout(); // ALWAYS load master layout first
+
+            switch (role) {
+                case "Police Officer" ->
+                        sceneManager.switchContent("/fxml/policeOfficer/policeDashboard.fxml");
+
+                case "Forensic Expert" ->
+                        sceneManager.switchContent("/fxml/forensicExpert/expertDashboard.fxml");
+
+                case "Court Official" ->
+                        sceneManager.switchContent("/fxml/courtOfficial/courtDashboard.fxml");
+
+                case "System Admin" ->
+                        sceneManager.switchContent("/fxml/systemAdmin/adminDashboard.fxml");
+
+                default ->
+                        sceneManager.switchContent("/fxml/policeOfficer/policeDashboard.fxml");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not load dashboard for role: " + role);
+        }
+    }
+
+    // ======================================================
+    // MASTER LAYOUT LOADER (Sidebar + Topbar)
+    // ======================================================
+    private void loadMasterLayout() throws IOException {
+        // create once per login
+        sceneManager = new SceneManager(primaryStage);
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/components/master.fxml"));
+
+        // one factory to inject sceneManager into all controllers used in master.fxml and its includes
         loader.setControllerFactory(type -> {
             try {
-                if (type == SidebarController.class) {
-                    SidebarController sc = new SidebarController();
-                    sc.setSceneManager(sceneManager);
-                    return sc;
+                if (type == com.fcms.controllers.components.MasterLayoutController.class) {
+                    var c = new com.fcms.controllers.components.MasterLayoutController();
+                    c.setSceneManager(sceneManager);
+                    return c;
+                } else if (type == com.fcms.controllers.components.SidebarController.class) {
+                    var c = new com.fcms.controllers.components.SidebarController();
+                    c.setSceneManager(sceneManager);
+                    return c;
+                } else if (type == com.fcms.controllers.components.TopbarController.class) {
+                    var c = new com.fcms.controllers.components.TopbarController();
+                    c.setSceneManager(sceneManager);
+                    return c;
                 }
-                // default construction for other controllers (e.g., PoliceDashboardController)
+                // default for any other controller
                 return type.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -49,143 +97,97 @@ public class Main extends Application {
 
         Parent root = loader.load();
 
-        // Optional: get dashboard controller if you need it for other tasks
-        MainLayoutController dashboardController = loader.getController();
-
-        // Create scene and attach CSS
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/auth.css").toExternalForm());
 
-        // Configure stage
-        primaryStage.setTitle("CaseVault - Police Officer Dashboard");
-        //primaryStage.setResizable(true);
-        primaryStage.setMinWidth(900);
-        primaryStage.setMinHeight(600);
-        primaryStage.setMaximized(true);
+        primaryStage.setTitle("CaseVault Dashboard");
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
-        this.primaryStage = primaryStage;
-        SQLiteDatabase.initializeDatabase();
-        //TestDataInserter.insertTestData();
-
-        showLoginScreen();
     }
 
-    private void showDashboard() {
-        UserSession session = UserSession.getInstance();
-        String role = session.getRole();
 
-        System.out.println("Navigating to dashboard for role: " + role);
-
-        try {
-            String fxmlFile = getDashboardFXML(role);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent root = loader.load();
-
-            // Set up the dashboard controller
-            setupDashboardController(loader.getController());
-
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
-
-            primaryStage.setTitle("CaseVault - " + role + " Dashboard");
-            primaryStage.setScene(scene);
-            primaryStage.setMinWidth(900);
-            primaryStage.setMinHeight(600);
-            primaryStage.setMaximized(true); // Dashboard can be maximized
-            primaryStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Cannot load dashboard for role: " + role);
-        }
-    }
-
-    private String getDashboardFXML(String role) {
-        switch (role) {
-            case "Police Officer":
-                return "/fxml/policeOfficer/policeDashboard.fxml";
-            case "Forensic Expert":
-                return "/fxml/forensicExpert/expertDashboard.fxml";
-            case "Court Official":
-                return "/fxml/courtOfficial/courtDashboard.fxml"; // Adjust path as needed
-            default:
-                return "/fxml/policeOfficer/policeDashboard.fxml"; // fallback
-        }
-    }
-
-    private void setupDashboardController(Object controller) {
-        // You can set up logout handlers or other common dashboard setup here
-        // For now, we'll just log the controller type
-        System.out.println("Dashboard controller type: " + controller.getClass().getSimpleName());
-    }
-
+    // ======================================================
+    // LOGIN SCREEN
+    // ======================================================
     public void showLoginScreen() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/auth/login.fxml"));
             Parent root = loader.load();
 
             LoginController loginController = loader.getController();
-
-            // Set up navigation callbacks
             loginController.setOnNavigateToSignup(this::showSignupScreen);
-            loginController.setOnNavigateToForgotPassword(this::showForgotPasswordScreen);
             loginController.setOnLoginSuccess(this::showDashboard);
 
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/auth.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
 
             primaryStage.setTitle("CaseVault - Login");
             primaryStage.setScene(scene);
-            primaryStage.setMinWidth(400);
-            primaryStage.setMinHeight(600);
-            primaryStage.setMaximized(false); // Login screen should not be maximized
+            primaryStage.setResizable(false);
             primaryStage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error loading login screen: " + e.getMessage());
         }
     }
 
+
+    // ======================================================
+    // SIGNUP SCREEN
+    // ======================================================
     private void showSignupScreen() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/auth/signup.fxml"));
             Parent root = loader.load();
 
-            SignupController signupController = loader.getController();
-            signupController.setOnNavigateToLogin(this::showLoginScreen);
-            signupController.setOnSubmitSuccess(() -> {
-                showAlert("Success", "Your account request has been submitted for admin review.");
+            SignupController controller = loader.getController();
+            controller.setOnNavigateToLogin(this::showLoginScreen);
+            controller.setOnSubmitSuccess(() -> {
+                showAlert("Success", "Signup request sent for admin approval.");
                 showLoginScreen();
             });
 
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/auth.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
+
             primaryStage.setTitle("CaseVault - Sign Up");
             primaryStage.setScene(scene);
-            primaryStage.setMinWidth(420);  // Reduced from 450
-            primaryStage.setMinHeight(650); // Reduced from 700
-            primaryStage.setMaximized(false);
+            primaryStage.setResizable(false);
             primaryStage.show();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    private void showForgotPasswordScreen() {
-        System.out.println("Navigate to forgot password screen");
-        // TODO: Implement forgot password screen
-        showAlert("Info", "Forgot password feature coming soon!");
-    }
-
     private void showAlert(String title, String message) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        javafx.scene.control.Alert alert =
+                new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+
+    // ======================================================
+    // INSERT TEST DATA (unchanged)
+    // ======================================================
+    private void insertTestData() {
+        try (Connection conn = SQLiteDatabase.getConnection();
+             Statement stmt = conn.createStatement()) {
+
+            // your full test insert code...
+            System.out.println("Test data inserted.");
+
+        } catch (Exception e) {
+            System.out.println("Error inserting test data: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

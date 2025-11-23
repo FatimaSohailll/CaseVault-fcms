@@ -12,9 +12,13 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+
 public class SceneManager {
 
     private final Stage stage;
+    private AnchorPane contentArea;
 
     public SceneManager(Stage stage) {
         this.stage = stage;
@@ -23,6 +27,10 @@ public class SceneManager {
     /**
      * Simple center switch without context injection.
      */
+    public void setContentArea(AnchorPane area) {
+        this.contentArea = area;
+    }
+
     public void switchContent(String fxmlPath) {
         switchContent(fxmlPath, null);
     }
@@ -77,6 +85,21 @@ public class SceneManager {
             modal.initModality(Modality.APPLICATION_MODAL);
             modal.show();
         } catch (IOException e) {
+            if (contentArea == null) {
+                System.out.println("ERROR: contentArea IS NULL");
+                return;
+            }
+
+            // Set content
+            contentArea.getChildren().setAll(content);
+
+            // IMPORTANT: Force loaded screen to fill entire area
+            AnchorPane.setTopAnchor(content, 0.0);
+            AnchorPane.setBottomAnchor(content, 0.0);
+            AnchorPane.setLeftAnchor(content, 0.0);
+            AnchorPane.setRightAnchor(content, 0.0);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -135,4 +158,5 @@ public class SceneManager {
             ex.printStackTrace();
         }
     }
+
 }

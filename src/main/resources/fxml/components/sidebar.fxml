@@ -4,19 +4,29 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.components.SidebarController"
-      spacing="8" styleClass="sidebar" fx:id="sidebarContainer"
-      minWidth="80" prefWidth="200" maxWidth="250">
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.fcms.controllers.components.SidebarController"
+      fx:id="sidebarContainer"
+      spacing="8"
+      styleClass="sidebar"
+      minWidth="80" prefWidth="200" maxWidth="250"
+      VBox.vgrow="ALWAYS">
 
     <padding>
         <Insets top="24" right="8" bottom="24" left="8"/>
     </padding>
-    <!-- Collapse/Expand toggle button -->
+
+    <!-- Collapse Button -->
     <Button text="☰" onAction="#toggleSidebar" styleClass="collapse-btn"/>
+
+
+    <!-- ========================================================= -->
+    <!-- ======================== POLICE ========================= -->
+    <!-- ========================================================= -->
 
     <HBox fx:id="dashboardRow" spacing="10" styleClass="nav-row">
         <Pane fx:id="dashboardIcon"/>
-        <Button fx:id="dashboardBtn" text="Dashboard" onAction="#handleDashboard" styleClass="nav-btn"/>
+        <Button fx:id="dashboardBtn" text="Dashboard" onAction="#handlePoliceDashboard" styleClass="nav-btn"/>
     </HBox>
 
     <HBox fx:id="registerRow" spacing="10" styleClass="nav-row">
@@ -29,20 +39,19 @@
         <Button fx:id="manageCasesBtn" text="Manage Cases" onAction="#handleManageCases" styleClass="nav-btn"/>
     </HBox>
 
-
     <HBox fx:id="forensicAnalysisRow" spacing="10" styleClass="nav-row">
-        <Pane fx:id="forensicAnalysisIcon" />
-        <Button fx:id="forensicAnalysisBtn" onAction="#handleForensicAnalysis" prefHeight="25.0" prefWidth="154.0" styleClass="nav-btn" text="Forensic Analysis" />
+        <Pane fx:id="forensicAnalysisIcon"/>
+        <Button fx:id="forensicAnalysisBtn" text="Forensic Analysis" onAction="#handleForensicAnalysis" styleClass="nav-btn"/>
     </HBox>
 
     <HBox fx:id="manageParticipantsRow" spacing="10" styleClass="nav-row">
-        <Pane fx:id="manageParticipantsIcon" />
-        <Button fx:id="manageParticipantsBtn" onAction="#handleManageParticipants" styleClass="nav-btn" text="Manage Participants" />
+        <Pane fx:id="manageParticipantsIcon"/>
+        <Button fx:id="manageParticipantsBtn" text="Manage Participants" onAction="#handleManageParticipants" styleClass="nav-btn"/>
     </HBox>
 
     <HBox fx:id="crimeAnalyticsRow" spacing="10" styleClass="nav-row">
-        <Pane fx:id="crimeAnalyticsIcon" />
-        <Button fx:id="crimeAnalyticsBtn" onAction="#handleCrimeAnalytics" styleClass="nav-btn" text="Crime Analytics" />
+        <Pane fx:id="crimeAnalyticsIcon"/>
+        <Button fx:id="crimeAnalyticsBtn" text="Crime Analytics" onAction="#handleCrimeAnalytics" styleClass="nav-btn"/>
     </HBox>
 
     <HBox fx:id="closeCaseRow" spacing="10" styleClass="nav-row">
@@ -50,11 +59,97 @@
         <Button fx:id="closeCaseBtn" text="Close Case" onAction="#handleCloseCase" styleClass="nav-btn"/>
     </HBox>
 
-    <HBox fx:id="submitToCourtRow" spacing="10" styleClass="nav-row">
-        <Pane fx:id="submitToCourtIcon"/>
-        <Button fx:id="submitToCourtBtn" text="Submit to Court" onAction="#handleSubmitToCourt" styleClass="nav-btn"/>
+    <HBox fx:id="searchCasesRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="searchCasesIcon"/>
+        <Button fx:id="searchCasesBtn" text="Search Cases" onAction="#handlePoliceSearchCases" styleClass="nav-btn"/>
     </HBox>
 
-    <!-- Spacer to push content up and let sidebar grow vertically -->
+    <HBox fx:id="submitToCourtRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="submitToCourtIcon"/>
+        <Button fx:id="submitToCourtBtn" text="Submit To Court" onAction="#handleSubmitToCourt" styleClass="nav-btn"/>
+    </HBox>
+
+
+
+    <!-- ========================================================= -->
+    <!-- ======================= ADMIN =========================== -->
+    <!-- ========================================================= -->
+
+    <!-- Admin Dashboard -->
+    <HBox fx:id="adminDashboardRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="adminDashboardIcon"/>
+        <Button fx:id="adminDashboardBtn"
+                text="Admin Dashboard"
+                onAction="#handleAdminDashboard"
+                styleClass="nav-btn"/>
+    </HBox>
+
+    <!-- Manage Users -->
+    <HBox fx:id="adminManageUsersRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="adminManageUsersIcon"/>
+        <Button fx:id="adminManageUsersBtn"
+                text="Manage Users"
+                onAction="#handleAdminManageUsers"
+                styleClass="nav-btn"/>
+    </HBox>
+
+    <!-- Waiting List -->
+    <HBox fx:id="adminWaitingListRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="adminWaitingListIcon"/>
+        <Button fx:id="adminWaitingListBtn"
+                text="Waiting List"
+                onAction="#handleAdminWaitingList"
+                styleClass="nav-btn"/>
+    </HBox>
+
+
+
+
+    <!-- ========================================================= -->
+    <!-- =================== FORENSIC EXPERT ===================== -->
+    <!-- ========================================================= -->
+
+    <!-- Dashboard FIRST -->
+    <HBox fx:id="expertDashboardRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="expertDashboardIcon"/>
+        <Button text="Expert Dashboard" onAction="#handleExpertDashboard" styleClass="nav-btn"/>
+    </HBox>
+
+    <HBox fx:id="expertUploadReportRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="expertUploadReportIcon"/>
+        <Button fx:id="expertUploadReportBtn" text="Upload Report" onAction="#handleExpertUploadReport" styleClass="nav-btn"/>
+    </HBox>
+
+    <HBox fx:id="expertAddEvidenceRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="expertAddEvidenceIcon"/>
+        <Button text="Add Evidence" onAction="#handleAddEvidence" styleClass="nav-btn"/>
+    </HBox>
+
+
+
+    <!-- ========================================================= -->
+    <!-- ==================== COURT OFFICIAL ===================== -->
+    <!-- ========================================================= -->
+
+    <!-- Dashboard FIRST -->
+    <HBox fx:id="courtDashboardRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="courtDashboardIcon"/>
+        <Button text="Court Dashboard" onAction="#handleCourtDashboard" styleClass="nav-btn"/>
+    </HBox>
+
+    <HBox fx:id="courtRecordVerdictRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="courtRecordVerdictIcon"/>
+        <Button fx:id="courtRecordVerdictBtn" text="Record Verdict" onAction="#handleCourtRecordVerdict" styleClass="nav-btn"/>
+    </HBox>
+
+    <HBox fx:id="courtSearchCasesRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="courtSearchCasesIcon"/>
+        <Button text="Search Cases" onAction="#handleCourtSearchCases" styleClass="nav-btn"/>
+    </HBox>
+
+
+
+    <!-- Spacer -->
     <Region VBox.vgrow="ALWAYS"/>
+
 </VBox>

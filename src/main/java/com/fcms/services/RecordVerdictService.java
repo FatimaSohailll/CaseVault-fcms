@@ -1,31 +1,43 @@
 package com.fcms.services;
 
+import com.fcms.models.CourtVerdict;
+import com.fcms.repositories.CourtVerdictRepository;
+
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
+import java.util.UUID;
 
 public class RecordVerdictService {
 
-    // Dummy verdict options
-    public List<String> getVerdictOptions() {
-        return Arrays.asList(
-                "Guilty",
-                "Not Guilty",
-                "Case Dismissed",
-                "Plea Bargain Accepted",
-                "Hung Jury",
-                "Mistrial"
-        );
+    public String[] getVerdictOptions() {
+        return new String[]{"guilty", "not guilty"};
     }
 
-    // Simulated save to database
-    public boolean saveVerdict(String verdict, String sentence, String notes, LocalDate date) {
-        System.out.println("----- VERDICT SAVED -----");
-        System.out.println("Verdict: " + verdict);
-        System.out.println("Sentence: " + sentence);
-        System.out.println("Notes: " + notes);
-        System.out.println("Date: " + date);
-        System.out.println("--------------------------");
-        return true;
+    public CourtVerdict getVerdictForCase(String caseId) {
+        return CourtVerdictRepository.getVerdict(caseId);
+    }
+    public boolean hasVerdict(String caseId) {
+        return CourtVerdictRepository.hasVerdict(caseId);
+    }
+
+    public boolean saveVerdict(String outcome,
+                               String sentence,
+                               String notes,
+                               LocalDate date,
+                               String caseId,
+                               String issuedBy) {
+
+        // Create verdict object
+        CourtVerdict v = new CourtVerdict(
+                UUID.randomUUID().toString(),
+                outcome,
+                sentence,
+                date,
+                notes,
+                caseId,
+                issuedBy
+        );
+
+        // Save using repository
+        return CourtVerdictRepository.saveVerdict(v);
     }
 }

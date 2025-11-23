@@ -1,110 +1,141 @@
 package com.fcms.controllers.policeOfficer;
 
+import com.fcms.models.Case;
+import com.fcms.services.CaseService;
+import com.fcms.repositories.UserRepository;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
+import javafx.scene.control.*;
+
+import java.util.List;
 
 public class SubmitToCourtController {
 
-    // ---------- CASE SUMMARY ----------
+    @FXML private ComboBox<Case> caseDropdown;
     @FXML private Label selectedCaseLabel;
 
-    // ---------- CHECKLIST STATUS ----------
-    @FXML private HBox itemEvidence;          // ✔ All Evidence Logged
-    @FXML private HBox itemForensic;          // ✔ Forensic Report Uploaded
-    @FXML private HBox itemStatements;        // ✔ Witness Statements Recorded
-    @FXML private HBox itemChain;             // ✔ Chain of Custody Documented
-    @FXML private HBox itemLegal;             // ○ Legal Review Completed
-    @FXML private HBox itemOfficer;           // ✔ Officer Report Finalized
-
-    @FXML private Label completionStatus;
-
-    // ---------- EVIDENCE SUMMARY ----------
     @FXML private Label evidenceCount;
     @FXML private Label forensicCount;
-    @FXML private Label witnessCount;
 
-    // ---------- BUTTONS ----------
+    @FXML private ComboBox<String> courtOfficialCombo;
     @FXML private Button submitButton;
-    @FXML private Button cancelButton;
 
+    private final CaseService caseService = new CaseService();
+    private final UserRepository userRepo = new UserRepository();
+
+    @FXML private TextArea caseDetailsArea;
 
     @FXML
     private void initialize() {
 
-        // Dummy values for now – you can connect real data later
-        selectedCaseLabel.setText("No case selected");
+        loadCases();
+        loadCourtOfficials();
+        renderCaseDropdown();
 
-        evidenceCount.setText("5");
-        forensicCount.setText("3");
-        witnessCount.setText("4");
+        caseDropdown.setOnAction(e -> updateCaseUI());
+        courtOfficialCombo.setOnAction(e -> updateSubmitButton());
 
-        updateCompletionStatus();
-
-        // Disable submit if checklist incomplete
-        submitButton.setDisable(!isChecklistComplete());
+        updateSubmitButton();
     }
 
-
-    // --------------------------------------------------------
-    // CHECKLIST LOGIC
-    // --------------------------------------------------------
-
-    private boolean isChecklistComplete() {
-        // itemLegal is incomplete → so checklist incomplete
-        return !itemLegal.getStyle().contains("#f5f5f5");
+    private void loadCases() {
+        List<Case> all = caseService.getAllCases();
+        caseDropdown.getItems().setAll(all);
     }
 
-    private int countCompleted() {
-        int completed = 0;
-
-        if (isCompleted(itemEvidence)) completed++;
-        if (isCompleted(itemForensic)) completed++;
-        if (isCompleted(itemStatements)) completed++;
-        if (isCompleted(itemChain)) completed++;
-        if (isCompleted(itemOfficer)) completed++;
-
-        // itemLegal NOT completed
-        return completed;
+    private void loadCourtOfficials() {
+        List<String> officials = userRepo.getAllCourtOfficials();
+        courtOfficialCombo.getItems().setAll(officials);
     }
 
-    private boolean isCompleted(HBox box) {
-        return box.getStyle().contains("#eaffea");
+    private void renderCaseDropdown() {
+        caseDropdown.setCellFactory(list -> new ListCell<>() {
+            @Override protected void updateItem(Case c, boolean empty) {
+                super.updateItem(c, empty);
+                setText(empty || c == null ? null : c.getId() + " — " + c.getTitle());
+            }
+        });
+
+        caseDropdown.setButtonCell(new ListCell<>() {
+            @Override protected void updateItem(Case c, boolean empty) {
+                super.updateItem(c, empty);
+                setText(empty || c == null ? null : c.getId() + " — " + c.getTitle());
+            }
+        });
     }
 
-    private void updateCompletionStatus() {
-        int c = countCompleted();
-        completionStatus.setText(c + " of 6 completed");
-        completionStatus.setTextFill(Color.web(c == 6 ? "green" : "#d77a00"));
+    private void updateCaseUI() {
+        Case selected = caseDropdown.getValue();
+        if (selected == null) return;
+
+        // fetch latest state
+        Case c = caseService.getCaseById(selected.getId());
+
+        selectedCaseLabel.setText(c.getTitle());
+
+        // counts
+        int e = caseService.countEvidenceForCase(c.getId());
+        int f = caseService.countForensicReportsForCase(c.getId());
+
+        evidenceCount.setText(String.valueOf(e));
+        forensicCount.setText(String.valueOf(f));
+
+        // disable button if submitted
+        if ("submitted".equalsIgnoreCase(c.getStatus())) {
+            disableSubmitButton();
+        } else {
+            updateSubmitButton();
+        }
     }
 
+    private void disableSubmitButton() {
+        submitButton.setDisable(true);
+        if (!submitButton.getStyleClass().contains("submit-disabled")) {
+            submitButton.getStyleClass().add("submit-disabled");
+        }
+    }
 
-    // --------------------------------------------------------
-    // BUTTON ACTIONS
-    // --------------------------------------------------------
+    private void updateSubmitButton() {
 
-    @FXML
-    private void handleSubmit() {
-        if (!isChecklistComplete()) {
-            System.out.println("Cannot submit: Checklist incomplete.");
+        Case selected = caseDropdown.getValue();
+        if (selected == null) {
+            disableSubmitButton();
             return;
         }
 
-        System.out.println("Case submitted to court successfully.");
+        // fetch real DB state
+        Case fresh = caseService.getCaseById(selected.getId());
+
+        // if already submitted
+        if ("submitted".equalsIgnoreCase(fresh.getStatus())) {
+            disableSubmitButton();
+            return;
+        }
+
+        boolean ok = courtOfficialCombo.getValue() != null;
+
+        submitButton.setDisable(!ok);
+
+        if (ok) {
+            submitButton.getStyleClass().remove("submit-disabled");
+        }
     }
 
     @FXML
-    private void handleCancel() {
-        System.out.println("Submission cancelled.");
-    }
+    private void handleSubmit() {
 
-    // --------------------------------------------------------
-    // OPTIONAL: call this from other controllers when selecting a case
-    // --------------------------------------------------------
+        Case c = caseDropdown.getValue();
+        String official = courtOfficialCombo.getValue();
 
-    public void setSelectedCase(String caseName) {
-        selectedCaseLabel.setText(caseName);
+        if (c == null || official == null) return;
+
+        // update in DB
+        caseService.submitCaseToCourt(c.getId(), official);
+
+        disableSubmitButton();
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setContentText("Case submitted to court successfully.");
+        alert.showAndWait();
     }
 }

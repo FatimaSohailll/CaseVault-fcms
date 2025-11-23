@@ -4,8 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
-
-<VBox spacing="20" style="-fx-padding: 24; -fx-pref-width: 500; -fx-pref-height: 580;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.policeOfficer.EditParticipantController">
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.policeOfficer.EditParticipantController">
+    <VBox spacing="20" style="-fx-padding: 24; -fx-pref-width: 450;">
 
     <!-- Dialog Header -->
     <VBox spacing="8">
@@ -55,3 +55,4 @@
         <Button fx:id="cancelButton" styleClass="view-button" text="Cancel" onAction="#handleCancel" HBox.hgrow="ALWAYS" />
     </HBox>
 </VBox>
+    </ScrollPane>

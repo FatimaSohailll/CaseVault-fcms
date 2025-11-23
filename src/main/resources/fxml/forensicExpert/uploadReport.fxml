@@ -26,30 +26,41 @@
                         <Label style="-fx-text-fill: #171617; -fx-font-size: 18px; -fx-font-weight: bold;" text="Evidence Details" />
 
                         <VBox spacing="12.0">
-                            <VBox spacing="4.0">
-                                <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Evidence ID" />
-                                <Label fx:id="evidenceIdLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                            </VBox>
+                            <!-- Evidence ID with Icon -->
+                            <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                <Label style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" text="🆔" />
+                                <VBox spacing="4.0">
+                                    <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Evidence ID" />
+                                    <Label fx:id="evidenceIdLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                                </VBox>
+                            </HBox>
 
-                            <VBox spacing="4.0">
-                                <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Evidence Type" />
-                                <Label fx:id="evidenceTypeLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                            </VBox>
+                            <!-- Evidence Type with Icon -->
+                            <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                <Label style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" text="🔍" />
+                                <VBox spacing="4.0">
+                                    <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Evidence Type" />
+                                    <Label fx:id="evidenceTypeLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                                </VBox>
+                            </HBox>
 
-                            <VBox spacing="4.0">
-                                <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Requested By" />
-                                <Label fx:id="requestedByLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                            </VBox>
+                            <!-- Requested By with Icon -->
+                            <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                <Label style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" text="👮" />
+                                <VBox spacing="4.0">
+                                    <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Requested By" />
+                                    <Label fx:id="requestedByLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                                </VBox>
+                            </HBox>
 
-                            <VBox spacing="4.0">
-                                <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Request Date" />
-                                <Label fx:id="requestDateLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                            </VBox>
-                        </VBox>
-
-                        <VBox spacing="4.0">
-                            <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Description" />
-                            <Label fx:id="descriptionLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-wrap-text: true;" wrapText="true" />
+                            <!-- Request Date with Icon -->
+                            <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                <Label style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" text="📅" />
+                                <VBox spacing="4.0">
+                                    <Label style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" text="Request Date" />
+                                    <Label fx:id="requestDateLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                                </VBox>
+                            </HBox>
                         </VBox>
                     </VBox>
                 </VBox>
@@ -59,32 +70,44 @@
             <VBox spacing="20.0" HBox.hgrow="ALWAYS">
                 <VBox style="-fx-background-color: white; -fx-border-color: #e5e5e5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 24;">
                     <VBox spacing="20.0">
-                        <!-- Report Title -->
-                        <VBox spacing="8.0">
-                            <Label style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" text="Report Title *" />
-                            <TextField fx:id="titleField" promptText="Enter report title..." />
-                        </VBox>
-
-                        <!-- Completion Date -->
-                        <VBox spacing="8.0">
-                            <Label style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" text="Completion Date *" />
-                            <DatePicker fx:id="completionDatePicker" />
-                        </VBox>
-
-                        <!-- File Upload -->
-                        <VBox spacing="8.0">
-                            <Label style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" text="Upload Report File *" />
+                        <!-- Report Title with Icon -->
+                        <HBox spacing="8.0" alignment="CENTER_LEFT">
+                            <Label style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" text="📝" />
                             <VBox spacing="8.0">
-                                <Button fx:id="chooseFileButton" mnemonicParsing="false" text="Choose File" />
-                                <Label fx:id="fileNameLabel" style="-fx-text-fill: #6b7280; -fx-font-size: 13px;" text="No file selected" />
+                                <Label style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" text="Report Title *" />
+                                <TextField fx:id="titleField" promptText="Enter report title..." />
                             </VBox>
-                        </VBox>
+                        </HBox>
 
-                        <!-- Additional Notes -->
-                        <VBox spacing="8.0">
-                            <Label style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" text="Additional Notes" />
-                            <TextArea fx:id="notesArea" prefRowCount="4" promptText="Enter any additional observations or recommendations..." wrapText="true" />
-                        </VBox>
+                        <!-- Completion Date with Icon -->
+                        <HBox spacing="8.0" alignment="CENTER_LEFT">
+                            <Label style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" text="✅" />
+                            <VBox spacing="8.0">
+                                <Label style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" text="Completion Date *" />
+                                <DatePicker fx:id="completionDatePicker" />
+                            </VBox>
+                        </HBox>
+
+                        <!-- File Upload with Icon -->
+                        <HBox spacing="8.0" alignment="CENTER_LEFT">
+                            <Label style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" text="📎" />
+                            <VBox spacing="8.0">
+                                <Label style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" text="Upload Report File *" />
+                                <VBox spacing="8.0">
+                                    <Button fx:id="chooseFileButton" mnemonicParsing="false" text="Choose File" />
+                                    <Label fx:id="fileNameLabel" style="-fx-text-fill: #6b7280; -fx-font-size: 13px;" text="No file selected" />
+                                </VBox>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Additional Notes with Icon -->
+                        <HBox spacing="8.0" alignment="CENTER_LEFT">
+                            <Label style="-fx-text-fill: #6b7280; -fx-font-size: 16px;" text="🗒️" />
+                            <VBox spacing="8.0">
+                                <Label style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" text="Additional Notes" />
+                                <TextArea fx:id="notesArea" prefRowCount="4" promptText="Enter any additional observations or recommendations..." wrapText="true" />
+                            </VBox>
+                        </HBox>
                     </VBox>
                 </VBox>
 

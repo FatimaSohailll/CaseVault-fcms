@@ -1,10 +1,8 @@
 package com.fcms.repositories;
 
 import com.fcms.database.SQLiteDatabase;
-import com.fcms.models.UserAccount;
+import com.fcms.models.CreateUserAccount;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AuthRepository {
 
@@ -142,7 +140,7 @@ public class AuthRepository {
             default: return "US";
         }
     }
-    public UserAccount getUserCredentials(String username) throws SQLException {
+    public CreateUserAccount getUserCredentials(String username) throws SQLException {
         String sql = "SELECT userID, username, password, role, approved FROM UserAccount WHERE username = ?";
         try (Connection conn = SQLiteDatabase.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -150,7 +148,7 @@ public class AuthRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return new UserAccount(
+                return new CreateUserAccount(
                         rs.getString("userID"),
                         rs.getString("username"),
                         rs.getString("password"),
@@ -190,4 +188,27 @@ public class AuthRepository {
             return rs.next() ? rs.getString("email") : null;
         }
     }
+
+    public CreateUserAccount getAdminCredentials(String adminID) throws SQLException {
+        String sql = "SELECT adminID, name, password FROM SystemAdmin WHERE adminID = ?";
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, adminID);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                CreateUserAccount admin = new CreateUserAccount(
+                        rs.getString("adminID"),   // userID
+                        rs.getString("adminID"),   // username (admins log in using adminID)
+                        rs.getString("password"),  // password
+                        "System Admin",            // role
+                        true                       // approved
+                );
+                return admin;
+            }
+        }
+        return null;
+    }
+
 }

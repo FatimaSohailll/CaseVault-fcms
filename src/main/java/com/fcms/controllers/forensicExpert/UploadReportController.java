@@ -25,7 +25,6 @@ public class UploadReportController implements Initializable {
     @FXML private Label evidenceTypeLabel;
     @FXML private Label requestedByLabel;
     @FXML private Label requestDateLabel;
-    @FXML private Label descriptionLabel;
     @FXML private TextField titleField;
     @FXML private DatePicker completionDatePicker;
     @FXML private Button chooseFileButton;
@@ -69,7 +68,7 @@ public class UploadReportController implements Initializable {
     }
 
     private void setupStyles() {
-        chooseFileButton.getStyleClass().add("outline-button");
+        chooseFileButton.getStyleClass().add("view-button");
         submitButton.getStyleClass().add("action-button");
         cancelButton.getStyleClass().add("view-button");
         titleField.getStyleClass().add("form-field");

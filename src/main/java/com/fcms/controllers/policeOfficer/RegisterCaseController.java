@@ -1,5 +1,7 @@
 package com.fcms.controllers.policeOfficer;
 
+import com.fcms.models.Case;
+import com.fcms.services.CaseService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -35,32 +37,20 @@ public class RegisterCaseController {
         validationMessage.setVisible(false);
     }
 
-    @FXML private Label titleWarning, typeWarning, descWarning, dateWarning;
-
     @FXML
     private void handleSaveCase() {
-        boolean valid = true;
+        hideWarnings();
 
-        titleWarning.setVisible(false);
-        typeWarning.setVisible(false);
-        descWarning.setVisible(false);
-        dateWarning.setVisible(false);
+        String title = caseTitleField.getText().trim();
+        String type = caseTypeDropdown.getValue();
+        String description = descriptionField.getText().trim();
+        LocalDate date = datePicker.getValue();
 
-        if (caseTitleField.getText().trim().isEmpty()) {
-            titleWarning.setVisible(true);
-            valid = false;
-        }
-        if (caseTypeDropdown.getValue() == null) {
-            typeWarning.setVisible(true);
-            valid = false;
-        }
-        if (descriptionField.getText().trim().isEmpty()) {
-            descWarning.setVisible(true);
-            valid = false;
-        }
-        if (datePicker.getValue() == null) {
-            dateWarning.setVisible(true);
-            valid = false;
+        // Validate via service
+        String validationError = caseService.validateCaseInput(title, type, description, date);
+        if (validationError != null) {
+            showValidationError(validationError);
+            return;
         }
 
         // Generate a unique case ID (UUID or custom format)
@@ -106,5 +96,24 @@ public class RegisterCaseController {
         caseTypeDropdown.setValue(null);
         descriptionField.clear();
         datePicker.setValue(null);
+    }
+
+    private void hideWarnings() {
+        titleWarning.setVisible(false);
+        typeWarning.setVisible(false);
+        descWarning.setVisible(false);
+        dateWarning.setVisible(false);
+    }
+
+    private void showValidationError(String error) {
+        validationMessage.setText(error);
+        validationMessage.setVisible(true);
+
+        switch (error) {
+            case "Title is required" -> titleWarning.setVisible(true);
+            case "Type is required" -> typeWarning.setVisible(true);
+            case "Description is required" -> descWarning.setVisible(true);
+            case "Date is required" -> dateWarning.setVisible(true);
+        }
     }
 }

@@ -4,165 +4,86 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/21.0.6"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.fcms.controllers.policeOfficer.SubmitToCourtController"
-            fitToWidth="true"
-            style="-fx-background-color: #f5f5f5;">
+<ScrollPane fitToWidth="true" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.policeOfficer.SubmitToCourtController">
 
     <VBox spacing="25">
-        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
 
         <!-- BACK TO DASHBOARD -->
         <HBox spacing="5">
-            <Label text="←" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-            <Hyperlink text="Back to Dashboard" style="-fx-font-size: 14;"/>
+            <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="←" />
+            <Hyperlink style="-fx-font-size: 14;" text="Back to Dashboard" />
         </HBox>
 
         <!-- HEADER -->
         <VBox spacing="5">
-            <Label text="Submit Case to Court"
-                   style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
-            <Label text="Final review and submission to judicial system"
-                   style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+            <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Submit Case to Court" />
+            <Label style="-fx-font-size: 14; -fx-text-fill: #666;" text="Final review and submission to judicial system" />
         </VBox>
 
-        <!-- WARNING ALERT -->
-        <HBox spacing="10"
-              style="-fx-background-color: #fff8e5; -fx-border-color: #f2c36b;
-                     -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 15;">
-            <Label text="⚠" style="-fx-font-size: 16;"/>
-            <Label text="Please complete all checklist items before submitting to court."
-                   style="-fx-text-fill: #6a5a00; -fx-font-size: 14;"/>
-        </HBox>
+        <!-- CASE DROPDOWN -->
+        <VBox spacing="10">
+            <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Select Case" />
 
-        <!-- CASE SUMMARY BOX -->
-        <VBox spacing="20"
-              style="-fx-background-color: white; -fx-background-radius: 10;">
-            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
-
-            <Label text="Case Summary"
-                   style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-
-            <VBox alignment="CENTER" spacing="5" style="-fx-padding: 40 0;">
-                <Label fx:id="selectedCaseLabel"
-                       text="No case selected"
-                       style="-fx-font-size: 16; -fx-text-fill: #444;"/>
-                <Label text="Please select a case from the dashboard"
-                       style="-fx-text-fill: #777;"/>
-            </VBox>
+            <ComboBox fx:id="caseDropdown"
+                      prefWidth="350"
+                      promptText="Select a case"
+                      styleClass="court-combo" />
         </VBox>
 
-        <!-- PRE-SUBMISSION CHECKLIST -->
-        <VBox spacing="20"
-              style="-fx-background-color: white; -fx-background-radius: 10;">
-            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <!-- CASE SUMMARY -->
+        <VBox spacing="20" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <padding><Insets bottom="25" left="20" right="20" top="25" /></padding>
 
-            <Label text="Pre-Submission Checklist"
-                   style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Case Summary" />
 
-            <VBox spacing="10">
-
-                <HBox fx:id="itemEvidence" spacing="10"
-                      style="-fx-background-color: #eaffea; -fx-background-radius: 8; -fx-padding: 15;">
-                    <Label text="✔" style="-fx-text-fill: green; -fx-font-size: 16;"/>
-                    <Label text="All Evidence Logged"/>
-                </HBox>
-
-                <HBox fx:id="itemForensic" spacing="10"
-                      style="-fx-background-color: #eaffea; -fx-background-radius: 8; -fx-padding: 15;">
-                    <Label text="✔" style="-fx-text-fill: green; -fx-font-size: 16;"/>
-                    <Label text="Forensic Report Uploaded"/>
-                </HBox>
-
-                <HBox fx:id="itemStatements" spacing="10"
-                      style="-fx-background-color: #eaffea; -fx-background-radius: 8; -fx-padding: 15;">
-                    <Label text="✔" style="-fx-text-fill: green; -fx-font-size: 16;"/>
-                    <Label text="Witness Statements Recorded"/>
-                </HBox>
-
-                <HBox fx:id="itemChain" spacing="10"
-                      style="-fx-background-color: #eaffea; -fx-background-radius: 8; -fx-padding: 15;">
-                    <Label text="✔" style="-fx-text-fill: green; -fx-font-size: 16;"/>
-                    <Label text="Chain of Custody Documented"/>
-                </HBox>
-
-                <HBox fx:id="itemLegal" spacing="10"
-                      style="-fx-background-color: #f5f5f5; -fx-background-radius: 8; -fx-padding: 15;">
-                    <Label text="○" style="-fx-font-size: 16; -fx-text-fill: #777;"/>
-                    <Label text="Legal Review Completed"/>
-                </HBox>
-
-                <HBox fx:id="itemOfficer" spacing="10"
-                      style="-fx-background-color: #eaffea; -fx-background-radius: 8; -fx-padding: 15;">
-                    <Label text="✔" style="-fx-text-fill: green; -fx-font-size: 16;"/>
-                    <Label text="Officer Report Finalized"/>
-                </HBox>
-
+            <VBox alignment="CENTER" spacing="8">
+                <Label fx:id="selectedCaseLabel" style="-fx-font-size: 18; -fx-text-fill: #333;" text="No case selected" />
             </VBox>
-
-            <Label fx:id="completionStatus"
-                   text="Completion Status: 5 of 6 completed"
-                   style="-fx-text-fill: #d77a00; -fx-font-size: 14;"/>
         </VBox>
 
         <!-- EVIDENCE SUMMARY -->
-        <VBox spacing="20"
-              style="-fx-background-color: white; -fx-background-radius: 10;">
-            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <VBox spacing="20" style="-fx-background-color: white; -fx-background-radius: 10;">
+            <padding><Insets bottom="25" left="20" right="20" top="25" /></padding>
 
-            <Label text="Evidence Summary"
-                   style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Evidence Summary" />
 
             <HBox spacing="20">
 
-                <VBox alignment="CENTER" spacing="5"
-                      style="-fx-background-color: #eef5ff; -fx-background-radius: 10; -fx-padding: 20;"
-                      prefWidth="200">
-                    <Label fx:id="evidenceCount" text="5"
-                           style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
-                    <Label text="Evidence Items" style="-fx-text-fill: #666;"/>
+                <VBox alignment="CENTER" prefWidth="200" spacing="5" style="-fx-background-color: #eef5ff; -fx-background-radius: 10; -fx-padding: 20;">
+                    <Label fx:id="evidenceCount" style="-fx-font-size: 28px; -fx-font-weight: bold;" text="0" />
+                    <Label style="-fx-text-fill: #666;" text="Evidence Items" />
                 </VBox>
 
-                <VBox alignment="CENTER" spacing="5"
-                      style="-fx-background-color: #eef5ff; -fx-background-radius: 10; -fx-padding: 20;"
-                      prefWidth="200">
-                    <Label fx:id="forensicCount" text="3"
-                           style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
-                    <Label text="Forensic Reports" style="-fx-text-fill: #666;"/>
-                </VBox>
-
-                <VBox alignment="CENTER" spacing="5"
-                      style="-fx-background-color: #eef5ff; -fx-background-radius: 10; -fx-padding: 20;"
-                      prefWidth="200">
-                    <Label fx:id="witnessCount" text="4"
-                           style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
-                    <Label text="Witness Statements" style="-fx-text-fill: #666;"/>
+                <VBox alignment="CENTER" prefWidth="200" spacing="5" style="-fx-background-color: #eef5ff; -fx-background-radius: 10; -fx-padding: 20;">
+                    <Label fx:id="forensicCount" style="-fx-font-size: 28px; -fx-font-weight: bold;" text="0" />
+                    <Label style="-fx-text-fill: #666;" text="Forensic Reports" />
                 </VBox>
             </HBox>
 
-            <HBox spacing="10"
-                  style="-fx-background-color: #f0f6ff; -fx-padding: 15; -fx-background-radius: 8;">
-                <Label text="⚠" style="-fx-font-size: 18;"/>
-                <Label text="Once submitted to court, this case will be transferred to the judicial system. Ensure all information is accurate and complete before proceeding."
-                       style="-fx-font-size: 14;"/>
+            <!-- COURT OFFICIAL -->
+            <VBox spacing="10" style="-fx-padding: 10 0;">
+                <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Assign to Court Official" />
+
+
+                <ComboBox fx:id="courtOfficialCombo"
+                          prefWidth="350"
+                          promptText="Select Court Official"
+                          styleClass="court-combo" />
+            </VBox>
+
+            <HBox spacing="10" style="-fx-background-color: #f0f6ff; -fx-padding: 15; -fx-background-radius: 8;">
+                <Label style="-fx-font-size: 18;" text="⚠" />
+                <Label style="-fx-font-size: 14;" text="Once submitted to court, this case will be transferred to the judicial system." />
             </HBox>
 
             <HBox spacing="15">
                 <Button fx:id="submitButton"
-                        text="⚖   Submit to Court"
                         onAction="#handleSubmit"
-                        style="-fx-background-color: #3a4660; -fx-text-fill: white; -fx-font-size: 15;
-                               -fx-padding: 10 30; -fx-background-radius: 8;"
-                        prefWidth="300"/>
-
-                <Button fx:id="cancelButton"
-                        text="Cancel"
-                        onAction="#handleCancel"
-                        style="-fx-background-color: #ffffff; -fx-border-color: #ccc;
-                               -fx-padding: 10 25; -fx-background-radius: 8; -fx-border-radius: 8;"/>
+                        prefWidth="300"
+                        text="⚖   Submit to Court"
+                        styleClass="submit-button" />
             </HBox>
-
         </VBox>
 
     </VBox>

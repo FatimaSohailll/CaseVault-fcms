@@ -1,9 +1,6 @@
 package com.fcms.repositories;
 
-import com.fcms.models.users.UserAccount;
-import com.fcms.models.users.PoliceOfficer;
-import com.fcms.models.users.CourtOfficial;
-import com.fcms.models.users.ForensicExpert;
+import com.fcms.models.users.*;
 import com.fcms.database.SQLiteDatabase;
 
 import java.sql.*;
@@ -11,6 +8,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
+
+    // =====================================================
+    // GENERATE USER ID BASED ON ROLE
+    // =====================================================
+    public static String generateUserID(String role) {
+        String prefix;
+
+        switch (role) {
+            case "Police Officer" -> prefix = "PO";
+            case "Forensic Expert" -> prefix = "EX";
+            case "Court Official" -> prefix = "CR";
+            default -> prefix = "US"; // fallback
+        }
+
+        String sql = "SELECT userID FROM UserAccount WHERE userID LIKE ? ORDER BY userID DESC LIMIT 1";
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, prefix + "%");
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // Extract number after prefix
+                String last = rs.getString("userID").substring(2);
+                int num = Integer.parseInt(last) + 1;
+                return prefix + String.format("%05d", num);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error generating userID: " + e.getMessage());
+        }
+
+        // If no previous users
+        return prefix + "00001";
+    }
+
 
     // =====================================================
     // FETCH ALL USERS
@@ -26,14 +61,22 @@ public class UserRepository {
 
             while (rs.next()) {
 
-                String id   = rs.getString("userID");
-                String role = rs.getString("role");
+                String id        = rs.getString("userID");
+                String username  = rs.getString("username");
+                String name      = rs.getString("name");
+                String email     = rs.getString("email");
+                String password  = rs.getString("password");
+                String role      = rs.getString("role");
+                String managedBy = rs.getString("managedBY");
+                String createdAt = rs.getString("createdAt");
+                boolean approved = rs.getBoolean("approved");
 
                 UserAccount u;
 
                 switch (role) {
 
-                    case "Police" -> {
+                    case "Police Officer" -> {
+
                         PreparedStatement ps = conn.prepareStatement(
                                 "SELECT rank, department FROM PoliceOfficer WHERE officerID=?"
                         );
@@ -42,19 +85,21 @@ public class UserRepository {
 
                         u = new PoliceOfficer(
                                 id,
-                                rs.getString("username"),
-                                rs.getString("name"),
-                                rs.getString("email"),
-                                null,
+                                username,
+                                name,
+                                email,
+                                password,
                                 role,
-                                rs.getString("managedBY"),
-                                rs.getString("createdAt"),
+                                managedBy,
+                                approved,
+                                createdAt,
                                 r2.getString("rank"),
                                 r2.getString("department")
                         );
                     }
 
                     case "Court Official" -> {
+
                         PreparedStatement ps = conn.prepareStatement(
                                 "SELECT courtName, designation FROM CourtOfficial WHERE officialID=?"
                         );
@@ -63,19 +108,21 @@ public class UserRepository {
 
                         u = new CourtOfficial(
                                 id,
-                                rs.getString("username"),
-                                rs.getString("name"),
-                                rs.getString("email"),
-                                null,
+                                username,
+                                name,
+                                email,
+                                password,
                                 role,
-                                rs.getString("managedBY"),
-                                rs.getString("createdAt"),
+                                managedBy,
+                                approved,
+                                createdAt,
                                 r2.getString("courtName"),
                                 r2.getString("designation")
                         );
                     }
 
-                    default -> { // Forensic Expert
+                    default -> {
+
                         PreparedStatement ps = conn.prepareStatement(
                                 "SELECT labName FROM ForensicExpert WHERE expertID=?"
                         );
@@ -84,13 +131,14 @@ public class UserRepository {
 
                         u = new ForensicExpert(
                                 id,
-                                rs.getString("username"),
-                                rs.getString("name"),
-                                rs.getString("email"),
-                                null,
+                                username,
+                                name,
+                                email,
+                                password,
                                 role,
-                                rs.getString("managedBY"),
-                                rs.getString("createdAt"),
+                                managedBy,
+                                approved,
+                                createdAt,
                                 r2.getString("labName")
                         );
                     }
@@ -106,10 +154,14 @@ public class UserRepository {
         return list;
     }
 
+
+    // =====================================================
+    // GET ONLY PENDING USERS
+    // =====================================================
     public static List<UserAccount> getPendingUsers() {
         List<UserAccount> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM UserAccount WHERE managedBY='Pending'";
+        String sql = "SELECT * FROM UserAccount WHERE approved = 0";
 
         try (Connection conn = SQLiteDatabase.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -117,14 +169,22 @@ public class UserRepository {
 
             while (rs.next()) {
 
-                String id   = rs.getString("userID");
-                String role = rs.getString("role");
+                String id        = rs.getString("userID");
+                String username  = rs.getString("username");
+                String name      = rs.getString("name");
+                String email     = rs.getString("email");
+                String password  = rs.getString("password");
+                String role      = rs.getString("role");
+                String managedBy = rs.getString("managedBY");
+                String createdAt = rs.getString("createdAt");
+                boolean approved = rs.getBoolean("approved");
 
                 UserAccount u;
 
                 switch (role) {
 
-                    case "Police" -> {
+                    case "Police Officer" -> {
+
                         PreparedStatement ps = conn.prepareStatement(
                                 "SELECT rank, department FROM PoliceOfficer WHERE officerID=?"
                         );
@@ -133,19 +193,21 @@ public class UserRepository {
 
                         u = new PoliceOfficer(
                                 id,
-                                rs.getString("username"),
-                                rs.getString("name"),
-                                rs.getString("email"),
-                                null,
+                                username,
+                                name,
+                                email,
+                                password,
                                 role,
-                                rs.getString("managedBY"),
-                                rs.getString("createdAt"),
+                                managedBy,
+                                approved,
+                                createdAt,
                                 r2.getString("rank"),
                                 r2.getString("department")
                         );
                     }
 
                     case "Court Official" -> {
+
                         PreparedStatement ps = conn.prepareStatement(
                                 "SELECT courtName, designation FROM CourtOfficial WHERE officialID=?"
                         );
@@ -154,19 +216,21 @@ public class UserRepository {
 
                         u = new CourtOfficial(
                                 id,
-                                rs.getString("username"),
-                                rs.getString("name"),
-                                rs.getString("email"),
-                                null,
+                                username,
+                                name,
+                                email,
+                                password,
                                 role,
-                                rs.getString("managedBY"),
-                                rs.getString("createdAt"),
+                                managedBy,
+                                approved,
+                                createdAt,
                                 r2.getString("courtName"),
                                 r2.getString("designation")
                         );
                     }
 
                     default -> {
+
                         PreparedStatement ps = conn.prepareStatement(
                                 "SELECT labName FROM ForensicExpert WHERE expertID=?"
                         );
@@ -175,13 +239,14 @@ public class UserRepository {
 
                         u = new ForensicExpert(
                                 id,
-                                rs.getString("username"),
-                                rs.getString("name"),
-                                rs.getString("email"),
-                                null,
+                                username,
+                                name,
+                                email,
+                                password,
                                 role,
-                                rs.getString("managedBY"),
-                                rs.getString("createdAt"),
+                                managedBy,
+                                approved,
+                                createdAt,
                                 r2.getString("labName")
                         );
                     }
@@ -197,29 +262,32 @@ public class UserRepository {
         return list;
     }
 
+
     // =====================================================
-    // INSERT USER
+    // INSERT USER — ALWAYS approved = 1
     // =====================================================
     public static void insertUser(UserAccount u) {
-        String sql = "INSERT INTO UserAccount " +
-                "(userID, username, email, name, password, role, managedBY) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        String sql = """
+            INSERT INTO UserAccount
+            (userID, username, email, name, password, role, managedBY, approved)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+            """;
 
         try (Connection conn = SQLiteDatabase.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // Insert into main table
             stmt.setString(1, u.getUserID());
             stmt.setString(2, u.getUsername());
             stmt.setString(3, u.getEmail());
             stmt.setString(4, u.getName());
             stmt.setString(5, u.getPassword());
             stmt.setString(6, u.getRole());
-            stmt.setString(7, u.getManagedBy());
+            stmt.setString(7, "System Admin");
 
             stmt.executeUpdate();
 
-            // NOW insert into subclass table
+            // SUB TABLE INSERT
             if (u instanceof PoliceOfficer p) {
                 PreparedStatement ps = conn.prepareStatement(
                         "INSERT INTO PoliceOfficer (officerID, rank, department) VALUES (?, ?, ?)"
@@ -250,32 +318,37 @@ public class UserRepository {
             insertHistory("System Admin", "Added new user: " + u.getName());
 
         } catch (Exception e) {
-            System.out.println("Error inserting user: " + e.getMessage());
+            System.out.println("❌ Error inserting user: " + e.getMessage());
         }
     }
+
 
     // =====================================================
     // UPDATE USER
     // =====================================================
     public static void updateUser(UserAccount u) {
 
-        String sql = "UPDATE UserAccount SET username=?, email=?, name=?, password=?, role=?, managedBY=? WHERE userID=?";
+        String sql = """
+            UPDATE UserAccount
+            SET username=?, email=?, name=?, password=?, role=?, managedBY=?, approved=?
+            WHERE userID=?
+            """;
 
         try (Connection conn = SQLiteDatabase.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // Update base table
             stmt.setString(1, u.getUsername());
             stmt.setString(2, u.getEmail());
             stmt.setString(3, u.getName());
             stmt.setString(4, u.getPassword());
             stmt.setString(5, u.getRole());
             stmt.setString(6, u.getManagedBy());
-            stmt.setString(7, u.getUserID());
+            stmt.setBoolean(7, u.isApproved());
+            stmt.setString(8, u.getUserID());
 
             stmt.executeUpdate();
 
-            // Update subclass table
+            // UPDATE SUBCLASS
             if (u instanceof PoliceOfficer p) {
                 PreparedStatement ps = conn.prepareStatement(
                         "UPDATE PoliceOfficer SET rank=?, department=? WHERE officerID=?"
@@ -310,6 +383,7 @@ public class UserRepository {
         }
     }
 
+
     // =====================================================
     // DELETE USER
     // =====================================================
@@ -327,26 +401,31 @@ public class UserRepository {
         }
     }
 
+
     // =====================================================
     // HISTORY
     // =====================================================
-    public static void addHistory(String actor, String action) {
+    public static void insertHistory(String actor, String action) {
         String sql = "INSERT INTO UserHistory (actor, action) VALUES (?, ?)";
 
         try (Connection conn = SQLiteDatabase.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            ps.setString(1, actor);
-            ps.setString(2, action);
-            ps.executeUpdate();
+            stmt.setString(1, actor);
+            stmt.setString(2, action);
+            stmt.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Error inserting history: " + e.getMessage());
         }
     }
 
+    // =====================================================
+    // GET RECENT HISTORY (LIMIT N)
+    // =====================================================
     public static List<String[]> getRecentHistory(int limit) {
         List<String[]> history = new ArrayList<>();
+
         String sql = "SELECT actor, action, timestamp FROM UserHistory ORDER BY historyID DESC LIMIT ?";
 
         try (Connection conn = SQLiteDatabase.getConnection();
@@ -370,23 +449,10 @@ public class UserRepository {
         return history;
     }
 
-    public static int getUserCount() {
-        String sql = "SELECT COUNT(*) AS cnt FROM UserAccount WHERE managedBy != 'Pending'";
-
-        try (Connection conn = SQLiteDatabase.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getInt("cnt");
-            }
-        } catch (Exception e) {
-            System.out.println("Error counting users: " + e.getMessage());
-        }
-        return 0;
-    }
-
-    public static void insertHistory(String actor, String action) {
+    // =====================================================
+    // ADD HISTORY ENTRY
+    // =====================================================
+    public static void addHistory(String actor, String action) {
         String sql = "INSERT INTO UserHistory (actor, action) VALUES (?, ?)";
 
         try (Connection conn = SQLiteDatabase.getConnection();
@@ -401,19 +467,65 @@ public class UserRepository {
         }
     }
 
-    public static void updateStatus(String userID, String status) {
-        String sql = "UPDATE UserAccount SET managedBY=? WHERE userID=?";
+    // =====================================================
+    // UPDATE STATUS (for Waiting List Approve / Reject)
+    // =====================================================
+    public static void updateStatus(String userID, boolean approved, String managedBy) {
+        String sql = "UPDATE UserAccount SET approved=?, managedBY=? WHERE userID=?";
 
         try (Connection conn = SQLiteDatabase.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, status);
-            stmt.setString(2, userID);
+            stmt.setBoolean(1, approved);
+            stmt.setString(2, managedBy);
+            stmt.setString(3, userID);
+
             stmt.executeUpdate();
 
         } catch (Exception e) {
             System.out.println("Error updating user status: " + e.getMessage());
         }
+    }
+
+
+    // =====================================================
+    // COUNT APPROVED USERS ONLY
+    // =====================================================
+    public static int getUserCount() {
+
+        String sql = "SELECT COUNT(*) AS cnt FROM UserAccount WHERE approved = 1";
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) return rs.getInt("cnt");
+
+        } catch (Exception e) {
+            System.out.println("Error counting users: " + e.getMessage());
+        }
+
+        return 0;
+    }
+
+    public List<String> getAllCourtOfficials() {
+        List<String> list = new ArrayList<>();
+
+        String sql = "SELECT userID FROM UserAccount WHERE role = 'Court Official' AND approved = 1";
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(rs.getString("userID"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
 }

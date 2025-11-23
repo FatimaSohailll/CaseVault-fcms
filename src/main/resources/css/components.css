@@ -1,0 +1,116 @@
+/* Card Styles */
+.card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);
+}
+
+.stat-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 24;
+}
+
+/* Button Styles */
+.action-button {
+    -fx-background-color: #001440;
+    -fx-text-fill: white;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-border-color: #001440;
+}
+
+.action-button:hover {
+    -fx-background-color: #002a66;
+    -fx-border-color: #002a66;
+}
+
+.view-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #001440;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.view-button:hover {
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #9ca3af;
+}
+
+/* Alert Styles */
+.error-alert {
+    -fx-background-color: #fef2f2;
+    -fx-border-color: #fecaca;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.success-alert {
+    -fx-background-color: #dcfce7;
+    -fx-border-color: #bbf7d0;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+/* Status Badges */
+.status-badge {
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 6 12;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.status-pending {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #92400e;
+    -fx-border-color: #f59e0b;
+}
+
+.status-in-progress {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1e40af;
+    -fx-border-color: #3b82f6;
+}
+
+.status-completed {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #166534;
+    -fx-border-color: #22c55e;
+}
+
+/* Role Badges */
+.role-suspect {
+    -fx-background-color: #fef2f2;
+    -fx-text-fill: #991b1b;
+    -fx-background-radius: 12;
+    -fx-padding: 4 8;
+}
+
+.role-victim {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1e40af;
+    -fx-background-radius: 12;
+    -fx-padding: 4 8;
+}
+
+.role-witness {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #374151;
+    -fx-background-radius: 12;
+    -fx-padding: 4 8;
+}

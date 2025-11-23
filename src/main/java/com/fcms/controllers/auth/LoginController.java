@@ -14,10 +14,8 @@ public class LoginController {
     @FXML private PasswordField passwordField;
     @FXML private Button loginBtn;
     @FXML private Button signupBtn;
-    @FXML private Button forgotPasswordBtn;
 
     private Runnable onNavigateToSignup;
-    private Runnable onNavigateToForgotPassword;
     private Runnable onLoginSuccess;
     private final LoginService loginService;
 
@@ -27,10 +25,6 @@ public class LoginController {
 
     public void setOnNavigateToSignup(Runnable onNavigateToSignup) {
         this.onNavigateToSignup = onNavigateToSignup;
-    }
-
-    public void setOnNavigateToForgotPassword(Runnable onNavigateToForgotPassword) {
-        this.onNavigateToForgotPassword = onNavigateToForgotPassword;
     }
 
     public void setOnLoginSuccess(Runnable onLoginSuccess) {
@@ -44,9 +38,6 @@ public class LoginController {
         // Set up button actions
         if (signupBtn != null) {
             signupBtn.setOnAction(e -> handleSignup());
-        }
-        if (forgotPasswordBtn != null) {
-            forgotPasswordBtn.setOnAction(e -> handleForgotPassword());
         }
         if (loginBtn != null) {
             loginBtn.setOnAction(e -> handleLogin());
@@ -90,7 +81,7 @@ public class LoginController {
             System.out.println("Login successful for user: " + userID + " with role: " + result.getRole());
 
             // Store user session information (you might want to create a SessionManager class)
-            storeUserSession(result.getUserID(), result.getRole());
+            storeUserSession(result.getUserID(), result.getRole(), result.getUserID());
 
             // Navigate to main dashboard
             if (onLoginSuccess != null) {
@@ -106,10 +97,9 @@ public class LoginController {
         }
     }
 
-    private void storeUserSession(String userID, String role) {
-            UserSession session = UserSession.getInstance();
-            session.setCurrentUser(userID, role);
-            System.out.println("User session created - ID: " + userID + ", Role: " + role);
+    private void storeUserSession(String userID, String role, String username) {
+        UserSession session = UserSession.getInstance();
+        session.setCurrentUser(userID, role, username);
     }
 
     @FXML
@@ -119,16 +109,6 @@ public class LoginController {
             onNavigateToSignup.run();
         } else {
             System.err.println("onNavigateToSignup is null!");
-        }
-    }
-
-    @FXML
-    private void handleForgotPassword() {
-        System.out.println("Forgot password button clicked");
-        if (onNavigateToForgotPassword != null) {
-            onNavigateToForgotPassword.run();
-        } else {
-            System.err.println("onNavigateToForgotPassword is null!");
         }
     }
 

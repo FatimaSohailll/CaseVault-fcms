@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.components.TopbarController"
-      styleClass="top-bar">
+<HBox fx:id="topbarContainer" maxHeight="64" minHeight="64" prefHeight="64" styleClass="top-bar" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.components.TopbarController">
 
     <padding>
-        <Insets top="14" right="20" bottom="14" left="20"/>
+        <Insets bottom="14" left="20" right="20" top="14" />
     </padding>
+
     <!-- Left side: app title -->
-    <VBox spacing="4">
-        <Label text="CaseVault" styleClass="app-title"/>
-        <Label text="Forensic Case Management System" styleClass="subtitle"/>
-    </VBox>
+    <HBox alignment="CENTER_LEFT" spacing="10">
 
-    <!-- Spacer that grows to fill space -->
-    <Region HBox.hgrow="ALWAYS"/>
+        <ImageView fx:id="logoImage" fitHeight="60" fitWidth="160" preserveRatio="true" />
 
-    <!-- Right side: officer info + icon -->
-    <HBox spacing="12" alignment="CENTER_RIGHT">
-        <Pane fx:id="userIcon"/>
-        <VBox spacing="2" alignment="CENTER_RIGHT">
-            <Label text="Officer J. Smith" styleClass="user-info"/>
-            <Label text="Badge #46152" styleClass="user-info"/>
+        <VBox alignment="CENTER_LEFT" spacing="4">
+            <Label styleClass="app-title" text="CaseVault" />
+         <Label layoutX="10.0" layoutY="10.0" styleClass="subtitle" text="Forensic Case Management System" />
+        </VBox>
+
+    </HBox>
+
+
+    <!-- Spacer -->
+    <Region HBox.hgrow="ALWAYS" />
+
+    <!-- Right side: user info -->
+    <HBox alignment="CENTER_RIGHT" spacing="12">
+        <Pane fx:id="userIcon" />
+
+        <VBox alignment="CENTER_RIGHT" spacing="2">
+
+            <!-- USERNAME (top) -->
+            <Label fx:id="userNameLabel" styleClass="userAccount-info" text="Username" />
+
+            <!-- USER ID (bottom) -->
+            <Label fx:id="userIdLabel" styleClass="userAccount-info" text="User ID" />
+
         </VBox>
     </HBox>
 </HBox>
