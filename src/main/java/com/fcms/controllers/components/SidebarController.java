@@ -61,32 +61,7 @@ public class SidebarController {
     public void initialize() {
         injectIcons();
         applyRoleVisibility();
-        applyRoleTheme(UserSession.getInstance().getRole());
     }
-
-    private void applyRoleTheme(String role) {
-        sidebarContainer.getStyleClass().removeAll(
-                "sidebar-police",
-                "sidebar-court",
-                "sidebar-forensic",
-                "sidebar-admin"
-        );
-
-        switch (role) {
-            case "Police Officer" ->
-                    sidebarContainer.getStyleClass().add("sidebar-police");
-
-            case "Court Official"  ->
-                    sidebarContainer.getStyleClass().add("sidebar-court");
-
-            case "Forensic Expert" ->
-                    sidebarContainer.getStyleClass().add("sidebar-forensic");
-
-            case "System Admin" ->
-                    sidebarContainer.getStyleClass().add("sidebar-admin");
-        }
-    }
-
     // -------------------- ICONS --------------------
 
     private void injectIcons() {

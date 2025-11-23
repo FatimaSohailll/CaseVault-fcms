@@ -456,3 +456,99 @@
 .list-cell:empty {
     -fx-background-color: transparent;
 }
+
+
+/* ============================================
+   SAFE ComboBox Styling ONLY for Manage Users
+   ============================================ */
+.manage-role-combo.combo-box-base {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+    -fx-padding: 0 8;
+    -fx-pref-height: 38px;
+}
+
+.manage-role-combo.combo-box-base:hover {
+    -fx-border-color: #9ca3af;
+}
+
+.manage-role-combo.combo-box-base:focused {
+    -fx-border-color: #3b82f6;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 8, 0, 0, 0);
+}
+
+/* Keep default arrow working */
+.manage-role-combo .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 8;
+}
+
+.manage-role-combo .arrow {
+    -fx-background-color: #666;
+}
+
+/* Popup styling */
+.manage-role-combo .combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-radius: 8;
+    -fx-border-color: #d1d5db;
+}
+
+.manage-role-combo .combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #ff9800;      /* New highlight color */
+    -fx-text-fill: white;
+}
+.manage-role-combo .combo-box-popup .list-cell:hover {
+    -fx-background-color: #ffe0b2;      /* Softer hover color */
+}
+
+/* ============================================
+   ComboBox Styling ONLY for SubmitToCourt
+   ============================================ */
+
+.court-combo.combo-box-base {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #3a4660;   /* navy blue border */
+    -fx-border-radius: 8;
+    -fx-padding: 0 10;
+    -fx-pref-height: 40px;
+}
+
+.court-combo.combo-box-base:hover {
+    -fx-border-color: #56608a;   /* lighter hover */
+}
+
+.court-combo.combo-box-base:focused {
+    -fx-border-color: #3a66ff;
+    -fx-effect: dropshadow(gaussian, rgba(58,102,255,0.20), 8, 0, 0, 0);
+}
+
+/* arrow button */
+.court-combo .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 8;
+}
+
+.court-combo .arrow {
+    -fx-background-color: #3a4660;
+}
+
+/* popup */
+.court-combo .combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-radius: 8;
+    -fx-border-color: #d1d5db;
+}
+
+/* selected item highlight */
+.court-combo .combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #3a4660; /* dark blue highlight */
+    -fx-text-fill: white;
+}
+
+.court-combo .combo-box-popup .list-cell:hover {
+    -fx-background-color: #e2e7ff;  /* soft light blue */
+}

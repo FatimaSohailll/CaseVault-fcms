@@ -34,6 +34,7 @@ public class SubmitToCourtController {
     private final CaseService caseService = new CaseService();
     private final UserRepository userRepo = new UserRepository();
 
+    @FXML private TextArea caseDetailsArea;
 
     @FXML
     private void initialize() {

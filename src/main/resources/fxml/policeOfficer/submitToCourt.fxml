@@ -25,14 +25,11 @@
         <VBox spacing="10">
             <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Select Case" />
 
-            <ComboBox fx:id="caseDropdown" prefWidth="350" promptText="Select a case" />
+            <ComboBox fx:id="caseDropdown"
+                      prefWidth="350"
+                      promptText="Select a case"
+                      styleClass="court-combo" />
         </VBox>
-
-        <!-- WARNING -->
-        <HBox spacing="10" style="-fx-background-color: #fff8e5; -fx-border-color: #f2c36b;                      -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 15;">
-            <Label style="-fx-font-size: 16;" text="⚠" />
-            <Label style="-fx-text-fill: #6a5a00; -fx-font-size: 14;" text="Please complete all checklist items before submitting to court." />
-        </HBox>
 
         <!-- CASE SUMMARY -->
         <VBox spacing="20" style="-fx-background-color: white; -fx-background-radius: 10;">
@@ -68,7 +65,11 @@
             <VBox spacing="10" style="-fx-padding: 10 0;">
                 <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Assign to Court Official" />
 
-                <ComboBox fx:id="courtOfficialCombo" prefWidth="350" promptText="Select Court Official" />
+
+                <ComboBox fx:id="courtOfficialCombo"
+                          prefWidth="350"
+                          promptText="Select Court Official"
+                          styleClass="court-combo" />
             </VBox>
 
             <HBox spacing="10" style="-fx-background-color: #f0f6ff; -fx-padding: 15; -fx-background-radius: 8;">

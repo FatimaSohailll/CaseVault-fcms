@@ -5,6 +5,8 @@ import com.fcms.models.Icons;
 import com.fcms.models.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
@@ -14,6 +16,9 @@ public class TopbarController {
     @FXML private Label userNameLabel; // username (top)
     @FXML private Label userIdLabel;   // role (bottom)
     private SceneManager sceneManager;
+    @FXML
+    private ImageView logoImage;
+
 
     public void setSceneManager(SceneManager sm) { this.sceneManager = sm; }
 
@@ -22,6 +27,12 @@ public class TopbarController {
     @FXML
     public void initialize() {
 
+        try {
+            Image logo = new Image(getClass().getResourceAsStream("/images/CaseVault_logo.png"));
+            logoImage.setImage(logo);
+        } catch (Exception e) {
+            System.out.println("Logo failed to load: " + e.getMessage());
+        }
         // Add user icon
         userIcon.getChildren().add(createIcon("user"));
 

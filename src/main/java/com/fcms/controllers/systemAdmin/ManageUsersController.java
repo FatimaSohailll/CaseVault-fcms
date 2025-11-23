@@ -2,6 +2,7 @@ package com.fcms.controllers.systemAdmin;
 
 import com.fcms.models.users.UserAccount;
 import com.fcms.services.UserService;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.stage.Stage;
 
 public class ManageUsersController {
@@ -18,7 +18,6 @@ public class ManageUsersController {
     @FXML private TableView<UserAccount> usersTable;
     @FXML private TextField searchField;
     @FXML private ComboBox<String> roleFilter;
-    @FXML private ComboBox<String> statusFilter;
     @FXML private Label totalUsersLabel;
 
     private final UserService userService = new UserService();
@@ -90,10 +89,10 @@ public class ManageUsersController {
             }
         });
 
+        // Load users from DB (only approved)
         loadUsers();
-        updateUserCount();
 
-        // FILTERS
+        // Role filter only
         roleFilter.setItems(FXCollections.observableArrayList(
                 "All Roles",
                 "Police Officer",
@@ -102,17 +101,11 @@ public class ManageUsersController {
         ));
         roleFilter.setValue("All Roles");
 
-        statusFilter.setItems(FXCollections.observableArrayList(
-                "All Status",
-                "Active",
-                "Pending"
-        ));
-        statusFilter.setValue("All Status");
-
+        // Listeners
         searchField.textProperty().addListener((o, oldV, newV) -> applyFilters());
         roleFilter.valueProperty().addListener((o, oldV, newV) -> applyFilters());
-        statusFilter.valueProperty().addListener((o, oldV, newV) -> applyFilters());
 
+        // Initial filter + table bind
         applyFilters();
     }
 
@@ -123,44 +116,45 @@ public class ManageUsersController {
     }
 
     private void updateUserCount() {
-        totalUsersLabel.setText("All Users (" + allUserAccounts.size() + ")");
+        totalUsersLabel.setText("All Users (" + filteredUserAccounts.size() + ")");
     }
 
     private void applyFilters() {
         filteredUserAccounts.clear();
 
-        String search = searchField.getText().toLowerCase().trim();
+        String search = searchField.getText() == null
+                ? ""
+                : searchField.getText().toLowerCase().trim();
+
         String selectedRole = roleFilter.getValue();
-        String selectedStatus = statusFilter.getValue();
+        if (selectedRole == null) selectedRole = "All Roles";
 
         for (UserAccount u : allUserAccounts) {
 
+            // --- search: name OR email (you can add username here if you want) ---
             boolean matchesSearch =
                     u.getName().toLowerCase().contains(search) ||
                             u.getEmail().toLowerCase().contains(search);
 
+            // --- role filter ---
+            String role = u.getRole() == null ? "" : u.getRole().trim();
+
             boolean matchesRole =
                     selectedRole.equals("All Roles") ||
-                            u.getRole().equals(selectedRole);
+                            role.equalsIgnoreCase(selectedRole);
 
-            String status = u.isApproved() ? "Active" : "Pending";
-
-            boolean matchesStatus =
-                    selectedStatus.equals("All Status") ||
-                            selectedStatus.equals(status);
-
-            if (matchesSearch && matchesRole && matchesStatus) {
+            if (matchesSearch && matchesRole) {
                 filteredUserAccounts.add(u);
             }
         }
 
         usersTable.setItems(filteredUserAccounts);
+        updateUserCount();
     }
 
     public void reloadTable() {
         loadUsers();
         applyFilters();
-        updateUserCount();
     }
 
     private void openUserDialog(boolean isEdit, UserAccount user) {

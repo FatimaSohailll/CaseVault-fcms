@@ -1,28 +1,9 @@
 /* ======================================= */
-/*            TOP BAR (ROLE-BASED)         */
+/*             UNIVERSAL TOP BAR           */
 /* ======================================= */
-
-/* Base top bar (fallback – used if no role class attached) */
 .top-bar {
     -fx-background-color: #001440;
     -fx-alignment: center-left;
-}
-
-/* Role-specific topbar backgrounds */
-.topbar-police {
-    -fx-background-color: #001440; /* dark blue */
-}
-
-.topbar-court {
-    -fx-background-color: #FF8B07; /* orange-yellow */
-}
-
-.topbar-forensic {
-    -fx-background-color: #6e6e6e; /* grey */
-}
-
-.topbar-admin {
-    -fx-background-color: #af2020; /* red */
 }
 
 .app-title {
@@ -42,66 +23,50 @@
 }
 
 /* ======================================= */
-/*          SIDEBAR (ROLE-BASED)           */
+/*             UNIVERSAL SIDEBAR           */
 /* ======================================= */
-
-/* Sidebar container background per role */
-.sidebar-police {
-    -fx-background-color: #001440; /* dark blue */
+.sidebar {
+    -fx-background-color: #001440;   /* ALWAYS blue */
 }
 
-.sidebar-court {
-    -fx-background-color: #FF8B07; /* orange-yellow */
-}
-
-.sidebar-forensic {
-    -fx-background-color: #6e6e6e; /* grey */
-}
-
-.sidebar-admin {
-    -fx-background-color: #af2020; /* red */
-}
-
-/* Base row layout (role-specific colors come later) */
+/* Sidebar items */
 .nav-row {
     -fx-alignment: center-left;
     -fx-padding: 6 8;
     -fx-background-radius: 6;
 }
 
-.nav-row.active {
-    -fx-background-color: #f5f5f4;
+.nav-row:hover {
+    -fx-background-color: #1d2951;
 }
 
-/* Base button layout (no strong color – overridden by role rules) */
+/* Active button */
+.nav-row.active .nav-btn {
+    -fx-background-color: #f5f5f4;
+    -fx-text-fill: #001440;
+}
+
+/* Sidebar Buttons */
 .nav-btn {
+    -fx-background-color: transparent;
     -fx-background-radius: 6;
-    -fx-background-insets: 0;
     -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
     -fx-padding: 6 10;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
-    -fx-content-display: LEFT;
-    -fx-graphic-text-gap: 8;
-    -fx-wrap-text: false;
-    -fx-text-overrun: ellipsis;
 }
 
-/* Base icon styling; stroke color overridden per role / state where needed */
-.icon {
-    -fx-fill: transparent;
-    -fx-opacity: 0.9;
+.nav-btn:hover {
+    -fx-background-color: #1d2951;
 }
 
+/* Icons */
 .icon-path,
 .icon-line,
 .icon-circle {
-    -fx-stroke-width: 2;
-    -fx-stroke-line-cap: round;
-    -fx-stroke-line-join: round;
+    -fx-stroke: #ffffff;
 }
-
 /* ======================================= */
 /*    ROLE-SPECIFIC NAV COLORS & ICONS     */
 /* ======================================= */
