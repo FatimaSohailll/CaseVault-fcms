@@ -63,4 +63,21 @@ public class Case {
 
     public String getTime() { return time; }
     public void setTime(String time) { this.time = time; }
+
+    public boolean isSubmittedToCourt() {
+        return "submitted".equalsIgnoreCase(status);
+    }
+
+    public boolean hasVerdict() {
+        return "closed".equalsIgnoreCase(status);
+    }
+
+    public String getOfficerName() {
+        return assignedOfficer;
+    }
+
+    public String getCreatedAt() {
+        return dateRegistered != null ? dateRegistered.toString() : "";
+    }
+
 }

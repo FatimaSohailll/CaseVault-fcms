@@ -78,7 +78,11 @@
             </HBox>
 
             <HBox spacing="15">
-                <Button fx:id="submitButton" onAction="#handleSubmit" prefWidth="300" style="-fx-background-color: #3a4660; -fx-text-fill: white; -fx-font-size: 15;                                -fx-padding: 10 30; -fx-background-radius: 8;" text="⚖   Submit to Court" />
+                <Button fx:id="submitButton"
+                        onAction="#handleSubmit"
+                        prefWidth="300"
+                        text="⚖   Submit to Court"
+                        styleClass="submit-button" />
             </HBox>
         </VBox>
 

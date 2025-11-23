@@ -311,7 +311,7 @@ public class CaseRepository {
         String sql = """
         UPDATE CaseFile
         SET status = 'submitted',
-            courtOfficialID = ?
+            reviewedBy = ?
         WHERE caseID = ?
     """;
 
