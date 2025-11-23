@@ -421,8 +421,8 @@ public class UserRepository {
     }
 
     // =====================================================
-// GET RECENT HISTORY (LIMIT N)
-// =====================================================
+    // GET RECENT HISTORY (LIMIT N)
+    // =====================================================
     public static List<String[]> getRecentHistory(int limit) {
         List<String[]> history = new ArrayList<>();
 
@@ -507,4 +507,25 @@ public class UserRepository {
 
         return 0;
     }
+
+    public List<String> getAllCourtOfficials() {
+        List<String> list = new ArrayList<>();
+
+        String sql = "SELECT userID FROM UserAccount WHERE role = 'Court Official' AND approved = 1";
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(rs.getString("userID"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 }

@@ -82,7 +82,7 @@ public class SQLiteDatabase {
                 "description TEXT, " +
                 "location TEXT, " +
                 "type TEXT, " +
-                "status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed', 'archived')), " +
+                "status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed', 'archived', 'submitted')), " +
                 "priority TEXT CHECK (priority IN ('high', 'low', 'medium')), " +
                 "assignedOfficer TEXT, " +
                 "dateRegistered DATE NOT NULL, " +

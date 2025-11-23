@@ -4,38 +4,60 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane fitToWidth="true" style="-fx-background: #f6f6f6;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane fitToWidth="true"
+            style="-fx-background: #f6f6f6;"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.fcms.controllers.courtOfficial.CourtDashboardController">
+
     <VBox spacing="25">
         <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
 
         <!-- ====================== PAGE TITLE ====================== -->
-        <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Court Dashboard" />
+        <Label style="-fx-font-size: 20px; -fx-font-weight: bold;"
+               text="Court Dashboard" />
 
 
         <!-- ====================== OVERVIEW SECTION ====================== -->
         <VBox spacing="10">
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Overview" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;"
+                   text="Overview" />
 
             <HBox spacing="20">
 
                 <!-- Total Cases -->
-                <VBox prefWidth="200" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 15; -fx-border-color: #ffa54f;">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #555;" text="Total Cases" />
-                    <Label style="-fx-font-size: 30px; -fx-font-weight: bold;" text="6" />
+                <VBox prefWidth="200" spacing="10"
+                      style="-fx-background-color: white; -fx-background-radius: 10;
+                             -fx-border-radius: 10; -fx-padding: 15; -fx-border-color: #ffa54f;">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #555;"
+                           text="Total Cases" />
+                    <Label fx:id="totalCasesLabel"
+                           style="-fx-font-size: 30px; -fx-font-weight: bold;"
+                           text="0" />
                 </VBox>
 
                 <!-- Cases Awaiting Verdict -->
-                <VBox prefWidth="200" spacing="10" style="-fx-background-color: white; -fx-border-color: #ffa54f;                              -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 15;">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #555;" text="Cases Awaiting Verdict" />
-                    <Label style="-fx-font-size: 30px; -fx-font-weight: bold;" text="4" />
+                <VBox prefWidth="200" spacing="10"
+                      style="-fx-background-color: white; -fx-border-color: #ffa54f;
+                             -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 15;">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #555;"
+                           text="Cases Awaiting Verdict" />
+                    <Label fx:id="awaitingVerdictLabel"
+                           style="-fx-font-size: 30px; -fx-font-weight: bold;"
+                           text="0" />
                 </VBox>
 
                 <!-- Verdicts Recorded -->
-                <VBox prefWidth="200" spacing="10" style="-fx-background-color: white; -fx-border-color: #ffa54f; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 15;">
-                    <Label style="-fx-font-size: 14px; -fx-text-fill: #555;" text="Verdicts Recorded" />
-                    <Label style="-fx-font-size: 30px; -fx-font-weight: bold;" text="2" />
+                <VBox prefWidth="200" spacing="10"
+                      style="-fx-background-color: white; -fx-border-color: #ffa54f;
+                             -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 15;">
+                    <Label style="-fx-font-size: 14px; -fx-text-fill: #555;"
+                           text="Verdicts Recorded" />
+                    <Label fx:id="verdictsRecordedLabel"
+                           style="-fx-font-size: 30px; -fx-font-weight: bold;"
+                           text="0" />
                 </VBox>
 
             </HBox>
@@ -43,136 +65,39 @@
 
 
         <!-- ====================== SUBMITTED CASES SECTION ====================== -->
-        <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20;">
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20;">
 
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <VBox spacing="3">
-                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Submitted Cases" />
-                    <Label style="-fx-text-fill: #777;" text="Cases that require a verdict to be recorded" />
+                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;"
+                           text="Submitted Cases" />
+                    <Label style="-fx-text-fill: #777;"
+                           text="Cases that require a verdict to be recorded" />
                 </VBox>
                 <Pane HBox.hgrow="ALWAYS" />
-                <Label style="-fx-text-fill: #1a2c60; -fx-font-weight: bold;" text="See More &gt;" />
+                <Label style="-fx-text-fill: #1a2c60; -fx-font-weight: bold; -fx-cursor: hand;"
+                       text="See More >"
+                       onMouseClicked="#openSearchCases" />
             </HBox>
 
-            <!-- CARD 1 -->
-            <VBox spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
-                <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label style="-fx-font-weight: bold;" text="CR-2024-001" />
-                    <Label style="-fx-background-color: #ffc107;                            -fx-padding: 2 8; -fx-background-radius: 5;" text="Criminal" />
-                    <Label style="-fx-background-color: #F6F6F6; -fx-padding: 2 8; -fx-background-radius: 5;" text="Awaiting Verdict" />
-                    <Pane HBox.hgrow="ALWAYS" />
-                    <Button style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-padding: 6 14; -fx-background-radius: 5;" text="Record Verdict" />
-                </HBox>
-
-                <Label style="-fx-font-weight: bold;" text="Defendant: John Doe" />
-                <Label text="Description: Theft of property valued over $1,000" />
-                <Label style="-fx-text-fill: #666;" text="Filed: 1/15/2024" />
-            </VBox>
-
-
-            <!-- CARD 2 -->
-            <VBox spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
-                <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label style="-fx-font-weight: bold;" text="CR-2024-002" />
-                    <Label style="-fx-background-color: #ffc107;                            -fx-padding: 2 8; -fx-background-radius: 5;" text="Criminal" />
-                    <Label style="-fx-background-color: #F6F6F6; -fx-padding: 2 8; -fx-background-radius: 5;" text="Awaiting Verdict" />
-                    <Pane HBox.hgrow="ALWAYS" />
-                    <Button style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-padding: 6 14; -fx-background-radius: 5;" text="Record Verdict" />
-                </HBox>
-
-                <Label style="-fx-font-weight: bold;" text="Defendant: Jane Smith" />
-                <Label text="Description: Fraud and identity theft" />
-                <Label style="-fx-text-fill: #666;" text="Filed: 2/20/2024" />
-            </VBox>
-
-
-            <!-- CARD 3 -->
-            <VBox spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
-                <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label style="-fx-font-weight: bold;" text="CV-2024-003" />
-                    <Label style="-fx-background-color: #ffd27f;                            -fx-padding: 2 8; -fx-background-radius: 5;" text="Civil" />
-                    <Label style="-fx-background-color: #F6F6F6; -fx-padding: 2 8; -fx-background-radius: 5;" text="Awaiting Verdict" />
-                    <Pane HBox.hgrow="ALWAYS" />
-                    <Button style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-padding: 6 14; -fx-background-radius: 5;" text="Record Verdict" />
-                </HBox>
-
-                <Label style="-fx-font-weight: bold;" text="Defendant: ABC Corporation" />
-                <Label text="Description: Breach of contract" />
-                <Label style="-fx-text-fill: #666;" text="Filed: 3/10/2024" />
-            </VBox>
+            <!-- Dynamic cards inserted here -->
+            <VBox fx:id="submittedCasesContainer" spacing="10"/>
         </VBox>
-
-
 
 
         <!-- ====================== CASE HISTORY SECTION ====================== -->
-        <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20;">
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20;">
 
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Case History" />
-            <Label style="-fx-text-fill: #777;" text="All cases with recorded verdicts" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;"
+                   text="Case History" />
+            <Label style="-fx-text-fill: #777;"
+                   text="All cases with recorded verdicts" />
 
-
-            <!-- HISTORY CARD 1 -->
-            <VBox prefHeight="89.0" prefWidth="600.0" spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
-
-                <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label style="-fx-font-weight: bold;" text="CR-2024-004" />
-                    <Label style="-fx-background-color: #ffc107; -fx-padding: 2 8; -fx-background-radius: 5;" text="Criminal" />
-                    <Label style="-fx-background-color: #1a2c60; -fx-text-fill: white;                            -fx-padding: 2 8; -fx-background-radius: 5;" text="Verdict Recorded" />
-                </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <VBox prefHeight="63.0" prefWidth="336.0">
-                     <children>
-            
-                            <Label style="-fx-font-weight: bold;" text="Defendant: Robert Johnson" />
-                            <Label text="Description: Assault and battery" />
-                            <Label text="Notes: Defendant showed remorse during trial" />
-                            <Label style="-fx-text-fill: #666;" text="Filed: 1/5/2024" />
-                     </children>
-                  </VBox>
-                  <VBox prefHeight="68.0" prefWidth="348.0">
-                     <children>
-            
-                            <Label style="-fx-text-fill: #d63031; -fx-font-weight: bold;" text="Verdict: Guilty" />
-                            <Label text="Sentence: 2 years imprisonment" />
-                            <Label text="Verdict Date: 11/1/2024" />
-                     </children></VBox>
-               </children>
-            </HBox>
-            </VBox>
-         <VBox layoutX="30.0" layoutY="92.0" prefHeight="89.0" prefWidth="600.0" spacing="5" style="-fx-background-color: white; -fx-background-radius: 10;                                       -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-padding: 15;">
-            <children>
-               <HBox alignment="CENTER_LEFT" spacing="10">
-                  <children>
-                     <Label style="-fx-font-weight: bold;" text="TR-2024-005" />
-                     <Label style="-fx-background-color: #ffd27f; -fx-padding: 2 8; -fx-background-radius: 5;" text="Traffic" />
-                     <Label style="-fx-background-color: #1a2c60; -fx-text-fill: white;                            -fx-padding: 2 8; -fx-background-radius: 5;" text="Verdict Recorded" />
-                  </children>
-               </HBox>
-               <HBox prefHeight="100.0" prefWidth="200.0">
-                  <children>
-                     <VBox prefHeight="68.0" prefWidth="281.0">
-                        <children>
-                           <Label style="-fx-font-weight: bold;" text="Defendant: Mary Williams" />
-                           <Label text="Description: DUI – first offense" />
-                           <Label text="Notes: Completed DUI education program" />
-                           <Label style="-fx-text-fill: #666;" text="Filed: 2/28/2024" />
-                        </children>
-                     </VBox>
-                     <VBox prefHeight="68.0" prefWidth="299.0">
-                        <children>
-                           <Label style="-fx-text-fill: #d63031; -fx-font-weight: bold;" text="Verdict: Guilty" />
-                           <Label text="Sentence: 6 months license suspension, $1,500 fine" />
-                           <Label text="Verdict Date: 10/15/2024" />
-                        </children>
-                     </VBox>
-                  </children>
-               </HBox>
-            </children>
-         </VBox>
+            <!-- Dynamic history cards inserted here -->
+            <VBox fx:id="caseHistoryContainer" spacing="10"/>
         </VBox>
-
 
     </VBox>
 </ScrollPane>

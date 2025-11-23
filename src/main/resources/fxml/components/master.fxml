@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.fcms.controllers.components.MasterLayoutController">
+
+    <top>
+        <!-- topbar & sidebar are in the SAME folder, so relative include is fine -->
+        <fx:include source="topbar.fxml"/>
+    </top>
+
+    <left>
+        <fx:include source="sidebar.fxml"/>
+    </left>
+
+    <center>
+        <!-- this is where SceneManager will inject pages -->
+        <AnchorPane fx:id="contentArea"/>
+    </center>
+
+    <padding>
+        <Insets top="0" right="0" bottom="0" left="0"/>
+    </padding>
+</BorderPane>

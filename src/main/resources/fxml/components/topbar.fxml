@@ -4,27 +4,39 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 
-<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.components.TopbarController"
+<HBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.fcms.controllers.components.TopbarController"
       styleClass="top-bar">
 
     <padding>
         <Insets top="14" right="20" bottom="14" left="20"/>
     </padding>
+
     <!-- Left side: app title -->
     <VBox spacing="4">
         <Label text="CaseVault" styleClass="app-title"/>
         <Label text="Forensic Case Management System" styleClass="subtitle"/>
     </VBox>
 
-    <!-- Spacer that grows to fill space -->
+    <!-- Spacer -->
     <Region HBox.hgrow="ALWAYS"/>
 
-    <!-- Right side: officer info + icon -->
+    <!-- Right side: user info -->
     <HBox spacing="12" alignment="CENTER_RIGHT">
         <Pane fx:id="userIcon"/>
+
         <VBox spacing="2" alignment="CENTER_RIGHT">
-            <Label text="Officer J. Smith" styleClass="userAccount-info"/>
-            <Label text="Badge #46152" styleClass="userAccount-info"/>
+
+            <!-- USERNAME (top) -->
+            <Label fx:id="userNameLabel"
+                   text="Username"
+                   styleClass="userAccount-info"/>
+
+            <!-- USER ID (bottom) -->
+            <Label fx:id="userIdLabel"
+                   text="User ID"
+                   styleClass="userAccount-info"/>
+
         </VBox>
     </HBox>
 </HBox>
