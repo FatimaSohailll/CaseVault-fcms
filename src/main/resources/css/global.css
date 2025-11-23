@@ -449,3 +449,7 @@
 .list-cell:empty {
     -fx-background-color: transparent;
 }
+
+.top-bar {
+    -fx-background-color: #001845; /* dark navy */
+}
