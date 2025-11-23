@@ -1,86 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.fcms.controllers.auth.LoginController"
-      alignment="CENTER" spacing="20" style="-fx-background-color: #f8fafc;"
-      prefWidth="400" prefHeight="600">
+<VBox alignment="CENTER" prefHeight="600" prefWidth="400" spacing="20" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.auth.LoginController">
 
     <padding>
-        <Insets top="40" right="20" bottom="40" left="20"/>
+        <Insets bottom="40" left="20" right="20" top="40" />
     </padding>
 
     <!-- Logo and Header -->
     <VBox alignment="CENTER" spacing="10">
         <StackPane style="-fx-background-color: #001440; -fx-background-radius: 8;">
             <padding>
-                <Insets top="12" right="12" bottom="12" left="12"/>
+                <Insets bottom="12" left="12" right="12" top="12" />
             </padding>
-            <Label text="🔒" style="-fx-font-size: 24; -fx-text-fill: white;"/>
+            <Label style="-fx-font-size: 24; -fx-text-fill: white;" text="🔒" />
         </StackPane>
-        <Label text="CaseVault" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #001440;"/>
-        <Label text="Secure Access Portal – CaseVault System"
-               style="-fx-text-fill: #171617; -fx-opacity: 0.7; -fx-font-size: 12;"/>
+        <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #001440;" text="CaseVault" />
+        <Label style="-fx-text-fill: #171617; -fx-opacity: 0.7; -fx-font-size: 12;" text="Secure Access Portal – CaseVault System" />
     </VBox>
 
     <!-- Login Card -->
-    <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);"
-          spacing="20" maxWidth="320" prefWidth="320">
+    <VBox maxWidth="320" prefWidth="320" spacing="20" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
         <padding>
-            <Insets top="24" right="24" bottom="24" left="24"/>
+            <Insets bottom="24" left="24" right="24" top="24" />
         </padding>
 
-        <Label text="Sign In" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #001440;"
-               alignment="CENTER" maxWidth="Infinity"/>
+        <Label alignment="CENTER" maxWidth="Infinity" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #001440;" text="Sign In" />
 
         <VBox spacing="16">
             <!-- User ID Field -->
             <VBox spacing="8">
-                <Label text="Username" style="-fx-text-fill: #171617; -fx-font-size: 14;"/>
+                <Label style="-fx-text-fill: #171617; -fx-font-size: 14;" text="Username" />
                 <HBox alignment="CENTER_LEFT" style="-fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6;">
                     <padding>
-                        <Insets top="8" right="12" bottom="8" left="12"/>
+                        <Insets bottom="8" left="12" right="12" top="8" />
                     </padding>
-                    <Label text="👤" style="-fx-text-fill: #001440; -fx-opacity: 0.6;"/>
-                    <TextField fx:id="userField" promptText="Enter your username"
-                               style="-fx-background-color: transparent; -fx-border-width: 0; -fx-padding: 0 0 0 8;"
-                               HBox.hgrow="ALWAYS"/>
+                    <Label style="-fx-text-fill: #001440; -fx-opacity: 0.6;" text="👤" />
+                    <TextField fx:id="userField" promptText="Enter your username" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-padding: 0 0 0 8;" HBox.hgrow="ALWAYS" />
                 </HBox>
             </VBox>
 
             <!-- Password Field -->
             <VBox spacing="8">
-                <Label text="Password" style="-fx-text-fill: #171617; -fx-font-size: 14;"/>
+                <Label style="-fx-text-fill: #171617; -fx-font-size: 14;" text="Password" />
                 <HBox alignment="CENTER_LEFT" style="-fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6;">
                     <padding>
-                        <Insets top="8" right="12" bottom="8" left="12"/>
+                        <Insets bottom="8" left="12" right="12" top="8" />
                     </padding>
-                    <Label text="🔒" style="-fx-text-fill: #001440; -fx-opacity: 0.6;"/>
-                    <PasswordField fx:id="passwordField" promptText="Enter your password"
-                                   style="-fx-background-color: transparent; -fx-border-width: 0; -fx-padding: 0 0 0 8;"
-                                   HBox.hgrow="ALWAYS"/>
+                    <Label style="-fx-text-fill: #001440; -fx-opacity: 0.6;" text="🔒" />
+                    <PasswordField fx:id="passwordField" promptText="Enter your password" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-padding: 0 0 0 8;" HBox.hgrow="ALWAYS" />
                 </HBox>
             </VBox>
 
             <!-- Sign In Button -->
-            <Button fx:id="loginBtn" text="Sign In"
-                    style="-fx-background-color: #001440; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 6; -fx-pref-height: 40; -fx-cursor: hand;"
-                    onAction="#handleLogin" maxWidth="Infinity"/>
+            <Button fx:id="loginBtn" maxWidth="Infinity" onAction="#handleLogin" style="-fx-background-color: #001440; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 6; -fx-pref-height: 40; -fx-cursor: hand;" text="Sign In" />
         </VBox>
 
         <!-- Sign Up Link -->
         <HBox alignment="CENTER" spacing="4">
-            <Label text="Don't have an account?" style="-fx-text-fill: #171617; -fx-opacity: 0.7; -fx-font-size: 12;"/>
-            <Button fx:id="signupBtn" text="Sign up here"
-                    style="-fx-background-color: transparent; -fx-text-fill: #001440; -fx-font-size: 12; -fx-padding: 0; -fx-cursor: hand;"
-                    onAction="#handleSignup"/>
+            <Label style="-fx-text-fill: #171617; -fx-opacity: 0.7; -fx-font-size: 12;" text="Don't have an account?" />
+            <Button fx:id="signupBtn" onAction="#handleSignup" style="-fx-background-color: transparent; -fx-text-fill: #001440; -fx-font-size: 12; -fx-padding: 0; -fx-cursor: hand;" text="Sign up here" />
         </HBox>
     </VBox>
 
     <!-- Footer -->
-    <Label text="© 2025 CaseVault. Forensic Case Management System."
-           style="-fx-text-fill: #171617; -fx-opacity: 0.5; -fx-font-size: 10;"/>
+    <Label style="-fx-text-fill: #171617; -fx-opacity: 0.5; -fx-font-size: 10;" text="© 2025 CaseVault. Forensic Case Management System." />
 </VBox>

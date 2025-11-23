@@ -1,13 +1,13 @@
 package com.fcms.models;
 
-public class UserAccount {
+public class CreateUserAccount {
     private final String userID;
     private final String username;
     private final String password;
     private final String role;
     private final boolean approved;
 
-    public UserAccount(String userID, String username, String password, String role, boolean approved) {
+    public CreateUserAccount(String userID, String username, String password, String role, boolean approved) {
         this.userID = userID;
         this.username = username;
         this.password = password;

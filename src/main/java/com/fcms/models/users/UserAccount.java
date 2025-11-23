@@ -6,12 +6,13 @@ public class UserAccount {
     private String username;
     private String name;
     private String email;
-    private String password;   // NEW - full support
+    private String password;
     private String role;
-    private String managedBy;  // used as "status"
+    private String managedBy;
     private String createdAt;
+    private boolean approved;   // now boolean
 
-    // ========= FULL CONSTRUCTOR (8 FIELDS) =========
+    // ========= FULL CONSTRUCTOR (all fields) =========
     public UserAccount(String userID,
                        String username,
                        String name,
@@ -19,6 +20,7 @@ public class UserAccount {
                        String password,
                        String role,
                        String managedBy,
+                       boolean approved,
                        String createdAt) {
 
         this.userID = userID;
@@ -28,19 +30,21 @@ public class UserAccount {
         this.password = password;
         this.role = role;
         this.managedBy = managedBy;
+        this.approved = approved;     // TRUE/FALSE in Java
         this.createdAt = createdAt;
     }
 
-    // ========= SELECT CONSTRUCTOR (no password returned from DB) =========
+    // ========= CONSTRUCTOR for new users (createdAt auto) =========
     public UserAccount(String userID,
                        String username,
                        String name,
                        String email,
+                       String password,
                        String role,
                        String managedBy,
-                       String createdAt) {
+                       boolean approved) {
 
-        this(userID, username, name, email, null, role, managedBy, createdAt);
+        this(userID, username, name, email, password, role, managedBy, approved, null);
     }
 
     // ========= GETTERS =========
@@ -51,6 +55,7 @@ public class UserAccount {
     public String getPassword() { return password; }
     public String getRole() { return role; }
     public String getManagedBy() { return managedBy; }
+    public boolean isApproved() { return approved; }
     public String getCreatedAt() { return createdAt; }
 
     // ========= SETTERS =========
@@ -61,4 +66,6 @@ public class UserAccount {
     public void setPassword(String password) { this.password = password; }
     public void setRole(String role) { this.role = role; }
     public void setManagedBy(String managedBy) { this.managedBy = managedBy; }
+    public void setApproved(boolean approved) { this.approved = approved; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
 }

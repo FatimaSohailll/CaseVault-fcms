@@ -81,7 +81,7 @@ public class LoginController {
             System.out.println("Login successful for user: " + userID + " with role: " + result.getRole());
 
             // Store user session information (you might want to create a SessionManager class)
-            storeUserSession(result.getUserID(), result.getRole());
+            storeUserSession(result.getUserID(), result.getRole(), result.getUserID());
 
             // Navigate to main dashboard
             if (onLoginSuccess != null) {
@@ -97,10 +97,9 @@ public class LoginController {
         }
     }
 
-    private void storeUserSession(String userID, String role) {
-            UserSession session = UserSession.getInstance();
-            session.setCurrentUser(userID, role);
-            System.out.println("User session created - ID: " + userID + ", Role: " + role);
+    private void storeUserSession(String userID, String role, String username) {
+        UserSession session = UserSession.getInstance();
+        session.setCurrentUser(userID, role, username);
     }
 
     @FXML

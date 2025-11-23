@@ -23,8 +23,10 @@ public class ManageUsersController {
 
     private final UserService userService = new UserService();
 
-    private ObservableList<UserAccount> allUserAccounts = FXCollections.observableArrayList();
-    private ObservableList<UserAccount> filteredUserAccounts = FXCollections.observableArrayList();
+    private final ObservableList<UserAccount> allUserAccounts =
+            FXCollections.observableArrayList();
+    private final ObservableList<UserAccount> filteredUserAccounts =
+            FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -32,22 +34,26 @@ public class ManageUsersController {
         // USER ID
         TableColumn<UserAccount, String> idCol =
                 (TableColumn<UserAccount, String>) usersTable.getColumns().get(0);
-        idCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUserID()));
+        idCol.setCellValueFactory(c ->
+                new SimpleStringProperty(c.getValue().getUserID()));
 
         // NAME
         TableColumn<UserAccount, String> nameCol =
                 (TableColumn<UserAccount, String>) usersTable.getColumns().get(1);
-        nameCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
+        nameCol.setCellValueFactory(c ->
+                new SimpleStringProperty(c.getValue().getName()));
 
         // EMAIL
         TableColumn<UserAccount, String> emailCol =
                 (TableColumn<UserAccount, String>) usersTable.getColumns().get(2);
-        emailCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmail()));
+        emailCol.setCellValueFactory(c ->
+                new SimpleStringProperty(c.getValue().getEmail()));
 
         // ROLE
         TableColumn<UserAccount, String> roleCol =
                 (TableColumn<UserAccount, String>) usersTable.getColumns().get(3);
-        roleCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRole()));
+        roleCol.setCellValueFactory(c ->
+                new SimpleStringProperty(c.getValue().getRole()));
 
         // CREATED AT
         TableColumn<UserAccount, String> createdCol =
@@ -87,14 +93,19 @@ public class ManageUsersController {
         loadUsers();
         updateUserCount();
 
-        // Filters
+        // FILTERS
         roleFilter.setItems(FXCollections.observableArrayList(
-                "All Roles", "Police", "Forensic Expert", "Court Official"
+                "All Roles",
+                "Police Officer",
+                "Forensic Expert",
+                "Court Official"
         ));
         roleFilter.setValue("All Roles");
 
         statusFilter.setItems(FXCollections.observableArrayList(
-                "All Status", "Active", "Pending"
+                "All Status",
+                "Active",
+                "Pending"
         ));
         statusFilter.setValue("All Status");
 
@@ -105,17 +116,14 @@ public class ManageUsersController {
         applyFilters();
     }
 
+    // LOAD ONLY APPROVED USERS (approved = true)
     private void loadUsers() {
         allUserAccounts.setAll(userService.getAllUsers());
-
-        // Exclude pending accounts (they belong in Waiting List)
-        allUserAccounts.removeIf(u ->
-                u.getManagedBy() != null &&
-                        u.getManagedBy().equalsIgnoreCase("Pending")
-        );
+        allUserAccounts.removeIf(u -> !u.isApproved());
     }
+
     private void updateUserCount() {
-        totalUsersLabel.setText("All Users (" + userService.getUserCount() + ")");
+        totalUsersLabel.setText("All Users (" + allUserAccounts.size() + ")");
     }
 
     private void applyFilters() {
@@ -132,16 +140,18 @@ public class ManageUsersController {
                             u.getEmail().toLowerCase().contains(search);
 
             boolean matchesRole =
-                    selectedRole.equals("All Roles") || u.getRole().equals(selectedRole);
+                    selectedRole.equals("All Roles") ||
+                            u.getRole().equals(selectedRole);
 
-            boolean isPending = u.getManagedBy().equalsIgnoreCase("pending");
-            String currentStatus = isPending ? "Pending" : "Active";
+            String status = u.isApproved() ? "Active" : "Pending";
 
             boolean matchesStatus =
-                    selectedStatus.equals("All Status") || currentStatus.equals(selectedStatus);
+                    selectedStatus.equals("All Status") ||
+                            selectedStatus.equals(status);
 
-            if (matchesSearch && matchesRole && matchesStatus)
+            if (matchesSearch && matchesRole && matchesStatus) {
                 filteredUserAccounts.add(u);
+            }
         }
 
         usersTable.setItems(filteredUserAccounts);
@@ -155,20 +165,18 @@ public class ManageUsersController {
 
     private void openUserDialog(boolean isEdit, UserAccount user) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/systemAdmin/userDialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/systemAdmin/userDialog.fxml"));
             Parent root = loader.load();
 
             UserController ctrl = loader.getController();
             ctrl.setParent(this);
 
-            if (isEdit)
-                ctrl.loadUser(user);
+            if (isEdit) ctrl.loadUser(user);
 
             Stage stage = new Stage();
             stage.setTitle(isEdit ? "Edit User" : "Add User");
             stage.setScene(new Scene(root));
-            stage.setWidth(450);    // bigger width
-            stage.setHeight(420);   // bigger height
             stage.setResizable(true);
             stage.show();
 
@@ -188,8 +196,6 @@ public class ManageUsersController {
 
     private void handleDelete(UserAccount userAccount) {
         userService.deleteUser(userAccount.getUserID());
-        loadUsers();
-        applyFilters();
-        updateUserCount();
+        reloadTable();
     }
 }

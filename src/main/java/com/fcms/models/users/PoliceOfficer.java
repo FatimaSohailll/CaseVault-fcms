@@ -6,10 +6,22 @@ public class PoliceOfficer extends UserAccount {
     private String department;
 
     public PoliceOfficer(String userID, String username, String name, String email,
-                         String password, String role, String managedBy, String createdAt,
+                         String password, String role, String managedBy,
+                         boolean approved, String createdAt,
                          String rank, String department) {
 
-        super(userID, username, name, email, password, role, managedBy, createdAt);
+        super(
+                userID,
+                username,
+                name,
+                email,
+                password,
+                role,
+                managedBy,
+                approved,
+                createdAt
+        );
+
         this.rank = rank;
         this.department = department;
     }
