@@ -1,0 +1,121 @@
+/* Input Fields */
+.search-field, .filter-combo {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+}
+
+.search-field {
+    -fx-pref-width: 250px;
+    -fx-pref-height: 40px;
+}
+
+.filter-combo {
+    -fx-pref-width: 180px;
+    -fx-pref-height: 40px;
+}
+
+.search-field:focused, .filter-combo:focused {
+    -fx-border-color: #3b82f6;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 10, 0, 0, 0);
+}
+
+.search-field:hover, .filter-combo:hover {
+    -fx-border-color: #9ca3af;
+}
+
+/* Form Labels */
+.form-label {
+    -fx-text-fill: #171617;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Form Fields */
+.form-field {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+}
+
+.form-field:focused {
+    -fx-border-color: #001440;
+    -fx-effect: dropshadow(gaussian, rgba(0, 20, 64, 0.1), 10, 0, 0, 0);
+}
+
+/* Textarea */
+.form-textarea {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-font-size: 14px;
+    -fx-padding: 8;
+}
+
+.form-textarea:focused {
+    -fx-border-color: #001440;
+    -fx-effect: dropshadow(gaussian, rgba(0, 20, 64, 0.1), 10, 0, 0, 0);
+}
+
+/* File Upload */
+.file-upload-area {
+    -fx-border-color: #d1d5db;
+    -fx-border-style: dashed;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 24;
+    -fx-alignment: center;
+}
+
+/* Checkbox */
+.check-box {
+    -fx-text-fill: transparent;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #001440;
+    -fx-border-color: #001440;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+/* ComboBox Popup */
+.combo-box-popup .list-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.combo-box-popup .list-cell {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: oklch(0.145 0 0);
+    -fx-padding: 8 12;
+    -fx-font-weight: 400;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #ececf0;
+}
+
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #030213;
+    -fx-text-fill: #ffffff;
+}

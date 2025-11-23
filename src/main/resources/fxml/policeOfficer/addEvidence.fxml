@@ -72,7 +72,7 @@
                                     <Label styleClass="form-label" text="File Upload" />
                                     <VBox style="-fx-border-color: #d1d5db; -fx-border-style: dashed; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 24; -fx-alignment: center;">
                                         <Label text="📎" style="-fx-font-size: 24; -fx-text-fill: #9ca3af;" />
-                                        <Label text="Click to upload or drag and drop" style="-fx-text-fill: #6b7280; -fx-font-size: 13px; -fx-padding: 8 0 4 0;" />
+                                        <Label text="Click to upload" style="-fx-text-fill: #6b7280; -fx-font-size: 13px; -fx-padding: 8 0 4 0;" />
                                         <Label text="PDF, Images, Videos (MAX. 50MB)" style="-fx-text-fill: #9ca3af; -fx-font-size: 11px;" />
                                         <Button fx:id="fileUploadButton" styleClass="secondary-button" text="Choose File" style="-fx-margin: 16 0 0 0;" />
                                         <Label fx:id="fileNameLabel" style="-fx-font-size: 13px; -fx-padding: 8 0 0 0;" />
@@ -82,7 +82,7 @@
                                 <!-- Action Buttons -->
                                 <HBox spacing="12.0" style="-fx-padding: 16 0 0 0;">
                                     <Button fx:id="saveButton" styleClass="action-button" text="Save Evidence" />
-                                    <Button fx:id="cancelButton" styleClass="secondary-button" text="Cancel" />
+                                    <Button fx:id="cancelButton" styleClass="action-button" text="Cancel" />
                                 </HBox>
                             </VBox>
                         </VBox>

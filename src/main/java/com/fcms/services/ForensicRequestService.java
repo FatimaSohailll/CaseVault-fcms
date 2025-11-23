@@ -110,6 +110,14 @@ public class ForensicRequestService {
         }
     }
 
+    public int getUrgentCount() throws BusinessException {
+        try {
+            return requestRepository.getUrgentCount();
+        } catch (SQLException e) {
+            throw new BusinessException("Database error while getting urgent count: " + e.getMessage());
+        }
+    }
+
     public int getCompletedCount() throws BusinessException {
         try {
             return requestRepository.getCompletedCount();

@@ -13,7 +13,7 @@ public class ForensicExpertRepository {
         String sql = "SELECT ua.userID, ua.name, fe.labName, ua.email " +
                 "FROM UserAccount ua " +
                 "JOIN ForensicExpert fe ON ua.userID = fe.expertID " +
-                "WHERE ua.role = 'Forensic Expert'";
+                "WHERE ua.role = 'Forensic Expert' and ua.approved = true";
 
         try (Connection conn = SQLiteDatabase.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -41,7 +41,7 @@ public class ForensicExpertRepository {
         String sql = "SELECT ua.userID, ua.name, fe.labName, ua.email " +
                 "FROM UserAccount ua " +
                 "JOIN ForensicExpert fe ON ua.userID = fe.expertID " +
-                "WHERE ua.role = 'Forensic Expert' AND ua.userID = ?";
+                "WHERE ua.role = 'Forensic Expert' AND ua.userID = ? AND ua.approved = true";
 
         try (Connection conn = SQLiteDatabase.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

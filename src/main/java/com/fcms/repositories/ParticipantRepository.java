@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class ParticipantRepository {
-    private String officerId;
+    private String caseId;
 
-    public ParticipantRepository(String officerId) {
-        this.officerId = officerId;
+    public ParticipantRepository(String caseId) {
+        this.caseId = caseId;
     }
-
     public ParticipantRepository() {
-        this.officerId = null; // For cases where no filtering is needed
     }
 
     public void save(Participant participant) {
@@ -122,24 +120,15 @@ public class ParticipantRepository {
     public List<Participant> findAll() {
         List<Participant> participants = new ArrayList<>();
         String sql;
-
-        if (officerId != null) {
             // Get participants from cases assigned to this officer
             sql = "SELECT DISTINCT p.* FROM Participant p " +
                     "JOIN CaseParticipants cp ON p.participantID = cp.participantID " +
-                    "JOIN CaseFile cf ON cp.caseID = cf.caseID " +
-                    "WHERE cf.assignedOfficer = ?";
-        } else {
-            // Get all participants (no filtering)
-            sql = "SELECT * FROM Participant";
-        }
+                    "JOIN CaseFile cf ON cp.caseID = cf.caseID WHERE cp.caseID = ?" ;
 
         try (Connection conn = SQLiteDatabase.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            if (officerId != null) {
-                pstmt.setString(1, officerId);
-            }
+                pstmt.setString(1, caseId);
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -309,16 +298,43 @@ public class ParticipantRepository {
 
     // Generate a unique participant ID
     public String generateParticipantId() {
-        return "P-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        try {
+            String sql = "SELECT participantID FROM Participant ORDER BY participantID DESC LIMIT 1";
+
+            try (Connection conn = SQLiteDatabase.getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(sql);
+                 ResultSet rs = pstmt.executeQuery()) {
+
+                if (rs.next()) {
+                    // Get the last report ID and increment it
+                    String lastReportId = rs.getString("participantID");
+                    if (lastReportId != null && lastReportId.startsWith("PA")) {
+                        // Extract the numeric part and increment
+                        String numericPart = lastReportId.substring(2);
+                        try {
+                            int number = Integer.parseInt(numericPart);
+                            return String.format("PA%05d", number + 1);
+                        } catch (NumberFormatException e) {
+                            // If parsing fails, start from 1
+                            return "PA00001";
+                        }
+                    }
+                }
+                // If no reports exist yet, start from 1
+                return "PA00001";
+            }
+        } catch (SQLException e) {
+            System.err.println("Error generating participant ID: " + e.getMessage());
+            // Fallback: return a timestamp-based ID
+            return "PA" + System.currentTimeMillis() % 100000;
+        }
     }
 
-    // Getter for officer ID
-    public String getOfficerId() {
-        return officerId;
+    public String getCaseId() {
+        return caseId;
     }
 
-    // Setter for officer ID
-    public void setOfficerId(String officerId) {
-        this.officerId = officerId;
+    public void setcaseId(String caseId) {
+        this.caseId = caseId;
     }
 }

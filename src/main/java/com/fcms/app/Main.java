@@ -1,5 +1,8 @@
 package com.fcms.app;
 
+import com.fcms.controllers.policeOfficer.AddEvidenceController;
+import com.fcms.controllers.policeOfficer.ManageParticipantsController;
+import com.fcms.controllers.policeOfficer.RequestAnalysisController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -117,10 +120,9 @@ public class Main extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/auth/login.fxml"));
             Parent root = loader.load();
 
-            LoginController controller = loader.getController();
-            controller.setOnNavigateToSignup(this::showSignupScreen);
-            //controller.setOnNavigateToForgotPassword(() -> showAlert("Info", "Coming soon!"));
-            controller.setOnLoginSuccess(this::showDashboard);
+            LoginController loginController = loader.getController();
+            loginController.setOnNavigateToSignup(this::showSignupScreen);
+            loginController.setOnLoginSuccess(this::showDashboard);
 
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/css/auth.css").toExternalForm());
@@ -165,11 +167,6 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
-
-
-    // ======================================================
-    // ALERT
-    // ======================================================
     private void showAlert(String title, String message) {
         javafx.scene.control.Alert alert =
                 new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
