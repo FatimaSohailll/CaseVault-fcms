@@ -4,30 +4,46 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.ManageCasesController">
-    <!-- Center -->
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.ManageCasesController"
+            styleClass="main-content">
+    <top>
+        <VBox spacing="4">
+            <padding>
+                <Insets top="16" right="26" bottom="0" left="26"/>
+            </padding>
+            <Label text="Manage Case" styleClass="section-title"/>
+            <Label text="View and edit case information" styleClass="subtitle"/>
+        </VBox>
+    </top>
+
+
     <center>
         <HBox spacing="24">
             <padding>
                 <Insets top="26" right="26" bottom="26" left="26"/>
             </padding>
 
-            <!-- Left: scrollable case tiles -->
-            <ScrollPane fitToWidth="true" prefWidth="340" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
-                <content>
-                    <VBox fx:id="caseListContainer" spacing="12" fillWidth="true"/>
-                </content>
-            </ScrollPane>
+            <!-- Left Panel: Search + Case List -->
+            <VBox spacing="12" prefWidth="340" styleClass="case-list">
+                <Label text="Search cases..." styleClass="section-title"/>
+                <TextField fx:id="searchField" promptText="Search by ID, title, or location" styleClass="text-field"/>
 
-            <!-- Right: scrollable case details -->
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS" styleClass="case-scroll">
+                    <content>
+                        <VBox fx:id="caseListContainer" spacing="12" fillWidth="true"/>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+            <!-- Right Panel: Case Details -->
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="ALWAYS" HBox.hgrow="ALWAYS">
                 <content>
                     <VBox fx:id="caseDetailsRoot" spacing="18" fillWidth="true">
                         <Label fx:id="caseTitle" text="Select a case from the list to view details" styleClass="section-title"/>
 
-                        <!-- Basic information -->
-                        <VBox spacing="10" styleClass="card">
-                            <Label text="Basic information" styleClass="card-title"/>
+                        <!-- Basic Information -->
+                        <VBox spacing="10" styleClass="manage-card">
+                            <Label text="Basic Information" styleClass="manage-card-title"/>
                             <GridPane hgap="16" vgap="8">
                                 <columnConstraints>
                                     <ColumnConstraints percentWidth="30"/>
@@ -40,35 +56,37 @@
                                     <Label text="Priority:" styleClass="stat-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
                                     <Label fx:id="priorityLabel" styleClass="stat-value" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                                    <Label text="Case type:" styleClass="stat-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                    <Label text="Case Type:" styleClass="stat-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                                     <Label fx:id="typeLabel" styleClass="stat-value" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-                                    <Label text="Date reported:" styleClass="stat-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                    <Label text="Date Reported:" styleClass="stat-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                                     <Label fx:id="dateLabel" styleClass="stat-value" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
                                     <Label text="Location:" styleClass="stat-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                                     <Label fx:id="locationLabel" styleClass="stat-value" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-                                    <Label text="Assigned officer:" styleClass="stat-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                                    <Label text="Assigned Officer:" styleClass="stat-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
                                     <Label fx:id="officerLabel" styleClass="stat-value" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
                                 </children>
                             </GridPane>
 
-                            <Label text="Description" styleClass="card-subtitle"/>
+                            <Label text="Description" styleClass="manage-card-subtitle"/>
                             <Label fx:id="descriptionLabel" wrapText="true" styleClass="stat-value"/>
                         </VBox>
 
                         <!-- Evidence -->
-                        <VBox spacing="10" styleClass="card">
-                            <Label text="Evidence" styleClass="card-title"/>
+                        <VBox spacing="10" styleClass="manage-card">
+                            <Label text="Evidence" styleClass="manage-card-title"/>
                             <VBox fx:id="evidenceContainer" spacing="8"/>
                         </VBox>
 
                         <!-- Participants -->
-                        <VBox spacing="10" styleClass="card">
-                            <Label text="Participants" styleClass="card-title"/>
+                        <VBox spacing="10" styleClass="manage-card">
+                            <Label text="Participants" styleClass="manage-card-title"/>
                             <VBox fx:id="participantsContainer" spacing="8"/>
                         </VBox>
+                        <!-- Edit Button -->
+                        <Button fx:id="editCaseBtn" text="Edit Case" styleClass="primary-btn" maxWidth="180"/>
                     </VBox>
                 </content>
             </ScrollPane>
