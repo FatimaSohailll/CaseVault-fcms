@@ -1,5 +1,7 @@
 package com.fcms.app;
 
+import com.fcms.controllers.policeOfficer.AddEvidenceController;
+import com.fcms.database.TestDataInserter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,9 +27,22 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
 
         SQLiteDatabase.initializeDatabase();
-        insertTestData();
+        TestDataInserter.insertTestData();
 
         showLoginScreen();
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/addEvidence.fxml"));
+//        Parent root = loader.load();
+//
+//        AddEvidenceController loginController = loader.getController();
+//
+//        Scene scene = new Scene(root);
+//        //scene.getStylesheets().add(getClass().getResource("/css/auth.css").toExternalForm());
+//        scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
+//
+//        primaryStage.setTitle("CaseVault - Login");
+//        primaryStage.setScene(scene);
+//        primaryStage.setResizable(false);
+//        primaryStage.show();
     }
 
     // ======================================================

@@ -123,15 +123,9 @@ public class SQLiteDatabase {
                 "recordID TEXT PRIMARY KEY, " +
                 "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
                 "action TEXT NOT NULL, " +
-                "doneBy TEXT NOT NULL)");
-
-        // CUSTODY RECORD EVIDENCE (Junction table)
-        stmt.execute("CREATE TABLE IF NOT EXISTS CustodyRecordEvidence (" +
-                "recordID TEXT NOT NULL, " +
+                "doneBy TEXT NOT NULL, " +
                 "evidenceID TEXT NOT NULL, " +
-                "PRIMARY KEY (recordID, evidenceID), " +
-                "FOREIGN KEY (recordID) REFERENCES ChainOfCustody(recordID) ON DELETE CASCADE, " +
-                "FOREIGN KEY (evidenceID) REFERENCES Evidence(evidenceID) ON DELETE CASCADE)");
+                "FOREIGN KEY (evidenceID) REFERENCES Evidence(evidenceID))");
 
         // FORENSIC REQUEST
         stmt.execute("CREATE TABLE IF NOT EXISTS ForensicRequest (" +

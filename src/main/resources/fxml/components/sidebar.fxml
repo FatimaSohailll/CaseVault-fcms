@@ -115,16 +115,6 @@
         <Button text="Expert Dashboard" onAction="#handleExpertDashboard" styleClass="nav-btn"/>
     </HBox>
 
-    <HBox fx:id="expertUploadReportRow" spacing="10" styleClass="nav-row">
-        <Pane fx:id="expertUploadReportIcon"/>
-        <Button fx:id="expertUploadReportBtn" text="Upload Report" onAction="#handleExpertUploadReport" styleClass="nav-btn"/>
-    </HBox>
-
-    <HBox fx:id="expertAddEvidenceRow" spacing="10" styleClass="nav-row">
-        <Pane fx:id="expertAddEvidenceIcon"/>
-        <Button text="Add Evidence" onAction="#handleAddEvidence" styleClass="nav-btn"/>
-    </HBox>
-
 
 
     <!-- ========================================================= -->

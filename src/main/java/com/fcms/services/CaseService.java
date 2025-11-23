@@ -100,6 +100,9 @@ public class CaseService {
         caseRepository.submitCaseToCourt(caseId, courtOfficialId);
     }
 
+    public List<Case> getCasesByOfficer(String currentOfficerId){
+        return caseRepository.getCasesByOfficer(currentOfficerId);
+    }
 
     /* ============================================================
        NEW METHODS — USED BY SubmitToCourtController
