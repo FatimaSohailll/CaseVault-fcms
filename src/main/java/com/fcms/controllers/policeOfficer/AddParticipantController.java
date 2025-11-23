@@ -28,7 +28,7 @@ public class AddParticipantController implements Initializable {
 
     private ManageParticipantsController mainController;
     private ParticipantService participantService;
-    private String currentOfficerId;
+    private String currentCaseId = "CS00001";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -63,10 +63,10 @@ public class AddParticipantController implements Initializable {
         this.mainController = mainController;
     }
 
-    public void setCurrentOfficerId(String currentOfficerId) {
-        this.currentOfficerId = currentOfficerId;
+    public void setCurrentCaseId(String currentCaseId) {
+        this.currentCaseId = currentCaseId;
         // Initialize service with officer ID
-        this.participantService = new ParticipantService(currentOfficerId);
+        this.participantService = new ParticipantService(currentCaseId);
     }
 
     @FXML

@@ -13,11 +13,15 @@ public class ParticipantService {
         this.participantRepository = new ParticipantRepository(officerId);
     }
 
-    // Alternative constructor for cases where no officer filtering is needed
     public ParticipantService() {
-        this.officerId = null;
         this.participantRepository = new ParticipantRepository();
     }
+
+    // Alternative constructor for cases where no officer filtering is needed
+//    public ParticipantService() {
+//        this.officerId = null;
+//        this.participantRepository = new ParticipantRepository();
+//    }
 
     // Business logic for adding a participant
     public void addParticipant(Participant participant) throws BusinessException {

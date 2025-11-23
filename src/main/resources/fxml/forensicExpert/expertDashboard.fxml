@@ -5,9 +5,13 @@
 
 <AnchorPane prefHeight="712.0" prefWidth="1204.0" styleClass="root" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.forensicExpert.ExpertDashboardController">
 
-    <!-- Header - spans entire width -->
-    <HBox alignment="CENTER_LEFT" prefWidth="1200.0" spacing="12.0" styleClass="header" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-
+     Header - spans entire width
+    <HBox alignment="CENTER_LEFT" prefWidth="1200.0" spacing="12.0" styleClass="header" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox alignment="TOP_CENTER" prefHeight="35.0" prefWidth="483.0" spacing="0.0">
+            <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="334.0" styleClass="header-title" text="CaseVault Forensics" />
+            <Label prefHeight="17.0" prefWidth="334.0" styleClass="header-subtitle" text="Forensic Expert Dashboard" />
+        </VBox>
+    </HBox>
     <!-- Scrollable Content Area -->
     <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
         <VBox spacing="24.0" style="-fx-padding: 48;">
@@ -41,16 +45,16 @@
                         </HBox>
                     </VBox>
 
-                    <!-- In Progress Card -->
+                    <!-- Urgent Card -->
                     <VBox styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
                         <HBox alignment="CENTER_LEFT" spacing="16.0">
                             <VBox spacing="4.0">
-                                <Label styleClass="stat-label" text="In Progress" />
-                                <Label fx:id="inProgressCountLabel" styleClass="value-label" text="2" />
+                                <Label styleClass="stat-label" text="Urgent Requests" />
+                                <Label fx:id="urgentCountLabel" styleClass="value-label" text="2" />
                             </VBox>
                             <Region HBox.hgrow="ALWAYS" />
-                            <VBox alignment="CENTER" prefHeight="71.0" prefWidth="84.0" styleClass="stat-icon-info">
-                                <Label styleClass="stat-icon" text="↻" />
+                            <VBox alignment="CENTER" prefHeight="71.0" prefWidth="84.0" styleClass="stat-icon-urgent">
+                                <Label styleClass="stat-icon" text="⚠️" />
                             </VBox>
                         </HBox>
                     </VBox>
@@ -89,18 +93,16 @@
             <!-- Forensic Requests Table Section -->
             <VBox spacing="16.0">
                 <VBox spacing="16.0" styleClass="card">
-                    <VBox spacing="4.0">
-                        <Label styleClass="title-label" text="Forensic Requests" />
-                        <Label styleClass="subtitle-label" text="Manage and track all forensic analysis requests" />
-                    </VBox>
-
                     <!-- Search and Filter Row -->
-                    <HBox alignment="CENTER_LEFT" spacing="12.0">
+                    <!-- Search and Filter Row -->
+                    <HBox alignment="CENTER_LEFT" spacing="16.0">
+                        <VBox spacing="4.0">
+                            <Label styleClass="title-label" text="Forensic Requests" />
+                            <Label styleClass="subtitle-label" text="Manage and track all forensic analysis requests" />
+                        </VBox>
                         <Region HBox.hgrow="ALWAYS" />
                         <HBox alignment="CENTER_RIGHT" spacing="12.0">
-                            <HBox spacing="8.0" style="-fx-background-color: transparent;">
-                                <TextField fx:id="searchField" promptText="Search by Request ID or Evidence ID" styleClass="search-field" />
-                            </HBox>
+                            <TextField fx:id="searchField" promptText="Search by Request ID or Evidence ID" styleClass="search-field" />
                             <ComboBox fx:id="statusFilter" promptText="Filter by Status" styleClass="filter-combo" />
                         </HBox>
                     </HBox>
@@ -113,9 +115,9 @@
                             <TableColumn fx:id="evidenceTypeColumn" prefWidth="150.0" text="Evidence Type" />
                             <TableColumn fx:id="requestedByColumn" prefWidth="150.0" text="Requested By" />
                             <TableColumn fx:id="dateColumn" prefWidth="120.0" text="Date" />
-                            <TableColumn fx:id="statusColumn" prefWidth="100.0" text="Status" />
-                            <TableColumn fx:id="priorityColumn" prefWidth="100.0" text="Priority" />
-                            <TableColumn fx:id="actionsColumn" prefWidth="120.0" text="Actions" />
+                            <TableColumn fx:id="statusColumn" prefWidth="120.0" text="Status" />
+                            <TableColumn fx:id="priorityColumn" prefWidth="90.0" text="Priority" />
+                            <TableColumn fx:id="actionsColumn" prefWidth="150.0" text="Actions" />
                         </columns>
                         <columnResizePolicy>
                             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

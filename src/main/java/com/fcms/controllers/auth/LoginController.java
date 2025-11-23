@@ -14,10 +14,8 @@ public class LoginController {
     @FXML private PasswordField passwordField;
     @FXML private Button loginBtn;
     @FXML private Button signupBtn;
-    @FXML private Button forgotPasswordBtn;
 
     private Runnable onNavigateToSignup;
-    private Runnable onNavigateToForgotPassword;
     private Runnable onLoginSuccess;
     private final LoginService loginService;
 
@@ -27,10 +25,6 @@ public class LoginController {
 
     public void setOnNavigateToSignup(Runnable onNavigateToSignup) {
         this.onNavigateToSignup = onNavigateToSignup;
-    }
-
-    public void setOnNavigateToForgotPassword(Runnable onNavigateToForgotPassword) {
-        this.onNavigateToForgotPassword = onNavigateToForgotPassword;
     }
 
     public void setOnLoginSuccess(Runnable onLoginSuccess) {
@@ -45,9 +39,6 @@ public class LoginController {
         if (signupBtn != null) {
             signupBtn.setOnAction(e -> handleSignup());
         }
-//        if (forgotPasswordBtn != null) {
-//            forgotPasswordBtn.setOnAction(e -> handleForgotPassword());
-//        }
         if (loginBtn != null) {
             loginBtn.setOnAction(e -> handleLogin());
         }
@@ -120,16 +111,6 @@ public class LoginController {
             System.err.println("onNavigateToSignup is null!");
         }
     }
-
-//    @FXML
-//    private void handleForgotPassword() {
-//        System.out.println("Forgot password button clicked");
-//        if (onNavigateToForgotPassword != null) {
-//            onNavigateToForgotPassword.run();
-//        } else {
-//            System.err.println("onNavigateToForgotPassword is null!");
-//        }
-//    }
 
     private void showAlert(String title, String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);

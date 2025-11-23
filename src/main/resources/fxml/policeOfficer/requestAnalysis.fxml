@@ -119,19 +119,6 @@
                                     </VBox>
 
                                     <Separator style="-fx-background-color: #e5e5e5;" />
-
-                                    <!-- Request Summary -->
-                                    <VBox spacing="8.0">
-                                        <Label text="Request Summary" style="-fx-text-fill: #171617; -fx-font-size: 16px; -fx-font-weight: bold;" />
-                                        <VBox spacing="4.0">
-                                            <Label text="Evidence Selected:" style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" />
-                                            <Label fx:id="selectedEvidenceCountLabel" text="0 items" style="-fx-text-fill: #001440; -fx-font-size: 14px;" />
-                                        </VBox>
-                                        <VBox spacing="4.0">
-                                            <Label text="Analysis Type:" style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" />
-                                            <Label fx:id="analysisTypeSummaryLabel" text="Not selected" style="-fx-text-fill: #001440; -fx-font-size: 14px;" />
-                                        </VBox>
-                                    </VBox>
                                 </VBox>
                             </VBox>
 

@@ -10,7 +10,7 @@
 
         <!-- Header -->
         <HBox styleClass="header" style="-fx-padding: 16 32;">
-            <Button styleClass="view-button" text="← Back to Dashboard" />
+            <Button styleClass="view-button" text="← Back to Dashboard" style="-fx-text-fill: #001440; -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 4 0;" />
             <VBox HBox.hgrow="ALWAYS">
                 <Label styleClass="header-title" text="Add Evidence" />
                 <Label styleClass="header-subtitle" text="Log evidence for case investigation" />
@@ -38,7 +38,7 @@
                             <VBox spacing="16.0" style="-fx-padding: 16 0 0 0;">
 
                                 <!-- Evidence Type -->
-                                <VBox spacing="8.0">
+                                <VBox spacing="8.0" >
                                     <Label styleClass="form-label" text="Evidence Type *" />
                                     <ComboBox fx:id="evidenceTypeCombo" promptText="Select evidence type" styleClass="filter-combo" />
                                 </VBox>

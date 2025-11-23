@@ -1,5 +1,8 @@
 package com.fcms.controllers.policeOfficer;
 
+import com.fcms.services.CaseService;
+import com.fcms.models.Case;
+import com.fcms.models.UserSession;
 import com.fcms.services.ForensicRequestService;
 import com.fcms.services.EvidenceService;
 import com.fcms.services.ForensicExpertService;
@@ -26,7 +29,6 @@ public class RequestAnalysisController implements Initializable {
     @FXML private ComboBox<String> priorityCombo;
     @FXML private TextArea additionalNotesArea;
     @FXML private Button submitButton;
-    @FXML private Button cancelButton;
     @FXML private VBox successAlert;
     @FXML private VBox noCaseSelected;
     @FXML private VBox caseDetails;
@@ -35,8 +37,6 @@ public class RequestAnalysisController implements Initializable {
     @FXML private Label caseTypeLabel;
     @FXML private Label assignedOfficerLabel;
     @FXML private Label locationLabel;
-    @FXML private Label selectedEvidenceCountLabel;
-    @FXML private Label analysisTypeSummaryLabel;
     @FXML private VBox evidenceCheckboxContainer;
     @FXML private VBox expertsContainer;
 
@@ -49,38 +49,35 @@ public class RequestAnalysisController implements Initializable {
     private List<ForensicExpert> availableExperts = new ArrayList<>();
     private List<CheckBox> evidenceCheckboxes = new ArrayList<>();
     private ToggleGroup expertToggleGroup = new ToggleGroup();
+    private UserSession userSession;
+    private CaseService caseService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.currentOfficerId = "PO00001"; // This should come from session management
+        userSession = UserSession.getInstance();
+
+        // Validate that user is logged in and is a forensic expert
+        if (!userSession.isLoggedIn() || !userSession.isPoliceOfficer()) {
+            showAlert("Access Denied", "You must be logged in as a Police Officer to access this dashboard.");
+            return;
+        }
+
+        String currentUserId = userSession.getUserID();
+        System.out.println("DEBUG: Initializing Police Dashboard for user: " + currentUserId);
+
+        this.currentCaseId = "CS00001"; // Dummy case ID for testing
+        this.currentOfficerId= currentUserId;
         this.requestService = new ForensicRequestService();
         this.expertService = new ForensicExpertService();
+        this.caseService = new CaseService(currentCaseId);
 
-        // Use a dummy case ID for testing evidence loading
-        this.currentCaseId = "CS00001"; // Dummy case ID for testing
         this.evidenceService = new EvidenceService(currentCaseId);
 
-        initializeServices();
         setupComboBoxes();
         setupEventHandlers();
-        loadDummyCaseData(); // Load dummy case data for testing
         loadAvailableExperts();
+        loadCaseFromDatabase();
         loadEvidenceFromDatabase(); // Load evidence using dummy case ID
-    }
-
-    private void initializeServices() {
-        // Services are already initialized in the constructor
-    }
-
-    private void loadDummyCaseData() {
-        // Set dummy case data for testing
-        setCaseData(
-                "CS00001", // caseId
-                "Bank Robbery Investigation", // title
-                "Robbery", // type
-                "Officer John Smith", // officer
-                "123 Main Street" // location
-        );
     }
 
     private void loadAvailableExperts() {
@@ -94,6 +91,37 @@ public class RequestAnalysisController implements Initializable {
             System.err.println("Error loading forensic experts: " + e.getMessage());
             e.printStackTrace();
             showErrorAlert("Failed to load forensic experts: " + e.getMessage());
+        }
+    }
+
+    private void loadCaseFromDatabase() {
+        if (currentCaseId == null || currentCaseId.trim().isEmpty()) {
+            System.out.println("No case selected, cannot load case details");
+            return;
+        }
+
+        try {
+            // Fetch case details from database
+            Case caseDetails = caseService.getCaseById(currentCaseId);
+
+            if (caseDetails != null) {
+                // Update UI with case details from database
+                setCaseData(
+                        caseDetails.getId(),
+                        caseDetails.getTitle(),
+                        caseDetails.getType(),
+                        caseDetails.getAssignedOfficer(),
+                        caseDetails.getLocation()
+                );
+            } else {
+                System.err.println("Case not found in database: " + currentCaseId);
+                showErrorAlert("Case not found: " + currentCaseId);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error loading case from database: " + e.getMessage());
+            e.printStackTrace();
+            showErrorAlert("Failed to load case details from database: " + e.getMessage());
         }
     }
 
@@ -201,7 +229,7 @@ public class RequestAnalysisController implements Initializable {
             checkbox.setWrapText(true);
 
             checkbox.selectedProperty().addListener((obs, oldVal, newVal) -> {
-                updateEvidenceCount();
+                //updateEvidenceCount();
             });
 
             evidenceCheckboxes.add(checkbox);
@@ -234,7 +262,6 @@ public class RequestAnalysisController implements Initializable {
     private void setupEventHandlers() {
         analysisTypeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                analysisTypeSummaryLabel.setText(newVal);
                 updateSubmitButtonState();
             }
         });
@@ -243,12 +270,6 @@ public class RequestAnalysisController implements Initializable {
         expertToggleGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
             updateSubmitButtonState();
         });
-    }
-
-    private void updateEvidenceCount() {
-        int count = getSelectedEvidenceCount();
-        selectedEvidenceCountLabel.setText(count + " item" + (count != 1 ? "s" : ""));
-        updateSubmitButtonState();
     }
 
     private void updateSubmitButtonState() {
@@ -401,9 +422,6 @@ public class RequestAnalysisController implements Initializable {
         priorityCombo.setValue("Medium");
         additionalNotesArea.clear();
 
-        // Update UI state
-        updateEvidenceCount();
-        analysisTypeSummaryLabel.setText("Not selected");
     }
 
     public void setCaseData(String caseId, String title, String type, String officer, String location) {
@@ -422,6 +440,14 @@ public class RequestAnalysisController implements Initializable {
 
         // Load evidence for the selected case
         loadEvidenceFromDatabase();
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     // Getter for current officer ID (useful for testing)
