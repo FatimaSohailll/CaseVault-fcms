@@ -37,7 +37,7 @@
                         <Label text="Case Selection" style="-fx-text-fill: #171617; -fx-font-size: 18px; -fx-font-weight: bold;" />
                         <VBox spacing="12.0" style="-fx-padding: 16 0 0 0;">
                             <Label text="Select Case for Forensic Analysis *" style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                            <ComboBox fx:id="caseComboBox" promptText="Select a case to analyze" style="-fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
+                            <ComboBox fx:id="caseComboBox" styleClass="analysis-combo" promptText="Select a case to analyze" style="-fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
                         </VBox>
                     </VBox>
 
@@ -62,13 +62,13 @@
                                     <!-- Analysis Type -->
                                     <VBox spacing="8.0">
                                         <Label text="Analysis Type *" style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                                        <ComboBox fx:id="analysisTypeCombo" promptText="Select analysis type" style="-fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
+                                        <ComboBox fx:id="analysisTypeCombo" styleClass="analysis-combo" promptText="Select analysis type" style="-fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
                                     </VBox>
 
                                     <!-- Priority Level -->
                                     <VBox spacing="8.0">
                                         <Label text="Priority Level *" style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" />
-                                        <ComboBox fx:id="priorityCombo" promptText="Select priority" style="-fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
+                                        <ComboBox fx:id="priorityCombo" styleClass="analysis-combo" promptText="Select priority" style="-fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
                                     </VBox>
 
                                     <!-- Additional Notes -->

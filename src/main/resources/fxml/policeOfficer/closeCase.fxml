@@ -21,14 +21,14 @@
                     <!-- Case Selection -->
                     <VBox spacing="12">
                         <Label text="Select Case to Close" styleClass="section-title"/>
-                        <ComboBox fx:id="activeCaseDropdown" promptText="Active Case *" styleClass="combo-box"/>
+                        <ComboBox fx:id="activeCaseDropdown" promptText="Active Case *" styleClass="closecase-combo"/>
                     </VBox>
 
                     <!-- Closure Details -->
                     <VBox spacing="12">
                         <Label text="Closure Details" styleClass="section-title"/>
 
-                        <ComboBox fx:id="closureReasonDropdown" promptText="Closure Reason *" styleClass="combo-box"/>
+                        <ComboBox fx:id="closureReasonDropdown" promptText="Closure Reason *" styleClass="closecase-combo"/>
 
                         <TextArea fx:id="finalReportSummary" promptText="Provide a detailed summary of the case outcome, actions taken, and final status..."
                                   prefRowCount="6" wrapText="true" styleClass="text-area"/>

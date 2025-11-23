@@ -617,4 +617,170 @@
 #officerDropdown .combo-box-popup .list-cell:hover {
     -fx-background-color: #ececf0;
 }
+/* ============================================
+   EditCase – ComboBox Styling
+   ============================================ */
 
+.editcase-combo.combo-box-base {
+    -fx-background-color: white;
+    -fx-background-radius: 6;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+    -fx-padding: 0 10;
+    -fx-pref-height: 38px;
+    -fx-opacity: 1.0; /* ← prevents "greyed out" look */
+    -fx-prompt-text-fill: #9ca3af;
+}
+
+/* Hover */
+.editcase-combo.combo-box-base:hover {
+    -fx-border-color: #9ca3af;
+}
+
+/* Focused (clicked) */
+.editcase-combo.combo-box-base:focused {
+    -fx-border-color: #2563eb;
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.25), 8, 0, 0, 0);
+}
+
+/* Arrow button */
+.editcase-combo .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 8;
+}
+
+.editcase-combo .arrow {
+    -fx-background-color: #6b7280;
+}
+
+/* Popup list */
+.editcase-combo .combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+}
+
+/* Hover item */
+.editcase-combo .combo-box-popup .list-cell:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+/* Selected item */
+.editcase-combo .combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #001440;
+    -fx-text-fill: white;
+}
+
+/* ============================================
+   RequestAnalysis – ComboBox Styling
+   ============================================ */
+
+.analysis-combo.combo-box-base {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+    -fx-padding: 0 10;
+    -fx-pref-height: 40px;
+    -fx-opacity: 1.0; /* prevents dimmed look */
+    -fx-prompt-text-fill: #9ca3af;
+}
+
+.analysis-combo.combo-box-base:hover {
+    -fx-border-color: #9ca3af;
+}
+
+.analysis-combo.combo-box-base:focused {
+    -fx-border-color: #2563eb;
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.25), 8, 0, 0, 0);
+}
+
+/* Arrow button */
+.analysis-combo .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 8;
+}
+
+.analysis-combo .arrow {
+    -fx-background-color: #6b7280; /* medium grey arrow */
+}
+
+/* Popup list styling */
+.analysis-combo .combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+}
+
+.analysis-combo .combo-box-popup .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #374151;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+}
+
+.analysis-combo .combo-box-popup .list-cell:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+.analysis-combo .combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #001440;
+    -fx-text-fill: white;
+}
+
+/* ============================================
+   CloseCase – ComboBox Styling
+   ============================================ */
+
+.closecase-combo.combo-box-base {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+    -fx-padding: 0 10;
+    -fx-pref-height: 44px;
+    -fx-opacity: 1.0; /* prevents grey-out */
+    -fx-prompt-text-fill: #9ca3af;
+}
+
+.closecase-combo.combo-box-base:hover {
+    -fx-border-color: #9ca3af;
+}
+
+.closecase-combo.combo-box-base:focused {
+    -fx-border-color: #2563eb;
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.25), 8, 0, 0, 0);
+}
+
+/* Arrow button */
+.closecase-combo .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 8;
+}
+
+.closecase-combo .arrow {
+    -fx-background-color: #6b7280;
+}
+
+/* Popup list styling */
+.closecase-combo .combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+}
+
+.closecase-combo .combo-box-popup .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #111827;
+    -fx-padding: 10 14;
+    -fx-font-size: 14px;
+}
+
+.closecase-combo .combo-box-popup .list-cell:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+.closecase-combo .combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #001440;
+    -fx-text-fill: white;
+}
