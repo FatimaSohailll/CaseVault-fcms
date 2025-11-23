@@ -22,6 +22,7 @@ public class SceneManager {
 
             // Get the existing root BorderPane from the current scene
             BorderPane root = (BorderPane) stage.getScene().getRoot();
+
             root.setCenter(content);   // ✅ replace only center, keep sidebar/topbar
 
         } catch (IOException e) {

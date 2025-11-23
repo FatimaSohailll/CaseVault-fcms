@@ -16,6 +16,15 @@ public class CaseService {
     private final EvidenceRepository evidenceRepository;
     private final ParticipantRepository participantRepository;
 
+    private String caseID;
+
+    public CaseService(String caseID) {
+        this.caseID = caseID;
+        this.caseRepository = new CaseRepository();
+        this.evidenceRepository = new EvidenceRepository();
+        this.participantRepository = new ParticipantRepository();
+    }
+
     public CaseService() {
         this.caseRepository = new CaseRepository();
         this.evidenceRepository = new EvidenceRepository();

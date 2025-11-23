@@ -1,0 +1,77 @@
+/* Table Styles */
+.data-table {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5e5e5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 0;
+}
+
+.data-table .column-header-background {
+    -fx-background-color: transparent;
+    -fx-border-color: #e5e5e5;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.data-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: #e5e5e5;
+    -fx-text-fill: #171617;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+    -fx-padding: 16 12;
+}
+
+.data-table .table-cell {
+    -fx-border-color: #e5e5e5;
+    -fx-padding: 16 12;
+    -fx-text-fill: #374151;
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+}
+
+.data-table .table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5e5e5;
+}
+
+.data-table .table-row-cell:even {
+    -fx-background-color: #ffffff;
+}
+
+.data-table .table-row-cell:odd {
+    -fx-background-color: #ffffff;
+}
+
+.data-table .table-row-cell:selected {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #374151;
+}
+
+.data-table .table-row-cell:hover {
+    -fx-background-color: #f9fafb;
+}
+
+/* Remove grid lines */
+.data-table .table-row-cell {
+    -fx-table-cell-border-color: transparent;
+}
+
+.data-table {
+    -fx-table-cell-border-color: transparent;
+}
+
+/* ListView */
+.list-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 8 0;
+}
+
+.list-cell:empty {
+    -fx-background-color: transparent;
+}

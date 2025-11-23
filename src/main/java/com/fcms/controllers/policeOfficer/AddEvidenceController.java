@@ -93,7 +93,7 @@ public class AddEvidenceController implements Initializable {
         if (selectedCase != null) {
             selectedCaseLabel.setText("Selected Case: " + selectedCase.getId() + " • " + selectedCase.getTitle());
         } else {
-            selectedCaseLabel.setText("Selected Case: CASE-001 (Default)");
+            selectedCaseLabel.setText("Selected Case: ");
         }
     }
 

@@ -65,13 +65,6 @@
                 </HBox>
             </VBox>
 
-            <!-- Forgot Password Link -->
-            <HBox alignment="CENTER_RIGHT">
-                <Button fx:id="forgotPasswordBtn" text="Forgot Password?"
-                        style="-fx-background-color: transparent; -fx-text-fill: #001440; -fx-font-size: 12; -fx-padding: 0; -fx-cursor: hand;"
-                        onAction="#handleForgotPassword"/>
-            </HBox>
-
             <!-- Sign In Button -->
             <Button fx:id="loginBtn" text="Sign In"
                     style="-fx-background-color: #001440; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 6; -fx-pref-height: 40; -fx-cursor: hand;"

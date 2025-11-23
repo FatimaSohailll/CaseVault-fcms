@@ -1,0 +1,67 @@
+/* Table Header Styles */
+.table-header {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 8;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Table Row Styles */
+.table-row-cell {
+    -fx-border-color: #f3f4f6;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #f9fafb;
+}
+
+.table-row-cell:filled {
+    -fx-padding: 16 8;
+}
+
+.table-cell {
+    -fx-text-fill: #374151;
+    -fx-font-size: 14px;
+    -fx-padding: 16 8;
+    -fx-border-color: transparent;
+}
+
+/* Role Badge Styles */
+.role-suspect {
+    -fx-background-color: #fef2f2;
+    -fx-text-fill: #991b1b;
+    -fx-background-radius: 12;
+    -fx-padding: 4 8;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.role-victim {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1e40af;
+    -fx-background-radius: 12;
+    -fx-padding: 4 8;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+/* Edit Button Style */
+.edit-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #001440;
+    -fx-border-color: #001440;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 4 8;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+}
+
+.edit-button:hover {
+    -fx-background-color: #001440;
+    -fx-text-fill: white;
+}

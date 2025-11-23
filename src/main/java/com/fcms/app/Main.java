@@ -1,5 +1,8 @@
 package com.fcms.app;
 
+import com.fcms.controllers.policeOfficer.AddEvidenceController;
+import com.fcms.controllers.policeOfficer.ManageParticipantsController;
+import com.fcms.controllers.policeOfficer.RequestAnalysisController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,7 +26,24 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         SQLiteDatabase.initializeDatabase();
-        showLoginScreen();
+        TestDataInserter.insertTestData();
+       showLoginScreen();
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/requestAnalysis.fxml"));
+//        Parent root = loader.load();
+//
+//       RequestAnalysisController loginController = loader.getController();
+//
+//        Scene scene = new Scene(root);
+//        scene.getStylesheets().add(getClass().getResource("/css/global.css").toExternalForm());
+//        scene.getStylesheets().add(getClass().getResource("/css/forms.css").toExternalForm());
+//        scene.getStylesheets().add(getClass().getResource("/css/components.css").toExternalForm());
+//        //scene.getStylesheets().add(getClass().getResource("/css/manageParticipants.css").toExternalForm());
+//        primaryStage.setTitle("CaseVault - Login");
+//        primaryStage.setScene(scene);
+//        primaryStage.setMinWidth(400);
+//        primaryStage.setMinHeight(600);
+//        primaryStage.setMaximized(true);
+//        primaryStage.show();
     }
 
     private void showDashboard() {
@@ -138,7 +158,6 @@ public class Main extends Application {
 
             LoginController loginController = loader.getController();
             loginController.setOnNavigateToSignup(this::showSignupScreen);
-            loginController.setOnNavigateToForgotPassword(this::showForgotPasswordScreen);
             loginController.setOnLoginSuccess(this::showDashboard);
 
             Scene scene = new Scene(root);
@@ -182,11 +201,6 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
-
-    private void showForgotPasswordScreen() {
-        showAlert("Info", "Forgot password feature coming soon!");
-    }
-
     private void showAlert(String title, String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
         alert.setTitle(title);

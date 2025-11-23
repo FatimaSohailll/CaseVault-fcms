@@ -71,6 +71,12 @@
     -fx-padding: 12;
 }
 
+.stat-icon-urgent {
+    -fx-background-color: #fee;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
 .stat-icon-info {
     -fx-background-color: rgba(8, 145, 178, 0.08); /* info color with opacity */
     -fx-background-radius: 8;
@@ -100,6 +106,10 @@
 
 .stat-icon-info .stat-icon {
     -fx-text-fill: #0891b2; /* info color */
+}
+
+.stat-card-urgent .stat-icon{
+    -fx-text-fill: #FF2C2C;
 }
 
 .stat-icon-success .stat-icon {

@@ -37,7 +37,7 @@ public class EditParticipantController implements Initializable {
 
     private void setupComboBoxes() {
         ObservableList<String> roles = FXCollections.observableArrayList(
-                "Suspect", "Victim", "Witness"
+                "Suspect", "Victim"
         );
         roleComboBox.setItems(roles);
 
