@@ -4,9 +4,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 
-<HBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.fcms.controllers.components.TopbarController"
-      styleClass="top-bar">
+<HBox
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="com.fcms.controllers.components.TopbarController"
+        styleClass="top-bar"
+        prefHeight="64"
+        minHeight="64"
+        maxHeight="64">
 
     <padding>
         <Insets top="14" right="20" bottom="14" left="20"/>

@@ -18,7 +18,12 @@
 
     <center>
         <!-- this is where SceneManager will inject pages -->
-        <AnchorPane fx:id="contentArea"/>
+        <AnchorPane fx:id="contentArea"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0"/>
+
     </center>
 
     <padding>
