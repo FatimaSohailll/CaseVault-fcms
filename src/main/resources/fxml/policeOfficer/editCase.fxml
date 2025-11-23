@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.fcms.controllers.policeOfficer.EditCaseController"
+            fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+            styleClass="main-content">
+
+    <content>
+        <VBox spacing="12" fillWidth="true" maxWidth="Infinity">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16"/>
+            </padding>
+
+            <Label text="Edit Case" styleClass="section-title"/>
+
+            <HBox spacing="8">
+                <Button fx:id="saveBtn" text="Save Changes" styleClass="primary-btn"/>
+                <Button fx:id="cancelBtn" text="Cancel"/>
+            </HBox>
+
+            <!-- Basic information card -->
+            <VBox spacing="10" styleClass="manage-card" fillWidth="true">
+                <Label text="Basic Information" styleClass="manage-card-title"/>
+
+                <GridPane hgap="12" vgap="8">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="30"/>
+                        <ColumnConstraints percentWidth="70"/>
+                    </columnConstraints>
+
+                    <Label text="Case ID:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="stat-label"/>
+                    <TextField fx:id="caseIdField" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+
+                    <Label text="Title:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="stat-label"/>
+                    <TextField fx:id="titleField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Status:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="stat-label"/>
+                    <!-- ComboBox for status -->
+                    <ComboBox fx:id="statusCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
+
+                    <Label text="Priority:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="stat-label"/>
+                    <!-- ComboBox for priority -->
+                    <ComboBox fx:id="priorityCombo" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="200"/>
+
+                    <Label text="Case Type:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="stat-label"/>
+                    <TextField fx:id="typeField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Date Reported:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="stat-label"/>
+                    <TextField fx:id="dateField" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="yyyy-MM-dd"/>
+
+                    <Label text="Location:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="stat-label"/>
+                    <TextField fx:id="locationField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                    <Label text="Assigned Officer:" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="stat-label"/>
+                    <TextField fx:id="officerField" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+                </GridPane>
+
+                <Label text="Description" styleClass="manage-card-subtitle"/>
+                <TextArea fx:id="descriptionArea" wrapText="true" prefRowCount="5"/>
+            </VBox>
+
+            <!-- Evidence -->
+            <VBox spacing="10" styleClass="manage-card" fillWidth="true">
+                <Label text="Evidence" styleClass="manage-card-title"/>
+                <VBox fx:id="evidenceContainer" spacing="8" fillWidth="true"/>
+            </VBox>
+
+            <!-- Participants -->
+            <VBox spacing="10" styleClass="manage-card" fillWidth="true">
+                <Label text="Participants" styleClass="manage-card-title"/>
+                <VBox fx:id="participantsContainer" spacing="8" fillWidth="true"/>
+            </VBox>
+
+        </VBox>
+    </content>
+</ScrollPane>
