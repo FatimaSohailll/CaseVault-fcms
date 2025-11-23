@@ -1,7 +1,5 @@
 package com.fcms.app;
 
-import com.fcms.controllers.components.SidebarController;
-import com.fcms.controllers.components.TopbarController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,14 +8,12 @@ import javafx.stage.Stage;
 
 import com.fcms.controllers.auth.LoginController;
 import com.fcms.controllers.auth.SignupController;
-import com.fcms.controllers.components.MasterLayoutController;
 import com.fcms.database.SQLiteDatabase;
 import com.fcms.models.UserSession;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.util.Locale;
 
 public class Main extends Application {
 
@@ -58,7 +54,7 @@ public class Main extends Application {
                         sceneManager.switchContent("/fxml/systemAdmin/adminDashboard.fxml");
 
                 default ->
-                        sceneManager.switchContent("/fxml/common/dashboard.fxml");
+                        sceneManager.switchContent("/fxml/policeOfficer/policeDashboard.fxml");
             }
 
         } catch (Exception e) {
@@ -123,7 +119,7 @@ public class Main extends Application {
 
             LoginController controller = loader.getController();
             controller.setOnNavigateToSignup(this::showSignupScreen);
-            controller.setOnNavigateToForgotPassword(() -> showAlert("Info", "Coming soon!"));
+            //controller.setOnNavigateToForgotPassword(() -> showAlert("Info", "Coming soon!"));
             controller.setOnLoginSuccess(this::showDashboard);
 
             Scene scene = new Scene(root);

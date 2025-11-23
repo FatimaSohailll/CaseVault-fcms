@@ -210,7 +210,7 @@ public class SidebarController {
     @FXML public void handleCourtSearchCases() { sceneManager.switchContent("/fxml/courtOfficial/SearchCases.fxml"); }
 
     // ADMIN
-    @FXML public void handleAdminDashboard() { sceneManager.switchContent("/fxml/admin/adminDashboard.fxml"); }
-    @FXML public void handleAdminManageUsers() { sceneManager.switchContent("/fxml/admin/manageUsers.fxml"); }
-    @FXML public void handleAdminWaitingList() { sceneManager.switchContent("/fxml/admin/waitingList.fxml"); }
+    @FXML public void handleAdminDashboard() { sceneManager.switchContent("/fxml/systemAdmin/adminDashboard.fxml"); }
+    @FXML public void handleAdminManageUsers() { sceneManager.switchContent("/fxml/systemAdmin/manageUsers.fxml"); }
+    @FXML public void handleAdminWaitingList() { sceneManager.switchContent("/fxml/systemAdmin/waitingList.fxml"); }
 }
