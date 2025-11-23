@@ -5,6 +5,7 @@ import com.fcms.models.Icons;
 import com.fcms.models.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 public class TopbarController {
@@ -16,26 +17,27 @@ public class TopbarController {
 
     public void setSceneManager(SceneManager sm) { this.sceneManager = sm; }
 
+    @FXML private HBox topbarContainer;
+
     @FXML
     public void initialize() {
 
-        // Add icon
+        // Add user icon
         userIcon.getChildren().add(createIcon("user"));
 
-        // Session
+        // Get session
         UserSession session = UserSession.getInstance();
-
-        String username = session.getUsername();  // login username
-        String role     = session.getRole();      // Police Officer / Forensic Expert / Court Official
+        String username = session.getUsername();
+        String role = session.getRole();
 
         if (username == null || username.isBlank()) username = "Unknown User";
         if (role == null || role.isBlank()) role = "Unknown Role";
 
-        // TOP = username
         userNameLabel.setText(username);
-
-        // BOTTOM = role
         userIdLabel.setText(role);
+
+        // 🎨 Apply top bar theme
+        applyTopbarTheme(role);
     }
 
     private Icons createIcon(String name) {
@@ -43,4 +45,28 @@ public class TopbarController {
         icon.setSize(18);
         return icon;
     }
+
+    private void applyTopbarTheme(String role) {
+        topbarContainer.getStyleClass().removeAll(
+                "topbar-police",
+                "topbar-court",
+                "topbar-forensic",
+                "topbar-admin"
+        );
+
+        switch (role) {
+            case "Police Officer" ->
+                    topbarContainer.getStyleClass().add("topbar-police");
+
+            case "Court Official" ->
+                    topbarContainer.getStyleClass().add("topbar-court");
+
+            case "Forensic Expert" ->
+                    topbarContainer.getStyleClass().add("topbar-forensic");
+
+            case "System Admin" ->
+                    topbarContainer.getStyleClass().add("topbar-admin");
+        }
+    }
+
 }

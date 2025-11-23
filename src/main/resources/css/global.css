@@ -17,6 +17,13 @@
     -fx-font-weight: bold;
 }
 
+/* Force CaseVault title to always be white */
+.app-title,
+.header-title {
+    -fx-text-fill: white !important;
+}
+
+
 .header-subtitle {
     -fx-text-fill: #d1d5db; /* Light gray subtitle from your reference */
     -fx-font-size: 14px;

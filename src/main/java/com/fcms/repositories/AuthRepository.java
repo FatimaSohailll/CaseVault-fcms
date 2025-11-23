@@ -188,4 +188,27 @@ public class AuthRepository {
             return rs.next() ? rs.getString("email") : null;
         }
     }
+
+    public CreateUserAccount getAdminCredentials(String adminID) throws SQLException {
+        String sql = "SELECT adminID, name, password FROM SystemAdmin WHERE adminID = ?";
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, adminID);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                CreateUserAccount admin = new CreateUserAccount(
+                        rs.getString("adminID"),   // userID
+                        rs.getString("adminID"),   // username (admins log in using adminID)
+                        rs.getString("password"),  // password
+                        "System Admin",            // role
+                        true                       // approved
+                );
+                return admin;
+            }
+        }
+        return null;
+    }
+
 }

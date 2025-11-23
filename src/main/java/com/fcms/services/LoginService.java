@@ -13,12 +13,21 @@ public class LoginService {
 
     public LoginResult authenticate(String username, String password) {
         try {
-            // Validate inputs
-            if (username == null || username.trim().isEmpty() || password == null || password.isEmpty()) {
+            if (username == null || username.trim().isEmpty() ||
+                    password == null || password.isEmpty()) {
                 return new LoginResult(false, "Please enter both Username and Password", null, null);
             }
 
-            // Check if user exists and credentials match
+            // Check System Admin table
+            CreateUserAccount admin = userRepository.getAdminCredentials(username);
+            if (admin != null) {
+                if (!admin.getPassword().equals(password)) {
+                    return new LoginResult(false, "Invalid Username or Password", null, null);
+                }
+                return new LoginResult(true, "Login successful", admin.getUserID(), "System Admin");
+            }
+
+            // Check regular users
             CreateUserAccount user = userRepository.getUserCredentials(username);
 
             if (user == null) {
@@ -29,7 +38,6 @@ public class LoginService {
                 return new LoginResult(false, "Your account is pending administrator approval", null, null);
             }
 
-            // In production, you should hash the password and compare hashes
             if (!user.getPassword().equals(password)) {
                 return new LoginResult(false, "Invalid Username or Password", null, null);
             }

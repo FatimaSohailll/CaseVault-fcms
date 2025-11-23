@@ -20,7 +20,7 @@ public class SidebarController {
             manageParticipantsBtn, crimeAnalyticsBtn, closeCaseBtn, submitToCourtBtn, searchCasesBtn;
 
     // ADMIN BUTTONS
-    @FXML private Button adminManageUsersBtn, adminWaitingListBtn;
+    @FXML private Button adminDashboardBtn, adminManageUsersBtn, adminWaitingListBtn;
 
     // EXPERT BUTTONS
     @FXML private Button expertUploadReportBtn;
@@ -31,16 +31,24 @@ public class SidebarController {
     // ROWS (all users)
     @FXML private HBox dashboardRow, registerRow, manageCasesRow, forensicAnalysisRow,
             manageParticipantsRow, crimeAnalyticsRow, closeCaseRow, submitToCourtRow,
-            searchCasesRow, adminManageUsersRow, adminWaitingListRow,
-            expertUploadReportRow, courtRecordVerdictRow,
-            expertDashboardRow, expertAddEvidenceRow,
-            courtDashboardRow, courtSearchCasesRow;
+            searchCasesRow,
+
+    // ADMIN
+    adminDashboardRow, adminManageUsersRow, adminWaitingListRow,
+
+    // EXPERT
+    expertDashboardRow, expertUploadReportRow, expertAddEvidenceRow,
+
+    // COURT
+    courtDashboardRow, courtRecordVerdictRow, courtSearchCasesRow;
 
     // ICON HOLDERS
     @FXML private Pane dashboardIcon, registerIcon, manageCasesIcon, forensicAnalysisIcon,
             manageParticipantsIcon, crimeAnalyticsIcon, closeCaseIcon, submitToCourtIcon, searchCasesIcon,
-            adminManageUsersIcon, adminWaitingListIcon,
-            expertUploadReportIcon, courtRecordVerdictIcon;
+
+    adminDashboardIcon, adminManageUsersIcon, adminWaitingListIcon,
+
+    expertUploadReportIcon, courtRecordVerdictIcon;
 
     private boolean collapsed = false;
     private SceneManager sceneManager;
@@ -53,6 +61,30 @@ public class SidebarController {
     public void initialize() {
         injectIcons();
         applyRoleVisibility();
+        applyRoleTheme(UserSession.getInstance().getRole());
+    }
+
+    private void applyRoleTheme(String role) {
+        sidebarContainer.getStyleClass().removeAll(
+                "sidebar-police",
+                "sidebar-court",
+                "sidebar-forensic",
+                "sidebar-admin"
+        );
+
+        switch (role) {
+            case "Police Officer" ->
+                    sidebarContainer.getStyleClass().add("sidebar-police");
+
+            case "Court Official"  ->
+                    sidebarContainer.getStyleClass().add("sidebar-court");
+
+            case "Forensic Expert" ->
+                    sidebarContainer.getStyleClass().add("sidebar-forensic");
+
+            case "System Admin" ->
+                    sidebarContainer.getStyleClass().add("sidebar-admin");
+        }
     }
 
     // -------------------- ICONS --------------------
@@ -70,6 +102,7 @@ public class SidebarController {
         searchCasesIcon.getChildren().add(icon("search"));
 
         // Admin
+        adminDashboardIcon.getChildren().add(icon("home"));
         adminManageUsersIcon.getChildren().add(icon("users"));
         adminWaitingListIcon.getChildren().add(icon("filetext"));
 
@@ -101,7 +134,7 @@ public class SidebarController {
                 searchCasesRow,
 
                 // Admin
-                adminManageUsersRow, adminWaitingListRow,
+                adminDashboardRow, adminManageUsersRow, adminWaitingListRow,
 
                 // Expert
                 expertDashboardRow, expertUploadReportRow, expertAddEvidenceRow,
@@ -133,7 +166,7 @@ public class SidebarController {
             );
 
             case "System Admin" -> show(
-                    adminManageUsersRow, adminWaitingListRow
+                    adminDashboardRow, adminManageUsersRow, adminWaitingListRow
             );
         }
     }

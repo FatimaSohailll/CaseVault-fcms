@@ -7,6 +7,7 @@
 <HBox
         xmlns:fx="http://javafx.com/fxml"
         fx:controller="com.fcms.controllers.components.TopbarController"
+        fx:id="topbarContainer"
         styleClass="top-bar"
         prefHeight="64"
         minHeight="64"

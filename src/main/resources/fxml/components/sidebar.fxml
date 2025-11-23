@@ -75,15 +75,33 @@
     <!-- ======================= ADMIN =========================== -->
     <!-- ========================================================= -->
 
-    <HBox fx:id="adminManageUsersRow" spacing="10" styleClass="nav-row">
-        <Pane fx:id="adminManageUsersIcon"/>
-        <Button fx:id="adminManageUsersBtn" text="Manage Users" onAction="#handleAdminManageUsers" styleClass="nav-btn"/>
+    <!-- Admin Dashboard -->
+    <HBox fx:id="adminDashboardRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="adminDashboardIcon"/>
+        <Button fx:id="adminDashboardBtn"
+                text="Admin Dashboard"
+                onAction="#handleAdminDashboard"
+                styleClass="nav-btn"/>
     </HBox>
 
+    <!-- Manage Users -->
+    <HBox fx:id="adminManageUsersRow" spacing="10" styleClass="nav-row">
+        <Pane fx:id="adminManageUsersIcon"/>
+        <Button fx:id="adminManageUsersBtn"
+                text="Manage Users"
+                onAction="#handleAdminManageUsers"
+                styleClass="nav-btn"/>
+    </HBox>
+
+    <!-- Waiting List -->
     <HBox fx:id="adminWaitingListRow" spacing="10" styleClass="nav-row">
         <Pane fx:id="adminWaitingListIcon"/>
-        <Button fx:id="adminWaitingListBtn" text="Waiting List" onAction="#handleAdminWaitingList" styleClass="nav-btn"/>
+        <Button fx:id="adminWaitingListBtn"
+                text="Waiting List"
+                onAction="#handleAdminWaitingList"
+                styleClass="nav-btn"/>
     </HBox>
+
 
 
 
