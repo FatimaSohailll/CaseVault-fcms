@@ -2,7 +2,7 @@ package com.fcms.services;
 
 import com.fcms.repositories.AuthRepository;
 import java.sql.SQLException;
-import com.fcms.models.UserAccount;
+import com.fcms.models.CreateUserAccount;
 
 public class LoginService {
     private final AuthRepository userRepository;
@@ -19,7 +19,7 @@ public class LoginService {
             }
 
             // Check if user exists and credentials match
-            UserAccount user = userRepository.getUserCredentials(username);
+            CreateUserAccount user = userRepository.getUserCredentials(username);
 
             if (user == null) {
                 return new LoginResult(false, "Invalid Username or Password", null, null);

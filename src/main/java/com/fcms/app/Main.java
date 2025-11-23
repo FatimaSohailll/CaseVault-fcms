@@ -13,6 +13,8 @@ import com.fcms.controllers.policeOfficer.MainLayoutController;
 import com.fcms.models.UserSession;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Locale;
 
 public class Main extends Application {
@@ -23,6 +25,111 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         SQLiteDatabase.initializeDatabase();
+
+        String sql = """
+
+                -- 1. SYSTEM ADMIN (must be first)
+           INSERT OR IGNORE INTO SystemAdmin (adminID, name, password)
+           VALUES ('A00001', 'System Administrator', 'admin123');
+
+           -----------------------------------------------------------
+           -- 2. USER ACCOUNTS (for police + forensic experts)
+           -----------------------------------------------------------
+           INSERT OR IGNORE INTO UserAccount
+           (userID, username, email, name, password, role, managedBY, approved)
+           VALUES
+           ('PO00001', 'po00001', 'po00001@police.gov', 'Officer PO00001', 'pass123', 'Police Officer', 'A00001', 1),
+           ('PO00002', 'po00002', 'po00002@police.gov', 'Officer PO00002', 'pass123', 'Police Officer', 'A00001', 1),
+           ('PO00003', 'po00003', 'po00003@police.gov', 'Detective PO00003', 'pass123', 'Police Officer', 'A00001', 1),
+           ('PO00004', 'po00004', 'po00004@police.gov', 'Detective PO00004', 'pass123', 'Police Officer', 'A00001', 1),
+           ('PO00005', 'po00005', 'po00005@police.gov', 'Officer PO00005', 'pass123', 'Police Officer', 'A00001', 1),
+           ('PO00006', 'po00006', 'po00006@police.gov', 'Detective PO00006', 'pass123', 'Police Officer', 'A00001', 1),
+
+           ('EX00001', 'expert1', 'expert1@lab.com', 'Forensic Expert 1', 'pass123', 'Forensic Expert', 'A00001', 1),
+           ('EX00003', 'expert3', 'expert3@lab.com', 'Forensic Expert 3', 'pass123', 'Forensic Expert', 'A00001', 1);
+
+           -----------------------------------------------------------
+           -- 3. POLICE OFFICER DETAILS (must match userIDs)
+           -----------------------------------------------------------
+           INSERT OR IGNORE INTO PoliceOfficer (officerID, rank, department) VALUES
+           ('PO00001', 'Officer', 'Patrol Division'),
+           ('PO00002', 'Detective', 'Robbery Division'),
+           ('PO00003', 'Detective', 'Narcotics Division'),
+           ('PO00004', 'Detective', 'Crime Scene Unit'),
+           ('PO00005', 'Officer', 'Patrol Division'),
+           ('PO00006', 'Detective', 'Cyber Crimes Unit');
+
+           -----------------------------------------------------------
+           -- 4. FORENSIC EXPERT DETAILS
+           -----------------------------------------------------------
+           INSERT OR IGNORE INTO ForensicExpert (expertID, labName) VALUES
+           ('EX00001', 'Central Forensics Lab'),
+           ('EX00003', 'Central Forensics Lab');
+
+           -----------------------------------------------------------
+           -- 5. CASE FILES (officer IDs now valid)
+           -----------------------------------------------------------
+           INSERT OR IGNORE INTO CaseFile
+           (caseID, title, description, location, type, status, priority, assignedOfficer, dateRegistered)
+           VALUES
+           ('CS00001', 'Downtown Homicide', 'Homicide case with DNA evidence', 'Downtown District', 'Homicide', 'open', 'high', 'PO00001', '2025-11-15'),
+           ('CS00002', 'Bank Robbery', 'Bank robbery with fingerprint evidence', 'Financial District', 'Robbery', 'open', 'high', 'PO00002', '2025-11-14'),
+           ('CS00003', 'Gang Shooting', 'Gang-related shooting with ballistic evidence', 'East Side', 'Violent Crime', 'open', 'high', 'PO00003', '2025-11-16'),
+           ('CS00004', 'Drug Overdose', 'Suspicious death with toxicology evidence', 'West District', 'Narcotics', 'closed', 'medium', 'PO00004', '2025-11-10'),
+           ('CS00005', 'Cyber Fraud', 'Online fraud case with digital evidence', 'Citywide', 'Cyber Crime', 'open', 'high', 'PO00001', '2025-11-13'),
+           ('CS00006', 'Cold Case Review', 'Cold case with new DNA evidence', 'Central District', 'Cold Case', 'open', 'low', 'PO00005', '2025-11-17'),
+           ('CS00007', 'Burglary Series', 'Multiple burglaries with fingerprint evidence', 'North District', 'Property Crime', 'closed', 'medium', 'PO00002', '2025-11-09'),
+           ('CS00008', 'Armed Robbery', 'Armed robbery with ballistic evidence', 'South District', 'Robbery', 'open', 'high', 'PO00006', '2025-11-18');
+
+           -----------------------------------------------------------
+           -- 6. EVIDENCE (case IDs now valid)
+           -----------------------------------------------------------
+           INSERT OR IGNORE INTO Evidence (evidenceID, type, description, filename, location, collectionDate, caseID) VALUES
+           ('EV00001','DNA','Blood sample from crime scene','dna_sample_001.pdf','Evidence Room A','2025-11-15','CS00001'),
+           ('EV00002','Fingerprint','Latent prints from counter','fingerprints_002.pdf','Evidence Room B','2025-11-14','CS00002'),
+           ('EV00003','Ballistics','9mm bullet casing','bullet_casing_003.pdf','Evidence Room C','2025-11-16','CS00003'),
+           ('EV00004','Toxicology','Blood samples','blood_samples_004.pdf','Evidence Room D','2025-11-10','CS00004'),
+           ('EV00005','Digital','Mobile device','mobile_device_005.pdf','Evidence Room E','2025-11-13','CS00005'),
+           ('EV00006','DNA','Hair sample','hair_sample_006.pdf','Evidence Room A','2025-11-17','CS00006'),
+           ('EV00007','Fingerprint','Prints','fingerprints_007.pdf','Evidence Room B','2025-11-09','CS00007'),
+           ('EV00008','Ballistics','Firearm','firearm_008.pdf','Evidence Room C','2025-11-18','CS00008'),
+           ('EV00009','DNA','Blood sample','dna_victim_009.pdf','Evidence Room A','2025-11-15','CS00001'),
+           ('EV00010','Fingerprint','Suspect prints','fingerprint_suspect_010.pdf','Evidence Room B','2025-11-14','CS00002'),
+           ('EV00011','Digital','Laptop','laptop_suspect_011.pdf','Evidence Room E','2025-11-13','CS00005'),
+           ('EV00012','Ballistics','Weapon','weapon_suspect_012.pdf','Evidence Room C','2025-11-18','CS00008');
+
+           -----------------------------------------------------------
+           -- 7. FORENSIC REQUESTS (now all FK references valid)
+           -----------------------------------------------------------
+           INSERT OR IGNORE INTO ForensicRequest
+           (requestID, expertID, status, requestedBy, evidenceType, requestedDate, evidenceID, analysisType, priority)
+           VALUES
+           ('FR00001','EX00003','pending','PO00001','DNA','2025-11-20','EV00001','DNA Analysis','High'),
+           ('FR00002','EX00003','pending','PO00002','Fingerprint','2025-11-19','EV00002','Fingerprint Analysis','Urgent'),
+           ('FR00003','EX00003','pending','PO00003','Ballistics','2025-11-21','EV00003','Ballistics Analysis','Medium'),
+           ('FR00004','EX00003','completed','PO00004','Toxicology','2025-11-18','EV00004','Toxicology Screening','Medium'),
+           ('FR00005','EX00003','pending','PO00001','Digital','2025-11-19','EV00005','Digital Forensics','High'),
+           ('FR00006','EX00003','pending','PO00005','DNA','2025-11-22','EV00006','DNA Analysis','low'),
+           ('FR00007','EX00003','completed','PO00002','Fingerprint','2025-11-17','EV00007','Fingerprint Analysis','Medium'),
+           ('FR00008','EX00003','pending','PO00006','Ballistics','2025-11-21','EV00008','Ballistics Analysis','Urgent'),
+           ('FR00009','EX00001','pending','PO00001','DNA','2025-11-20','EV00009','DNA Analysis','High'),
+           ('FR00010','EX00001','pending','PO00002','Fingerprint','2025-11-19','EV00010','Fingerprint Analysis','Urgent'),
+           ('FR00011','EX00001','pending','PO00001','Digital','2025-11-19','EV00011','Digital Forensics','High'),
+           ('FR00012','EX00003','pending','PO00006','Ballistics','2025-11-21','EV00012','Ballistics Analysis','Urgent');
+
+           """;
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             Statement stmt = conn.createStatement()) {
+
+            stmt.executeUpdate(sql);
+            System.out.println("Test data inserted successfully!");
+
+        } catch (Exception e) {
+            System.out.println("Error inserting test data: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         showLoginScreen();
     }
 
