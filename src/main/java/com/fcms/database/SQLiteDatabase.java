@@ -49,6 +49,12 @@ public class SQLiteDatabase {
                 "approved  BOOL NOT NULL, " +
                 "createdAt DATETIME DEFAULT CURRENT_TIMESTAMP)");
 
+        stmt.execute("CREATE TABLE IF NOT EXISTS UserHistory (" +
+                "historyID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "actor TEXT NOT NULL, " +            // who did it (Admin)
+                "action TEXT NOT NULL, " +           // what happened ("Added new user")
+                "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
+
         // POLICE OFFICER
         stmt.execute("CREATE TABLE IF NOT EXISTS PoliceOfficer (" +
                 "officerID TEXT PRIMARY KEY, " +
@@ -76,7 +82,7 @@ public class SQLiteDatabase {
                 "description TEXT, " +
                 "location TEXT, " +
                 "type TEXT, " +
-                "status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed', 'archived')), " +
+                "status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed', 'archived', 'submitted')), " +
                 "priority TEXT CHECK (priority IN ('high', 'low', 'medium')), " +
                 "assignedOfficer TEXT, " +
                 "dateRegistered DATE NOT NULL, " +

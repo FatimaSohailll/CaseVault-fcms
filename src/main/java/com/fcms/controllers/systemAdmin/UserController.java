@@ -1,6 +1,7 @@
 package com.fcms.controllers.systemAdmin;
 
 import com.fcms.models.users.*;
+import com.fcms.repositories.UserRepository;
 import com.fcms.services.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -16,7 +17,6 @@ public class UserController {
     @FXML private PasswordField passwordField;
     @FXML private ComboBox<String> roleField;
 
-    // Role boxes
     @FXML private VBox roleSpecificBox;
 
     @FXML private GridPane policeBox;
@@ -36,28 +36,22 @@ public class UserController {
     private UserAccount editingUser;
     private boolean editMode = false;
 
-    public void setParent(ManageUsersController ctrl) {
-        this.parentController = ctrl;
-    }
+    public void setParent(ManageUsersController ctrl) { this.parentController = ctrl; }
 
     @FXML
     public void initialize() {
-        roleField.getItems().addAll("Police", "Court Official", "Forensic Expert");
-
+        roleField.getItems().addAll("Police Officer", "Court Official", "Forensic Expert");
         roleField.valueProperty().addListener((obs, oldVal, newVal) -> showRoleFields(newVal));
     }
 
     private void showRoleFields(String role) {
-        // hide everything first
+
         roleSpecificBox.setVisible(false);
         roleSpecificBox.setManaged(false);
-
         policeBox.setVisible(false);
         policeBox.setManaged(false);
-
         courtBox.setVisible(false);
         courtBox.setManaged(false);
-
         expertBox.setVisible(false);
         expertBox.setManaged(false);
 
@@ -67,7 +61,7 @@ public class UserController {
         roleSpecificBox.setManaged(true);
 
         switch (role) {
-            case "Police" -> {
+            case "Police Officer" -> {
                 policeBox.setVisible(true);
                 policeBox.setManaged(true);
             }
@@ -82,7 +76,9 @@ public class UserController {
         }
     }
 
-    // Load existing user
+    // =====================================================
+    // EDIT EXISTING USER
+    // =====================================================
     public void loadUser(UserAccount user) {
         this.editingUser = user;
         this.editMode = true;
@@ -93,6 +89,8 @@ public class UserController {
         passwordField.setText(user.getPassword());
 
         roleField.setValue(user.getRole());
+        showRoleFields(user.getRole());
+
         if (user instanceof PoliceOfficer p) {
             policeRankField.setText(p.getRank());
             policeDeptField.setText(p.getDepartment());
@@ -106,29 +104,36 @@ public class UserController {
         if (user instanceof ForensicExpert f) {
             labNameField.setText(f.getLabName());
         }
-
-        // Show and fill appropriate fields
-        showRoleFields(user.getRole());
     }
 
+    // =====================================================
+    // SAVE USER
+    // =====================================================
     @FXML
     private void saveUser() {
 
-        String id       = editMode ? editingUser.getUserID() : ("U" + System.currentTimeMillis());
+        String role = roleField.getValue();   // <-- MUST be defined FIRST
+
+        String id;
+
+        if (editMode) {
+            id = editingUser.getUserID();
+        } else {
+            id = UserRepository.generateUserID(role);  // now works
+        }
+
         String username = usernameField.getText();
         String name     = nameField.getText();
         String email    = emailField.getText();
         String password = passwordField.getText();
-        String role     = roleField.getValue();
 
-        // managedBy always = "System Admin"
         String managedBy = "System Admin";
 
         UserAccount u;
 
         switch (role) {
 
-            case "Police" -> {
+            case "Police Officer" -> {
                 u = new PoliceOfficer(
                         id,
                         username,
@@ -137,11 +142,11 @@ public class UserController {
                         password,
                         role,
                         managedBy,
-                        null,                    // createdAt
+                        true,
+                        null,
                         policeRankField.getText(),
                         policeDeptField.getText()
                 );
-
             }
 
             case "Court Official" -> {
@@ -153,14 +158,14 @@ public class UserController {
                         password,
                         role,
                         managedBy,
-                        null,                   // createdAt
+                        true,
+                        null,
                         courtNameField.getText(),
                         courtDesigField.getText()
                 );
-
             }
 
-            default -> { // Forensic Expert
+            default -> {
                 u = new ForensicExpert(
                         id,
                         username,
@@ -169,12 +174,12 @@ public class UserController {
                         password,
                         role,
                         managedBy,
-                        null,                   // createdAt
+                        true,
+                        null,
                         labNameField.getText()
                 );
             }
         }
-
 
         if (!editMode)
             userService.addUser(u);

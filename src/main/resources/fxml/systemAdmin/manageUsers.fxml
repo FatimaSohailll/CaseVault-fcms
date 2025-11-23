@@ -7,7 +7,8 @@
 <ScrollPane xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml"
             fitToWidth="true"
-            style="-fx-background:#f5f5f5;">
+            style="-fx-background:#f5f5f5;"
+            fx:controller="com.fcms.controllers.systemAdmin.ManageUsersController">
 
     <VBox spacing="20" style="-fx-padding: 20;">
 
@@ -19,56 +20,49 @@
                    style="-fx-text-fill: #777;" />
         </VBox>
 
-        <!-- TOP BAR: SEARCH + FILTERS + ADD USER -->
+        <!-- TOP BAR -->
         <HBox spacing="15" alignment="CENTER_LEFT">
 
-            <!-- Search Field -->
             <TextField fx:id="searchField"
-                       promptText="Search by name or email..."
+                       promptText="Search by name, username or email..."
                        style="-fx-background-radius: 8; -fx-padding: 10;"
                        HBox.hgrow="ALWAYS" />
 
-            <!-- Role Filter -->
-            <ComboBox prefWidth="150"
+            <ComboBox fx:id="roleFilter"
+                      prefWidth="150"
                       promptText="All Roles" />
 
-            <!-- Status Filter -->
-            <ComboBox prefWidth="150"
+            <ComboBox fx:id="statusFilter"
+                      prefWidth="150"
                       promptText="All Status" />
 
-            <!-- Add User Button -->
-            <Button text="Add User"
-                    style="-fx-background-color:#ff9800; -fx-text-fill:white; -fx-background-radius:8; -fx-padding:10 16;" />
+            <Button fx:id="addUserBtn"
+                    text="Add User"
+                    onAction="#openAddUser"
+                    style="-fx-background-color:#ff9800; -fx-text-fill:white;
+                           -fx-background-radius:8; -fx-padding:10 16;" />
         </HBox>
 
-        <!-- MAIN CARD -->
+
+        <!-- MAIN WHITE CARD -->
         <VBox spacing="15"
-              style="-fx-background-color: white; -fx-background-radius:12; -fx-padding:20; -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.08),10,0,0,4);">
+              style="-fx-background-color: white; -fx-background-radius:12;
+                     -fx-padding:20; -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.08),10,0,0,4);">
 
-            <Label text="All Users (6)"
-                   style="-fx-font-size: 16px; -fx-font-weight:bold;" />
+            <Label fx:id="totalUsersLabel"
+                   text="All Users (0)"
+                   style="-fx-font-size:16px; -fx-font-weight:bold;" />
 
-            <!-- USERS TABLE -->
+            <!-- TABLE -->
             <TableView fx:id="usersTable" prefHeight="400">
 
-                <!-- COLUMN: Name -->
                 <columns>
-                    <TableColumn text="Name" prefWidth="150" />
-
-                    <!-- Email -->
-                    <TableColumn text="Email" prefWidth="200" />
-
-                    <!-- Role -->
-                    <TableColumn text="Role" prefWidth="140" />
-
-                    <!-- Department -->
-                    <TableColumn text="Department" prefWidth="200" />
-
-                    <!-- Status -->
-                    <TableColumn text="Status" prefWidth="100" />
-
-                    <!-- Actions -->
-                    <TableColumn text="Actions" prefWidth="120" />
+                    <TableColumn fx:id="idColumn" text="User ID" prefWidth="120" />
+                    <TableColumn fx:id="nameColumn" text="Name" prefWidth="150" />
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="200" />
+                    <TableColumn fx:id="roleColumn" text="Role" prefWidth="140" />
+                    <TableColumn fx:id="createdColumn" text="Created At" prefWidth="180" />
+                    <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="120" />
                 </columns>
 
             </TableView>
