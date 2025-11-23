@@ -563,3 +563,58 @@
     -fx-background-color: #e2e7ff;  /* soft light blue */
 }
 
+/* ============================================
+   Register Case – ComboBox styling
+   ============================================ */
+
+/* normal state: not disabled, not faded */
+#caseTypeDropdown,
+#priorityDropdown,
+#officerDropdown {
+    -fx-background-color: white;
+    -fx-background-radius: 6;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+    -fx-padding: 0 10;
+    -fx-pref-height: 38px;
+    -fx-opacity: 1.0;                 /* ← make sure they never look faded */
+    -fx-prompt-text-fill: #9ca3af;    /* subtle grey placeholder */
+}
+
+/* hover */
+#caseTypeDropdown:hover,
+#priorityDropdown:hover,
+#officerDropdown:hover {
+    -fx-border-color: #9ca3af;
+}
+
+/* focused (clicked) */
+#caseTypeDropdown:focused,
+#priorityDropdown:focused,
+#officerDropdown:focused {
+    -fx-border-color: #3b82f6;
+    -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 8, 0, 0, 0);
+}
+
+/* their popup list – reuse your generic popup style but ensure readable text */
+#caseTypeDropdown .combo-box-popup .list-view,
+#priorityDropdown .combo-box-popup .list-view,
+#officerDropdown .combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-radius: 6;
+    -fx-border-color: #d1d5db;
+}
+
+#caseTypeDropdown .combo-box-popup .list-cell:filled:selected,
+#priorityDropdown .combo-box-popup .list-cell:filled:selected,
+#officerDropdown .combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #030213;
+    -fx-text-fill: white;
+}
+
+#caseTypeDropdown .combo-box-popup .list-cell:hover,
+#priorityDropdown .combo-box-popup .list-cell:hover,
+#officerDropdown .combo-box-popup .list-cell:hover {
+    -fx-background-color: #ececf0;
+}
+

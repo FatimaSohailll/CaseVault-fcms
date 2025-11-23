@@ -23,6 +23,7 @@ public class RegisterCaseController {
     @FXML private ComboBox<String> officerDropdown;
 
     private final CaseService caseService = new CaseService();
+    @FXML private Label priorityWarning;
 
     @FXML
     public void initialize() {
@@ -103,17 +104,21 @@ public class RegisterCaseController {
         typeWarning.setVisible(false);
         descWarning.setVisible(false);
         dateWarning.setVisible(false);
+        priorityWarning.setVisible(false);
     }
+
 
     private void showValidationError(String error) {
         validationMessage.setText(error);
         validationMessage.setVisible(true);
 
         switch (error) {
-            case "Title is required" -> titleWarning.setVisible(true);
-            case "Type is required" -> typeWarning.setVisible(true);
-            case "Description is required" -> descWarning.setVisible(true);
-            case "Date is required" -> dateWarning.setVisible(true);
+            case "Title is required"      -> titleWarning.setVisible(true);
+            case "Type is required"       -> typeWarning.setVisible(true);
+            case "Description is required"-> descWarning.setVisible(true);
+            case "Date is required"       -> dateWarning.setVisible(true);
+            case "Priority is required"   -> priorityWarning.setVisible(true);
         }
     }
+
 }
