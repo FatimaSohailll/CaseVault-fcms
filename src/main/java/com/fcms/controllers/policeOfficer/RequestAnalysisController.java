@@ -353,6 +353,7 @@ public class RequestAnalysisController implements Initializable {
             Case selectedCase = caseComboBox.getValue();
             String selectedEvidenceId = getSelectedEvidenceId();
             String selectedExpertId = getSelectedExpertId();
+            this.chainofCustodyService = new ChainofCustodyService();
 
             // Validate form inputs
             if (selectedCase == null) {
@@ -393,8 +394,8 @@ public class RequestAnalysisController implements Initializable {
             chainofCustodyService.addCustodyRecord(c);
 
 
-            showSuccessAlert("Request successfully sent!");
-            showSuccessAlert("Chain of Custody successfully logged!");
+            showAlert("Success: ","Request successfully sent!");
+            showAlert("Sucess: ", "Chain of Custody successfully logged!");
             resetForm();
 
         } catch (BusinessException e) {
