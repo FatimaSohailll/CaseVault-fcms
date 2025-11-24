@@ -39,11 +39,15 @@ public class SearchCasesController {
 
         addActionButtons();
         loadCasesFromDb();
+
+        searchByIdField.setOnAction(e -> handleSearch());
+        System.out.println("Loaded cases: " + allCases.size());
     }
 
     private void loadCasesFromDb() {
         List<Case> cases = caseService.getAllCases();
-        allCases.setAll(cases);
+        allCases.setAll(cases == null ? List.of() : cases);
+        // show all initially; user can clear or search
         resultsTable.setItems(allCases);
     }
 
@@ -76,29 +80,56 @@ public class SearchCasesController {
         caseTypeDropdown.getSelectionModel().clearSelection();
         startDatePicker.setValue(null);
         endDatePicker.setValue(null);
-        resultsTable.setItems(allCases); // reset to full DB list
+        // reset to full DB list
+        resultsTable.setItems(allCases);
     }
 
     @FXML
     private void handleSearch() {
-        String id = searchByIdField.getText().trim();
-        String officer = officerField.getText().trim();
-        String location = locationField.getText().trim();
+        String id = safeTrim(searchByIdField.getText());
+        String officer = safeTrim(officerField.getText()).toLowerCase();
+        String location = safeTrim(locationField.getText()).toLowerCase();
         String type = caseTypeDropdown.getValue();
         LocalDate start = startDatePicker.getValue();
         LocalDate end = endDatePicker.getValue();
 
+        // If no filter is set, clear results (prevent showing all)
+        if (!isAnyFilterSet(id, officer, location, type, start, end)) {
+            resultsTable.setItems(FXCollections.observableArrayList());
+            return;
+        }
+
         List<Case> filtered = allCases.stream()
-                .filter(c -> id.isEmpty() || c.getId().contains(id))
+                // ID: partial, case-insensitive
+                .filter(c -> id.isEmpty() || (c.getId() != null && c.getId().toLowerCase().contains(id.toLowerCase())))
+                // Officer: partial, case-insensitive
                 .filter(c -> officer.isEmpty() ||
-                        (c.getAssignedOfficer() != null && c.getAssignedOfficer().toLowerCase().contains(officer.toLowerCase())))
+                        (c.getAssignedOfficer() != null && c.getAssignedOfficer().toLowerCase().contains(officer)))
+                // Location: partial, case-insensitive
                 .filter(c -> location.isEmpty() ||
-                        (c.getLocation() != null && c.getLocation().toLowerCase().contains(location.toLowerCase())))
-                .filter(c -> type == null || (c.getType() != null && c.getType().equalsIgnoreCase(type)))
+                        (c.getLocation() != null && c.getLocation().toLowerCase().contains(location)))
+                // Type: exact match (case-insensitive) if selected
+                .filter(c -> type == null || type.isBlank() ||
+                        (c.getType() != null && c.getType().equalsIgnoreCase(type)))
+                // Start date inclusive
                 .filter(c -> start == null || (c.getDateRegistered() != null && !c.getDateRegistered().isBefore(start)))
+                // End date inclusive
                 .filter(c -> end == null || (c.getDateRegistered() != null && !c.getDateRegistered().isAfter(end)))
                 .collect(Collectors.toList());
 
         resultsTable.setItems(FXCollections.observableArrayList(filtered));
+    }
+
+    private boolean isAnyFilterSet(String id, String officer, String location, String type, LocalDate start, LocalDate end) {
+        return (id != null && !id.isBlank())
+                || (officer != null && !officer.isBlank())
+                || (location != null && !location.isBlank())
+                || (type != null && !type.isBlank())
+                || start != null
+                || end != null;
+    }
+
+    private String safeTrim(String s) {
+        return s == null ? "" : s.trim();
     }
 }
