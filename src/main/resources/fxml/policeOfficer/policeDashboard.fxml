@@ -19,25 +19,25 @@
             <HBox spacing="18" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                 <VBox styleClass="stat-box" VBox.vgrow="ALWAYS">
                     <Label text="Total Cases" styleClass="stat-title"/>
-                    <Label text="342" styleClass="stat-value"/>
-                    <Label text="+12 this month" styleClass="stat-sub"/>
+                    <Label fx:id="totalCasesLabel" text="0" styleClass="stat-value"/>
+                    <Label text="+0 this month" styleClass="stat-sub"/>
                 </VBox>
 
                 <VBox styleClass="stat-box" VBox.vgrow="ALWAYS">
                     <Label text="Open Cases" styleClass="stat-title"/>
-                    <Label text="87" styleClass="stat-value"/>
+                    <Label fx:id="openCasesLabel" text="0" styleClass="stat-value"/>
                     <Label text="Requires attention" styleClass="stat-sub"/>
                 </VBox>
 
                 <VBox styleClass="stat-box" VBox.vgrow="ALWAYS">
                     <Label text="Pending Analysis" styleClass="stat-title"/>
-                    <Label text="23" styleClass="stat-value"/>
+                    <Label fx:id="pendingAnalysisLabel" text="0" styleClass="stat-value"/>
                     <Label text="Forensic reports" styleClass="stat-sub"/>
                 </VBox>
 
                 <VBox styleClass="stat-box" VBox.vgrow="ALWAYS">
                     <Label text="Closed This Month" styleClass="stat-title"/>
-                    <Label text="45" styleClass="stat-value"/>
+                    <Label fx:id="closedThisMonthLabel" text="0" styleClass="stat-value"/>
                     <Label text="Resolution rate: 52%" styleClass="stat-sub"/>
                 </VBox>
             </HBox>
