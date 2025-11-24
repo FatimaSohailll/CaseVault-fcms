@@ -1,6 +1,7 @@
 package com.fcms.controllers.policeOfficer;
 
 import com.fcms.models.Case;
+import com.fcms.models.UserSession;
 import com.fcms.services.CaseService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -20,6 +21,17 @@ public class CloseCaseController {
 
     @FXML
     public void initialize() {
+        // Configure dropdown cell rendering first
+        activeCaseDropdown.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Case c, boolean empty) {
+                super.updateItem(c, empty);
+                setText(empty || c == null ? null : c.getId() + " — " + c.getTitle());
+            }
+        });
+        activeCaseDropdown.setButtonCell(activeCaseDropdown.getCellFactory().call(null));
+
+        // Populate UI
         loadActiveCases();
 
         closureReasonDropdown.getItems().addAll(
@@ -32,21 +44,30 @@ public class CloseCaseController {
         addChecklistItem("Forensic analysis completed (if applicable)");
         addChecklistItem("Case documentation is complete");
         addChecklistItem("Supervisor has reviewed the case");
-
-        // Show case titles in dropdown
-        activeCaseDropdown.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(Case c, boolean empty) {
-                super.updateItem(c, empty);
-                setText(empty || c == null ? null : c.getId() + " — " + c.getTitle());
-            }
-        });
-        activeCaseDropdown.setButtonCell(activeCaseDropdown.getCellFactory().call(null));
     }
 
+    /**
+     * Load only open cases assigned to the signed-in officer.
+     * If no session is present, clear the dropdown and show an informational alert.
+     */
     private void loadActiveCases() {
+        UserSession session = UserSession.getInstance();
+        if (session == null || !session.isLoggedIn()) {
+            // No signed-in user: clear dropdown and inform user
+            activeCaseDropdown.getItems().clear();
+            // Optional: show a subtle message rather than a modal alert
+            System.out.println("No user session: active cases list cleared.");
+            return;
+        }
+
+        String assigned = session.getUserID() != null ? session.getUserID() : session.getUsername();
+
         List<Case> openCases = caseService.getAllCases().stream()
                 .filter(c -> c.getStatus() != null && c.getStatus().equalsIgnoreCase("open"))
+                .filter(c -> {
+                    String a = c.getAssignedOfficer();
+                    return a != null && a.equals(assigned);
+                })
                 .collect(Collectors.toList());
 
         activeCaseDropdown.getItems().setAll(openCases);
@@ -77,7 +98,7 @@ public class CloseCaseController {
             return;
         }
 
-        // Persist closure
+        // Persist closure (service should enforce authorization server-side as well)
         caseService.closeCase(selectedCase.getId(), reason, report);
 
         showAlert("Case " + selectedCase.getId() + " closed successfully with reason: " + reason);

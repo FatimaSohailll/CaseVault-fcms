@@ -123,6 +123,28 @@ public class ForensicRequestRepository {
         }
     }
 
+    public int countPendingForOfficer(String assigned) {
+        String sql = """
+        SELECT COUNT(1) AS cnt
+        FROM ForensicRequest fr
+        JOIN Evidence e ON fr.evidenceID = e.evidenceID
+        JOIN CaseFile c ON e.caseID = c.caseID
+        WHERE c.assignedOfficer = ? AND LOWER(fr.status) = 'pending'
+        """;
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, assigned);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt("cnt");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
     // Analytics methods for dashboard - get counts by status for this expert
     public int getPendingCount() throws SQLException {
         String sql = "SELECT COUNT(*) as count FROM ForensicRequest WHERE status = 'pending' AND expertID = ?";
