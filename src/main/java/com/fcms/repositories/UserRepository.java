@@ -155,6 +155,39 @@ public class UserRepository {
     }
 
 
+    public static List<PoliceOfficer> getAllPoliceOfficers() {
+        List<PoliceOfficer> list = new ArrayList<>();
+        String sql = "SELECT ua.userID, ua.username, ua.name, ua.email, ua.password, ua.role, ua.managedBY, ua.approved, ua.createdAt, " +
+                "po.rank, po.department " +
+                "FROM UserAccount ua JOIN PoliceOfficer po ON po.officerID = ua.userID " +
+                "WHERE ua.role = 'Police Officer' AND ua.approved = 1";
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                PoliceOfficer p = new PoliceOfficer(
+                        rs.getString("userID"),
+                        rs.getString("username"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getString("managedBY"),
+                        rs.getBoolean("approved"),
+                        rs.getString("createdAt"),
+                        rs.getString("rank"),
+                        rs.getString("department")
+                );
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     // =====================================================
     // GET ONLY PENDING USERS
     // =====================================================
