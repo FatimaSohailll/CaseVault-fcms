@@ -96,7 +96,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <HBox alignment="CENTER_RIGHT" spacing="12.0">
                             <TextField fx:id="searchField" promptText="Search by Request ID or Evidence ID" styleClass="search-field" />
-                            <ComboBox fx:id="statusFilter" promptText="Filter by Status" />
+                            <ComboBox fx:id="statusFilter" promptText="Filter by Status"  styleClass="expert-filter-combo"/>
                         </HBox>
                     </HBox>
 
