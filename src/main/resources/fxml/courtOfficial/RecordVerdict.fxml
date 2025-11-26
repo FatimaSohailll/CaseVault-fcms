@@ -1,46 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fitToWidth="true"
-            fx:controller="com.fcms.controllers.courtOfficial.RecordVerdictController"
-            style="-fx-background: #f6f6f6;">
+<ScrollPane fitToWidth="true" style="-fx-background: #f6f6f6;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.courtOfficial.RecordVerdictController">
 
     <content>
         <VBox spacing="25">
             <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
+                <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
 
             <!-- PAGE TITLE -->
-            <Label text="Record Verdict"
-                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Record Verdict" />
 
             <!-- HEADER -->
             <VBox style="-fx-background-color: #ff9800; -fx-background-radius: 6;">
                 <padding>
-                    <Insets top="20" right="20" bottom="20" left="20"/>
+                    <Insets bottom="20" left="20" right="20" top="20" />
                 </padding>
                 <children>
-                    <Label text="⚖  Record Verdict"
-                           style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-                    <Label text="Enter verdict details for the selected case"
-                           style="-fx-text-fill: white; -fx-opacity: 0.8;"/>
+                    <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="⚖  Record Verdict" />
+                    <Label style="-fx-text-fill: white; -fx-opacity: 0.8;" text="Enter verdict details for the selected case" />
                 </children>
             </VBox>
 
             <!-- CASE INFO -->
             <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 8;">
                 <padding>
-                    <Insets top="20" right="20" bottom="20" left="20"/>
+                    <Insets bottom="20" left="20" right="20" top="20" />
                 </padding>
                 <children>
-                    <Label text="Case Information"
-                           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Case Information" />
 
                     <HBox spacing="50">
                         <children>
@@ -51,22 +43,22 @@
 
                                     <HBox spacing="10">
                                         <children>
-                                            <Label text="Case Number:"/>
-                                            <Label fx:id="caseIdLabel" text="--"/>
+                                            <Label text="Case Number:" />
+                                            <Label fx:id="caseIdLabel" text="--" />
                                         </children>
                                     </HBox>
 
                                     <HBox spacing="10">
                                         <children>
-                                            <Label text="Type:"/>
-                                            <Label fx:id="typeLabel" text="--"/>
+                                            <Label text="Type:" />
+                                            <Label fx:id="typeLabel" text="--" />
                                         </children>
                                     </HBox>
 
                                     <HBox spacing="10">
                                         <children>
-                                            <Label text="Description:"/>
-                                            <Label fx:id="titleLabel" text="--"/>
+                                            <Label text="Description:" />
+                                            <Label fx:id="titleLabel" text="--" />
                                         </children>
                                     </HBox>
 
@@ -79,15 +71,15 @@
 
                                     <HBox spacing="10">
                                         <children>
-                                            <Label text="Officer:"/>
-                                            <Label fx:id="officerLabel" text="--"/>
+                                            <Label text="Officer:" />
+                                            <Label fx:id="officerLabel" text="--" />
                                         </children>
                                     </HBox>
 
                                     <HBox spacing="10">
                                         <children>
-                                            <Label text="Filed:"/>
-                                            <Label fx:id="dateLabel" text="--"/>
+                                            <Label text="Filed:" />
+                                            <Label fx:id="dateLabel" text="--" />
                                         </children>
                                     </HBox>
 
@@ -102,47 +94,41 @@
             <!-- VERDICT -->
             <VBox spacing="5">
                 <children>
-                    <Label text="Verdict *" style="-fx-font-weight: bold;"/>
-                    <ComboBox fx:id="verdictCombo" promptText="Select verdict"/>
+                    <Label style="-fx-font-weight: bold;" text="Verdict *" />
+                    <ComboBox fx:id="verdictCombo" promptText="Select verdict" styleClass="court-combo" />
                 </children>
             </VBox>
 
             <!-- SENTENCE -->
             <VBox spacing="5">
                 <children>
-                    <Label text="Sentence *" style="-fx-font-weight: bold;"/>
-                    <TextArea fx:id="sentenceField" prefRowCount="2"
-                              promptText="Enter sentence details"/>
+                    <Label style="-fx-font-weight: bold;" text="Sentence *" />
+                    <TextArea fx:id="sentenceField" prefRowCount="2" promptText="Enter sentence details" />
                 </children>
             </VBox>
 
             <!-- NOTES -->
             <VBox spacing="5">
                 <children>
-                    <Label text="Notes (Optional)" style="-fx-font-weight: bold;"/>
-                    <TextArea fx:id="notesField" prefRowCount="2"
-                              promptText="Add any additional notes"/>
+                    <Label style="-fx-font-weight: bold;" text="Notes (Optional)" />
+                    <TextArea fx:id="notesField" prefRowCount="2" promptText="Add any additional notes" />
                 </children>
             </VBox>
 
             <!-- DATE -->
             <VBox spacing="5">
                 <children>
-                    <Label text="Verdict Date *" style="-fx-font-weight: bold;"/>
-                    <DatePicker fx:id="verdictDate"/>
+                    <Label style="-fx-font-weight: bold;" text="Verdict Date *" />
+                    <DatePicker fx:id="verdictDate" />
                 </children>
             </VBox>
 
             <!-- BUTTONS -->
             <HBox spacing="10">
                 <children>
-                    <Button fx:id="saveBtn"
-                            text="💾  Save Verdict"
-                            style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+                    <Button fx:id="saveBtn" style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;" text="💾  Save Verdict" />
 
-                    <Button fx:id="cancelBtn"
-                            text="Cancel"
-                            style="-fx-background-color: #e0e0e0; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+                    <Button fx:id="cancelBtn" style="-fx-background-color: #e0e0e0; -fx-padding: 8 15; -fx-background-radius: 5;" text="Cancel" />
                 </children>
             </HBox>
 

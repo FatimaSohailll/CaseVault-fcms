@@ -358,4 +358,46 @@ public class CaseRepository {
         }
         return cases;
     }
+
+    public List<Case> findSubmittedForOfficial(String officialId) {
+        List<Case> cases = new ArrayList<>();
+
+        String sql = """
+        SELECT caseID, title, type, assignedOfficer, location, dateRegistered, status, priority
+        FROM CaseFile
+        WHERE status = 'submitted'
+          AND reviewedBy = ?
+        ORDER BY dateRegistered DESC
+    """;
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, officialId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Case c = new Case();
+                c.setId(rs.getString("caseID"));
+                c.setTitle(rs.getString("title"));
+                c.setType(rs.getString("type"));
+                c.setAssignedOfficer(rs.getString("assignedOfficer"));
+                c.setLocation(rs.getString("location"));
+
+                String dr = rs.getString("dateRegistered");
+                c.setDateRegistered(dr != null ? LocalDate.parse(dr) : null);
+
+                c.setStatus(rs.getString("status"));
+                c.setPriority(rs.getString("priority"));
+
+                cases.add(c);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cases;
+    }
+
 }

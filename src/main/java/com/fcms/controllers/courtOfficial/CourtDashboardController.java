@@ -2,6 +2,7 @@ package com.fcms.controllers.courtOfficial;
 
 import com.fcms.models.Case;
 import com.fcms.models.CourtVerdict;
+import com.fcms.models.UserSession;
 import com.fcms.services.CaseService;
 import com.fcms.services.RecordVerdictService;
 import javafx.fxml.FXML;
@@ -38,7 +39,8 @@ public class CourtDashboardController {
     // MAIN REFRESH
     // =========================================================
     private void refreshDashboard() {
-        List<Case> allCases = caseService.getAllCases();
+        String officialId = UserSession.getInstance().getUserID();
+        List<Case> allCases = caseService.getSubmittedCasesForOfficial(officialId);
 
         // ---- stats ----
         int total = allCases.size();

@@ -195,5 +195,8 @@ public class CaseService {
         return caseRepository.countForensicReports(caseId);
     }
 
+    public List<Case> getSubmittedCasesForOfficial(String officialId) {
+        return caseRepository.findSubmittedForOfficial(officialId);
+    }
 
 }
