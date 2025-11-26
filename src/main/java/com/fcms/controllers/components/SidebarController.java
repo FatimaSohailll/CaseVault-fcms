@@ -22,8 +22,6 @@ public class SidebarController {
     // ADMIN BUTTONS
     @FXML private Button adminDashboardBtn, adminManageUsersBtn, adminWaitingListBtn;
 
-    // EXPERT BUTTONS
-    @FXML private Button expertUploadReportBtn;
 
     // COURT BUTTONS
     @FXML private Button courtRecordVerdictBtn;
@@ -37,7 +35,7 @@ public class SidebarController {
     adminDashboardRow, adminManageUsersRow, adminWaitingListRow,
 
     // EXPERT
-    expertDashboardRow, expertUploadReportRow, expertAddEvidenceRow,
+    expertDashboardRow,
 
     // COURT
     courtDashboardRow, courtRecordVerdictRow, courtSearchCasesRow;
@@ -81,9 +79,6 @@ public class SidebarController {
         adminManageUsersIcon.getChildren().add(icon("users"));
         adminWaitingListIcon.getChildren().add(icon("filetext"));
 
-        // Expert
-        expertUploadReportIcon.getChildren().add(icon("filetext"));
-
         // Court
         courtRecordVerdictIcon.getChildren().add(icon("folderopen"));
     }
@@ -112,7 +107,7 @@ public class SidebarController {
                 adminDashboardRow, adminManageUsersRow, adminWaitingListRow,
 
                 // Expert
-                expertDashboardRow, expertUploadReportRow, expertAddEvidenceRow,
+                expertDashboardRow,
 
                 // Court
                 courtDashboardRow, courtRecordVerdictRow, courtSearchCasesRow
@@ -133,7 +128,7 @@ public class SidebarController {
             );
 
             case "Forensic Expert" -> show(
-                    expertDashboardRow, expertUploadReportRow, expertAddEvidenceRow
+                    expertDashboardRow
             );
 
             case "Court Official" -> show(
@@ -176,9 +171,6 @@ public class SidebarController {
 
     // FORENSIC EXPERT
     @FXML public void handleExpertDashboard() { sceneManager.switchContent("/fxml/forensicExpert/expertDashboard.fxml"); }
-    @FXML public void handleExpertUploadReport() { sceneManager.switchContent("/fxml/forensicExpert/uploadReport.fxml"); }
-    @FXML public void handleAddEvidence() { sceneManager.switchContent("/fxml/forensicExpert/addEvidence.fxml"); }
-
     // COURT OFFICIAL
     @FXML public void handleCourtDashboard() { sceneManager.switchContent("/fxml/courtOfficial/courtDashboard.fxml"); }
     @FXML public void handleCourtRecordVerdict() { sceneManager.switchContent("/fxml/courtOfficial/RecordVerdict.fxml"); }

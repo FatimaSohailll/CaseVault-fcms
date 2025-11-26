@@ -1,15 +1,12 @@
 package com.fcms.controllers.policeOfficer;
 
+import com.fcms.models.*;
 import com.fcms.services.CaseService;
-import com.fcms.models.Case;
-import com.fcms.models.UserSession;
+import com.fcms.services.ChainofCustodyService;
 import com.fcms.services.ForensicRequestService;
 import com.fcms.services.EvidenceService;
 import com.fcms.services.ForensicExpertService;
 import com.fcms.services.BusinessException;
-import com.fcms.models.ForensicRequest;
-import com.fcms.models.Evidence;
-import com.fcms.models.ForensicExpert;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -19,65 +16,231 @@ import javafx.scene.layout.VBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.List;
 import java.util.ArrayList;
 
 public class RequestAnalysisController implements Initializable {
 
+    @FXML private ComboBox<Case> caseComboBox; // Changed to ComboBox<Case>
     @FXML private ComboBox<String> analysisTypeCombo;
     @FXML private ComboBox<String> priorityCombo;
     @FXML private TextArea additionalNotesArea;
     @FXML private Button submitButton;
     @FXML private VBox successAlert;
-    @FXML private VBox noCaseSelected;
-    @FXML private VBox caseDetails;
-    @FXML private Label caseIdLabel;
-    @FXML private Label caseTitleLabel;
-    @FXML private Label caseTypeLabel;
-    @FXML private Label assignedOfficerLabel;
-    @FXML private Label locationLabel;
     @FXML private VBox evidenceCheckboxContainer;
     @FXML private VBox expertsContainer;
 
     private ForensicRequestService requestService;
+    private ChainofCustodyService chainofCustodyService;
     private EvidenceService evidenceService;
     private ForensicExpertService expertService;
+    private CaseService caseService;
     private String currentCaseId;
     private String currentOfficerId;
     private List<Evidence> availableEvidence = new ArrayList<>();
     private List<ForensicExpert> availableExperts = new ArrayList<>();
+    private List<Case> availableCases = new ArrayList<>();
     private List<CheckBox> evidenceCheckboxes = new ArrayList<>();
     private ToggleGroup expertToggleGroup = new ToggleGroup();
     private UserSession userSession;
-    private CaseService caseService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         userSession = UserSession.getInstance();
 
-        // Validate that user is logged in and is a forensic expert
+        // Validate that user is logged in and is a police officer
         if (!userSession.isLoggedIn() || !userSession.isPoliceOfficer()) {
             showAlert("Access Denied", "You must be logged in as a Police Officer to access this dashboard.");
             return;
         }
 
-        String currentUserId = userSession.getUserID();
-        System.out.println("DEBUG: Initializing Police Dashboard for user: " + currentUserId);
+        this.currentOfficerId = userSession.getUserID();
+        System.out.println("DEBUG: Initializing Request Analysis for officer: " + currentOfficerId);
 
-        this.currentCaseId = "CS00001"; // Dummy case ID for testing
-        this.currentOfficerId= currentUserId;
+        // Initialize services
         this.requestService = new ForensicRequestService();
         this.expertService = new ForensicExpertService();
-        this.caseService = new CaseService(currentCaseId);
-
-        this.evidenceService = new EvidenceService(currentCaseId);
+        this.evidenceService = new EvidenceService(); // Initialize without case ID
+        this.caseService = new CaseService(); // Initialize case service
 
         setupComboBoxes();
         setupEventHandlers();
+        loadAvailableCases(); // Load cases for the dropdown
         loadAvailableExperts();
-        loadCaseFromDatabase();
-        loadEvidenceFromDatabase(); // Load evidence using dummy case ID
+    }
+
+    private void loadAvailableCases() {
+        try {
+            // Fetch cases assigned to the current officer
+            availableCases = caseService.getCasesByOfficer(currentOfficerId);
+
+            // Create observable list for combobox
+            ObservableList<Case> caseList = FXCollections.observableArrayList(availableCases);
+            caseComboBox.setItems(caseList);
+
+            // Set cell factory to display case information properly
+            caseComboBox.setCellFactory(param -> new ListCell<Case>() {
+                @Override
+                protected void updateItem(Case item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(item.getId() + " - " + item.getTitle());
+                    }
+                }
+            });
+
+            // Set button cell to display selected case
+            caseComboBox.setButtonCell(new ListCell<Case>() {
+                @Override
+                protected void updateItem(Case item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText("Select a case to analyze");
+                    } else {
+                        setText(item.getId() + " - " + item.getTitle());
+                    }
+                }
+            });
+
+            System.out.println("Loaded " + availableCases.size() + " cases for officer: " + currentOfficerId);
+
+        } catch (Exception e) {
+            System.err.println("Error loading cases: " + e.getMessage());
+            e.printStackTrace();
+            showErrorAlert("Failed to load cases: " + e.getMessage());
+        }
+    }
+
+    private void setupComboBoxes() {
+        // Case combo box setup is now in loadAvailableCases()
+
+        // Analysis types
+        ObservableList<String> analysisTypes = FXCollections.observableArrayList(
+                "DNA Analysis",
+                "Fingerprint Analysis",
+                "Digital Forensics",
+                "Ballistics Analysis",
+                "Toxicology Screening",
+                "Trace Evidence Analysis",
+                "Document Examination"
+        );
+        analysisTypeCombo.setItems(analysisTypes);
+
+        // Priorities
+        ObservableList<String> priorities = FXCollections.observableArrayList(
+                "Urgent",
+                "High",
+                "Medium",
+                "Low"
+        );
+        priorityCombo.setItems(priorities);
+        priorityCombo.setValue("Medium");
+    }
+
+    private void setupEventHandlers() {
+        // Case selection handler
+        caseComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                handleCaseSelection(newVal);
+            } else {
+                // Clear evidence when no case is selected
+                clearEvidenceSelection();
+            }
+            updateSubmitButtonState();
+        });
+
+        // Analysis type handler
+        analysisTypeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            updateSubmitButtonState();
+        });
+
+        // Expert selection handler
+        expertToggleGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+            updateSubmitButtonState();
+        });
+    }
+
+    private void handleCaseSelection(Case selectedCase) {
+        this.currentCaseId = selectedCase.getId();
+
+        // Update evidence service with selected case ID
+        this.evidenceService = new EvidenceService(currentCaseId);
+
+        // Load evidence for the selected case
+        loadEvidenceFromDatabase();
+
+        System.out.println("Selected case: " + selectedCase.getId() + " - " + selectedCase.getTitle());
+    }
+
+    private void loadEvidenceFromDatabase() {
+        if (currentCaseId == null || currentCaseId.trim().isEmpty()) {
+            System.out.println("No case selected, cannot load evidence");
+            clearEvidenceSelection();
+            return;
+        }
+
+        try {
+            // Fetch evidence from database for the selected case
+            availableEvidence = evidenceService.getEvidenceByCase(currentCaseId);
+
+            // Create dynamic checkboxes based on fetched evidence
+            createEvidenceCheckboxes();
+
+            System.out.println("Loaded " + availableEvidence.size() + " evidence items for case: " + currentCaseId);
+
+        } catch (Exception e) {
+            System.err.println("Error loading evidence from database: " + e.getMessage());
+            e.printStackTrace();
+            showErrorAlert("Failed to load evidence from database: " + e.getMessage());
+            clearEvidenceSelection();
+        }
+    }
+
+    private void clearEvidenceSelection() {
+        evidenceCheckboxContainer.getChildren().clear();
+        evidenceCheckboxes.clear();
+
+        Label noCaseLabel = new Label("Please select a case to view available evidence");
+        noCaseLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-style: italic; -fx-padding: 20; -fx-alignment: center;");
+        evidenceCheckboxContainer.getChildren().add(noCaseLabel);
+    }
+
+    private void createEvidenceCheckboxes() {
+        evidenceCheckboxContainer.getChildren().clear();
+        evidenceCheckboxes.clear();
+
+        if (availableEvidence.isEmpty()) {
+            Label noEvidenceLabel = new Label("No evidence available for this case");
+            noEvidenceLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-style: italic; -fx-padding: 20; -fx-alignment: center;");
+            evidenceCheckboxContainer.getChildren().add(noEvidenceLabel);
+            return;
+        }
+
+        for (Evidence evidence : availableEvidence) {
+            CheckBox checkbox = new CheckBox();
+
+            String checkboxText = String.format("%s - %s\nDescription: %s\nCollected: %s",
+                    evidence.getId(),
+                    evidence.getType(),
+                    evidence.getDescription(),
+                    evidence.getCollectionDateTime() != null ? evidence.getCollectionDateTime().toString() : "N/A");
+
+            checkbox.setText(checkboxText);
+            checkbox.setUserData(evidence.getId());
+            checkbox.setStyle("-fx-text-fill: #374151; -fx-font-size: 14px; -fx-padding: 8 0;");
+            checkbox.setWrapText(true);
+
+            checkbox.selectedProperty().addListener((obs, oldVal, newVal) -> {
+                updateSubmitButtonState();
+            });
+
+            evidenceCheckboxes.add(checkbox);
+            evidenceCheckboxContainer.getChildren().add(checkbox);
+        }
     }
 
     private void loadAvailableExperts() {
@@ -91,37 +254,6 @@ public class RequestAnalysisController implements Initializable {
             System.err.println("Error loading forensic experts: " + e.getMessage());
             e.printStackTrace();
             showErrorAlert("Failed to load forensic experts: " + e.getMessage());
-        }
-    }
-
-    private void loadCaseFromDatabase() {
-        if (currentCaseId == null || currentCaseId.trim().isEmpty()) {
-            System.out.println("No case selected, cannot load case details");
-            return;
-        }
-
-        try {
-            // Fetch case details from database
-            Case caseDetails = caseService.getCaseById(currentCaseId);
-
-            if (caseDetails != null) {
-                // Update UI with case details from database
-                setCaseData(
-                        caseDetails.getId(),
-                        caseDetails.getTitle(),
-                        caseDetails.getType(),
-                        caseDetails.getAssignedOfficer(),
-                        caseDetails.getLocation()
-                );
-            } else {
-                System.err.println("Case not found in database: " + currentCaseId);
-                showErrorAlert("Case not found: " + currentCaseId);
-            }
-
-        } catch (Exception e) {
-            System.err.println("Error loading case from database: " + e.getMessage());
-            e.printStackTrace();
-            showErrorAlert("Failed to load case details from database: " + e.getMessage());
         }
     }
 
@@ -182,102 +314,13 @@ public class RequestAnalysisController implements Initializable {
         return card;
     }
 
-    private void loadEvidenceFromDatabase() {
-        if (currentCaseId == null || currentCaseId.trim().isEmpty()) {
-            System.out.println("No case selected, cannot load evidence");
-            return;
-        }
-
-        try {
-            // Fetch evidence from database for the current case
-            availableEvidence = evidenceService.getEvidenceByCase(currentCaseId);
-
-            // Create dynamic checkboxes based on fetched evidence
-            createEvidenceCheckboxes();
-
-            System.out.println("Loaded " + availableEvidence.size() + " evidence items for case: " + currentCaseId);
-
-        } catch (Exception e) {
-            System.err.println("Error loading evidence from database: " + e.getMessage());
-            e.printStackTrace();
-            showErrorAlert("Failed to load evidence from database: " + e.getMessage());
-        }
-    }
-
-    private void createEvidenceCheckboxes() {
-        evidenceCheckboxContainer.getChildren().clear();
-        evidenceCheckboxes.clear();
-
-        if (availableEvidence.isEmpty()) {
-            Label noEvidenceLabel = new Label("No evidence available for this case");
-            noEvidenceLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-style: italic; -fx-padding: 20; -fx-alignment: center;");
-            evidenceCheckboxContainer.getChildren().add(noEvidenceLabel);
-            return;
-        }
-
-        for (Evidence evidence : availableEvidence) {
-            CheckBox checkbox = new CheckBox();
-
-            String checkboxText = String.format("%s %s\n%s",
-                    evidence.getId(),
-                    evidence.getType(),
-                    evidence.getDescription());
-
-            checkbox.setText(checkboxText);
-            checkbox.setUserData(evidence.getId());
-            checkbox.setStyle("-fx-text-fill: #374151; -fx-font-size: 14px; -fx-padding: 8 0;");
-            checkbox.setWrapText(true);
-
-            checkbox.selectedProperty().addListener((obs, oldVal, newVal) -> {
-                //updateEvidenceCount();
-            });
-
-            evidenceCheckboxes.add(checkbox);
-            evidenceCheckboxContainer.getChildren().add(checkbox);
-        }
-    }
-
-    private void setupComboBoxes() {
-        ObservableList<String> analysisTypes = FXCollections.observableArrayList(
-                "DNA Analysis",
-                "Fingerprint Analysis",
-                "Digital Forensics",
-                "Ballistics Analysis",
-                "Toxicology Screening",
-                "Trace Evidence Analysis",
-                "Document Examination"
-        );
-        analysisTypeCombo.setItems(analysisTypes);
-
-        ObservableList<String> priorities = FXCollections.observableArrayList(
-                "Urgent",
-                "High",
-                "Medium",
-                "Low"
-        );
-        priorityCombo.setItems(priorities);
-        priorityCombo.setValue("Medium");
-    }
-
-    private void setupEventHandlers() {
-        analysisTypeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                updateSubmitButtonState();
-            }
-        });
-
-        // Add listener for expert selection
-        expertToggleGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-            updateSubmitButtonState();
-        });
-    }
-
     private void updateSubmitButtonState() {
         int evidenceCount = getSelectedEvidenceCount();
+        boolean caseSelected = caseComboBox.getValue() != null;
         boolean analysisTypeSelected = analysisTypeCombo.getValue() != null;
         boolean expertSelected = getSelectedExpertId() != null;
 
-        submitButton.setDisable(evidenceCount != 1 || !analysisTypeSelected || !expertSelected);
+        submitButton.setDisable(!caseSelected || evidenceCount != 1 || !analysisTypeSelected || !expertSelected);
     }
 
     private int getSelectedEvidenceCount() {
@@ -307,10 +350,17 @@ public class RequestAnalysisController implements Initializable {
     @FXML
     private void handleSubmitRequest() {
         try {
+            Case selectedCase = caseComboBox.getValue();
             String selectedEvidenceId = getSelectedEvidenceId();
             String selectedExpertId = getSelectedExpertId();
+            this.chainofCustodyService = new ChainofCustodyService();
 
             // Validate form inputs
+            if (selectedCase == null) {
+                showErrorAlert("Please select a case");
+                return;
+            }
+
             if (selectedEvidenceId == null) {
                 showErrorAlert("Please select exactly one evidence item");
                 return;
@@ -336,7 +386,16 @@ public class RequestAnalysisController implements Initializable {
             ForensicRequest request = createForensicRequest(selectedEvidenceId, selectedExpertId);
             requestService.createRequest(request);
 
-            showSuccessAlert();
+            ChainOfCustody c = new  ChainOfCustody();
+            c.setTimestamp(LocalDateTime.now());
+            c.setEvidenceId(selectedEvidenceId);
+            c.setDoneBy(selectedCase.getAssignedOfficer());
+            c.setAction("Add Evidence");
+            chainofCustodyService.addCustodyRecord(c);
+
+
+            showAlert("Success: ","Request successfully sent!");
+            showAlert("Sucess: ", "Chain of Custody successfully logged!");
             resetForm();
 
         } catch (BusinessException e) {
@@ -347,12 +406,6 @@ public class RequestAnalysisController implements Initializable {
     @FXML
     private void handleCancel() {
         resetForm();
-    }
-
-    @FXML
-    private void handleBackToDashboard() {
-        // UI navigation logic here
-        // Example: NavigationUtil.navigateToDashboard();
     }
 
     private ForensicRequest createForensicRequest(String evidenceId, String expertId) {
@@ -374,17 +427,20 @@ public class RequestAnalysisController implements Initializable {
         request.setPriority(priorityCombo.getValue());
         request.setEvidenceType(selectedEvidence != null ? selectedEvidence.getType() : analysisTypeCombo.getValue());
         request.setStatus("pending");
+       // request.set(currentCaseId); // Set the case ID
 
-        // Handle additional notes (you may need to extend your model)
+        // Handle additional notes
         if (additionalNotesArea.getText() != null && !additionalNotesArea.getText().trim().isEmpty()) {
             // Store notes if your model supports it, otherwise log
             System.out.println("Additional notes for request: " + additionalNotesArea.getText());
+            // If your ForensicRequest model has a notes field, set it here:
+            // request.setNotes(additionalNotesArea.getText());
         }
 
         return request;
     }
 
-    private void showSuccessAlert() {
+    private void showSuccessAlert(String msg) {
         successAlert.setVisible(true);
 
         // Auto-hide success alert after 3 seconds
@@ -409,10 +465,12 @@ public class RequestAnalysisController implements Initializable {
     }
 
     private void resetForm() {
+        // Clear case selection
+        caseComboBox.setValue(null);
+
         // Clear evidence selections
-        for (CheckBox checkbox : evidenceCheckboxes) {
-            checkbox.setSelected(false);
-        }
+        evidenceCheckboxes.clear();
+        clearEvidenceSelection();
 
         // Clear expert selection
         expertToggleGroup.selectToggle(null);
@@ -422,24 +480,8 @@ public class RequestAnalysisController implements Initializable {
         priorityCombo.setValue("Medium");
         additionalNotesArea.clear();
 
-    }
-
-    public void setCaseData(String caseId, String title, String type, String officer, String location) {
-        this.currentCaseId = caseId;
-
-        // Update case details UI
-        caseIdLabel.setText(caseId);
-        caseTitleLabel.setText(title);
-        caseTypeLabel.setText(type);
-        assignedOfficerLabel.setText(officer);
-        locationLabel.setText(location);
-
-        // Show case details and hide "no case" message
-        noCaseSelected.setVisible(false);
-        caseDetails.setVisible(true);
-
-        // Load evidence for the selected case
-        loadEvidenceFromDatabase();
+        // Reset current case ID
+        currentCaseId = null;
     }
 
     private void showAlert(String title, String message) {
@@ -450,12 +492,11 @@ public class RequestAnalysisController implements Initializable {
         alert.showAndWait();
     }
 
-    // Getter for current officer ID (useful for testing)
+    // Getters and setters for testing
     public String getCurrentOfficerId() {
         return currentOfficerId;
     }
 
-    // Setter for current officer ID (useful for testing)
     public void setCurrentOfficerId(String officerId) {
         this.currentOfficerId = officerId;
     }

@@ -5,13 +5,6 @@
 
 <AnchorPane prefHeight="712.0" prefWidth="1204.0" styleClass="root" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.forensicExpert.ExpertDashboardController">
 
-     Header - spans entire width
-    <HBox alignment="CENTER_LEFT" prefWidth="1200.0" spacing="12.0" styleClass="header" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <VBox alignment="TOP_CENTER" prefHeight="35.0" prefWidth="483.0" spacing="0.0">
-            <Label alignment="TOP_LEFT" prefHeight="17.0" prefWidth="334.0" styleClass="header-title" text="CaseVault Forensics" />
-            <Label prefHeight="17.0" prefWidth="334.0" styleClass="header-subtitle" text="Forensic Expert Dashboard" />
-        </VBox>
-    </HBox>
     <!-- Scrollable Content Area -->
     <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
         <VBox spacing="24.0" style="-fx-padding: 48;">
@@ -103,7 +96,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <HBox alignment="CENTER_RIGHT" spacing="12.0">
                             <TextField fx:id="searchField" promptText="Search by Request ID or Evidence ID" styleClass="search-field" />
-                            <ComboBox fx:id="statusFilter" promptText="Filter by Status" styleClass="filter-combo" />
+                            <ComboBox fx:id="statusFilter" promptText="Filter by Status"  styleClass="expert-filter-combo"/>
                         </HBox>
                     </HBox>
 

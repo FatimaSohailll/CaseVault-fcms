@@ -25,10 +25,7 @@
         <VBox spacing="10">
             <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Select Case" />
 
-            <ComboBox fx:id="caseDropdown"
-                      prefWidth="350"
-                      promptText="Select a case"
-                      styleClass="court-combo" />
+            <ComboBox fx:id="caseDropdown" prefWidth="350" promptText="Select a case" styleClass="court-combo" />
         </VBox>
 
         <!-- CASE SUMMARY -->
@@ -66,23 +63,21 @@
                 <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Assign to Court Official" />
 
 
-                <ComboBox fx:id="courtOfficialCombo"
-                          prefWidth="350"
-                          promptText="Select Court Official"
-                          styleClass="court-combo" />
+                <ComboBox fx:id="courtOfficialCombo" prefWidth="350" promptText="Select Court Official" styleClass="court-combo" />
             </VBox>
 
             <HBox spacing="10" style="-fx-background-color: #f0f6ff; -fx-padding: 15; -fx-background-radius: 8;">
                 <Label style="-fx-font-size: 18;" text="⚠" />
-                <Label style="-fx-font-size: 14;" text="Once submitted to court, this case will be transferred to the judicial system." />
+            <VBox prefHeight="0.0" prefWidth="502.0">
+               <children>
+                      <Label prefHeight="20.0" prefWidth="597.0" style="-fx-font-size: 14;" text="Once submitted to court, this case will be transferred to the judicial system." />
+                  <Label layoutX="10.0" layoutY="10.0" prefHeight="20.0" prefWidth="597.0" style="-fx-font-size: 14;" text="If the button is greyed out, it means the case has already been submitted." />
+               </children>
+            </VBox>
             </HBox>
 
             <HBox spacing="15">
-                <Button fx:id="submitButton"
-                        onAction="#handleSubmit"
-                        prefWidth="300"
-                        text="⚖   Submit to Court"
-                        styleClass="submit-button" />
+                <Button fx:id="submitButton" onAction="#handleSubmit" prefWidth="300" styleClass="submit-button" text="⚖   Submit to Court" />
             </HBox>
         </VBox>
 

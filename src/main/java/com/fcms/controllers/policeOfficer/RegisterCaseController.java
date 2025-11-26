@@ -24,6 +24,7 @@ public class RegisterCaseController {
     @FXML private ComboBox<PoliceOfficer> officerDropdown;
 
     private final CaseService caseService = new CaseService();
+    @FXML private Label priorityWarning;
 
     @FXML
     public void initialize() {
@@ -155,6 +156,7 @@ public class RegisterCaseController {
         dateWarning.setVisible(false);
         priorityWarning.setVisible(false);
     }
+
 
     private void showValidationError(String error) {
         validationMessage.setText(error);

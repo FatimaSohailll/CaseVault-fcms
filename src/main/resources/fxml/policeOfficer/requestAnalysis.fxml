@@ -4,10 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.paint.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" styleClass="root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.policeOfficer.RequestAnalysisController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fcms.controllers.policeOfficer.RequestAnalysisController">
 
     <VBox spacing="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
@@ -17,8 +15,6 @@
 
                 <HBox style="-fx-background-color: white; -fx-padding: 16 32; -fx-border-color: #e5e7eb; -fx-border-width: 0 0 1 0;">
                     <VBox>
-                        <Button styleClass="view-button" text="← Back to Dashboard" onAction="#handleBackToDashboard"
-                                style="-fx-text-fill: #001440; -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 4 0;" />
                         <Label text="Request Forensic Analysis" style="-fx-text-fill: #171617; -fx-font-size: 24px; -fx-font-weight: bold; -fx-padding: 8 0 0 0;" />
                         <Label text="Submit evidence for forensic examination" style="-fx-text-fill: #6b7280; -fx-font-size: 14px; -fx-padding: 4 0 0 0;" />
                     </VBox>
@@ -28,7 +24,7 @@
                 <VBox spacing="24.0" style="-fx-padding: 32; -fx-background-color: #f5f5f4;">
 
                     <!-- Success Alert -->
-                    <VBox fx:id="successAlert" visible="false" styleClass="success-alert" style="-fx-padding: 12; -fx-background-color: #dcfce7; -fx-border-color: #bbf7d0; -fx-border-radius: 6; -fx-background-radius: 6;">
+                    <VBox fx:id="successAlert" visible="false" style="-fx-padding: 12; -fx-background-color: #dcfce7; -fx-border-color: #bbf7d0; -fx-border-radius: 6; -fx-background-radius: 6;">
                         <HBox spacing="8.0" alignment="CENTER_LEFT">
                             <Label text="✓" style="-fx-text-fill: #16a34a; -fx-font-weight: bold;" />
                             <Label text="Forensic Request Sent successfully! The lab will process your request."
@@ -36,48 +32,60 @@
                         </HBox>
                     </VBox>
 
+                    <!-- Case Selection Card -->
+                    <VBox style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20;">
+                        <Label text="Case Selection" style="-fx-text-fill: #171617; -fx-font-size: 18px; -fx-font-weight: bold;" />
+                        <VBox spacing="12.0" style="-fx-padding: 16 0 0 0;">
+                            <Label text="Select Case for Forensic Analysis *" style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                            <ComboBox fx:id="caseComboBox" styleClass="analysis-combo" promptText="Select a case to analyze" style="-fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
+                        </VBox>
+                    </VBox>
+
                     <HBox spacing="24.0">
                         <!-- Left Column - Main Form -->
                         <VBox spacing="24.0" HBox.hgrow="ALWAYS">
 
                             <!-- Evidence Selection Card -->
-                            <VBox styleClass="card">
-                                <Label styleClass="title-label" text="Select Evidence and Analysis Type" />
+                            <VBox style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20;">
+                                <Label text="Select Evidence and Analysis Type" style="-fx-text-fill: #171617; -fx-font-size: 18px; -fx-font-weight: bold;" />
 
                                 <VBox spacing="16.0" style="-fx-padding: 16 0 0 0;">
-                                    <Label styleClass="form-label" text="Select Evidence for Analysis *" />
+                                    <Label text="Select Evidence for Analysis *" style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" />
 
                                     <!-- Dynamic Evidence List Container -->
                                     <VBox fx:id="evidenceCheckboxContainer" spacing="8.0">
                                         <!-- Dynamic evidence items will be loaded here from database -->
-                                        <Label text="Select a case to view available evidence"
+                                        <Label text="Please select a case to view available evidence"
                                                style="-fx-text-fill: #6b7280; -fx-font-style: italic; -fx-padding: 20; -fx-alignment: center;" />
                                     </VBox>
 
                                     <!-- Analysis Type -->
                                     <VBox spacing="8.0">
-                                        <Label styleClass="form-label" text="Analysis Type *" />
-                                        <ComboBox fx:id="analysisTypeCombo" promptText="Select analysis type" styleClass="filter-combo" />
+                                        <Label text="Analysis Type *" style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                                        <ComboBox fx:id="analysisTypeCombo" styleClass="analysis-combo" promptText="Select analysis type" style="-fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
                                     </VBox>
 
                                     <!-- Priority Level -->
                                     <VBox spacing="8.0">
-                                        <Label styleClass="form-label" text="Priority Level *" />
-                                        <ComboBox fx:id="priorityCombo" promptText="Select priority" styleClass="filter-combo" />
+                                        <Label text="Priority Level *" style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                                        <ComboBox fx:id="priorityCombo" styleClass="analysis-combo" promptText="Select priority" style="-fx-background-color: white; -fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
                                     </VBox>
 
                                     <!-- Additional Notes -->
                                     <VBox spacing="8.0">
-                                        <Label styleClass="form-label" text="Additional Notes / Special Instructions" />
-                                        <TextArea fx:id="additionalNotesArea" styleClass="form-textarea"
+                                        <Label text="Additional Notes / Special Instructions" style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                                        <TextArea fx:id="additionalNotesArea"
                                                   promptText="Enter any additional information for the forensic team..."
-                                                  prefRowCount="4" wrapText="true" />
+                                                  prefRowCount="4" wrapText="true"
+                                                  style="-fx-border-color: #d1d5db; -fx-border-radius: 6; -fx-background-radius: 6;" />
                                     </VBox>
 
                                     <!-- Submit Buttons -->
                                     <HBox spacing="12.0" style="-fx-padding: 16 0 0 0;">
-                                        <Button fx:id="submitButton" styleClass="action-button" text="🔬 Submit Request" onAction="#handleSubmitRequest" />
-                                        <Button fx:id="cancelButton" styleClass="view-button" text="Cancel" onAction="#handleCancel" />
+                                        <Button fx:id="submitButton" text="🔬 Submit Request" onAction="#handleSubmitRequest"
+                                                style="-fx-background-color: #001440; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-border-radius: 6; -fx-background-radius: 6;" />
+                                        <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel"
+                                                style="-fx-background-color: #6b7280; -fx-text-fill: white; -fx-padding: 8 16; -fx-border-radius: 6; -fx-background-radius: 6;" />
                                     </HBox>
                                 </VBox>
                             </VBox>
@@ -85,46 +93,9 @@
 
                         <!-- Right Column - Case Summary and Experts -->
                         <VBox spacing="16.0" prefWidth="320.0">
-                            <!-- Case Summary Card -->
-                            <VBox styleClass="card">
-                                <Label styleClass="title-label" text="Case Summary" />
-
-                                <VBox fx:id="noCaseSelected" spacing="4.0" style="-fx-padding: 16 0; -fx-alignment: center;">
-                                    <Label text="No case selected" style="-fx-text-fill: #6b7280; -fx-font-size: 14px;" />
-                                    <Label text="Select a case from the dashboard" style="-fx-text-fill: #9ca3af; -fx-font-size: 12px;" />
-                                </VBox>
-
-                                <VBox fx:id="caseDetails" visible="false" spacing="12.0" style="-fx-padding: 16 0 0 0;">
-                                    <VBox style="-fx-background-color: #dbeafe; -fx-padding: 16; -fx-background-radius: 8;" spacing="12.0">
-                                        <VBox spacing="4.0">
-                                            <Label text="Case ID" style="-fx-text-fill: #6b7280; -fx-font-size: 12px;" />
-                                            <Label fx:id="caseIdLabel" style="-fx-text-fill: #001440; -fx-font-size: 14px;" />
-                                        </VBox>
-                                        <VBox spacing="4.0">
-                                            <Label text="Title" style="-fx-text-fill: #6b7280; -fx-font-size: 12px;" />
-                                            <Label fx:id="caseTitleLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px;" />
-                                        </VBox>
-                                        <VBox spacing="4.0">
-                                            <Label text="Type" style="-fx-text-fill: #6b7280; -fx-font-size: 12px;" />
-                                            <Label fx:id="caseTypeLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px;" />
-                                        </VBox>
-                                        <VBox spacing="4.0">
-                                            <Label text="Assigned Officer" style="-fx-text-fill: #6b7280; -fx-font-size: 12px;" />
-                                            <Label fx:id="assignedOfficerLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px;" />
-                                        </VBox>
-                                        <VBox spacing="4.0">
-                                            <Label text="Location" style="-fx-text-fill: #6b7280; -fx-font-size: 12px;" />
-                                            <Label fx:id="locationLabel" style="-fx-text-fill: #171617; -fx-font-size: 14px;" />
-                                        </VBox>
-                                    </VBox>
-
-                                    <Separator style="-fx-background-color: #e5e5e5;" />
-                                </VBox>
-                            </VBox>
-
                             <!-- Available Forensic Experts Card -->
-                            <VBox styleClass="card">
-                                <Label styleClass="title-label" text="Available Forensic Experts" />
+                            <VBox style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20;">
+                                <Label text="Available Forensic Experts" style="-fx-text-fill: #171617; -fx-font-size: 18px; -fx-font-weight: bold;" />
 
                                 <VBox fx:id="expertsContainer" spacing="12.0" style="-fx-padding: 16 0 0 0;">
                                     <!-- Dynamic expert cards will be loaded here from database -->
