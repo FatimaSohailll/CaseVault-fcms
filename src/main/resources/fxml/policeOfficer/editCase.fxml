@@ -40,17 +40,17 @@
 
                     <Label text="Status:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="stat-label"/>
                     <!-- ComboBox for status -->
-                    <ComboBox fx:id="statusCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
+                    <ComboBox fx:id="statusCombo" styleClass="editcase-combo" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
 
                     <Label text="Priority:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="stat-label"/>
                     <!-- ComboBox for priority -->
-                    <ComboBox fx:id="priorityCombo" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="200"/>
+                    <ComboBox fx:id="priorityCombo" styleClass="editcase-combo" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="200"/>
 
                     <Label text="Case Type:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="stat-label"/>
                     <TextField fx:id="typeField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Date Reported:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="stat-label"/>
-                    <TextField fx:id="dateField" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="yyyy-MM-dd"/>
+                    <DatePicker fx:id="datePicker" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="yyyy-MM-dd"/>
 
                     <Label text="Location:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="stat-label"/>
                     <TextField fx:id="locationField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>

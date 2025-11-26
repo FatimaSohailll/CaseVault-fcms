@@ -1,6 +1,5 @@
 package com.fcms.controllers.policeOfficer;
 
-import com.fcms.app.SceneManager;
 import com.fcms.models.Case;
 import com.fcms.models.Evidence;
 import com.fcms.models.Participant;
@@ -15,15 +14,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-
 import java.util.List;
 
 public class ManageCasesController {
@@ -53,13 +48,10 @@ public class ManageCasesController {
     public void initialize() {
         System.out.println("ManageCasesController.initialize()");
 
-        // Start with placeholder and disabled edit button
         showPlaceholder();
         updateEditButtonState();
-
         loadCases();
 
-        // Edit button handler checks session and case selection
         if (editCaseBtn != null) {
             editCaseBtn.setOnAction(e -> {
                 UserSession s = UserSession.getInstance();
@@ -75,15 +67,12 @@ public class ManageCasesController {
                     showAlert("No case selected", "Please select a case first.");
                     return;
                 }
-
-                // Prevent editing closed cases
                 if (isClosedStatus(activeCase.getStatus())) {
                     showAlert("Cannot edit", "This case is closed and cannot be edited.");
                     return;
                 }
 
                 try {
-                    // Capture stage and root BEFORE loading/replacing center to avoid detached-node NPEs
                     Stage stage = (Stage) caseDetailsRoot.getScene().getWindow();
                     BorderPane root = (BorderPane) stage.getScene().getRoot();
 
@@ -91,43 +80,36 @@ public class ManageCasesController {
                     Parent editRoot = loader.load();
 
                     Object controller = loader.getController();
-                    if (controller instanceof com.fcms.controllers.policeOfficer.EditCaseController) {
-                        com.fcms.controllers.policeOfficer.EditCaseController editController =
-                                (com.fcms.controllers.policeOfficer.EditCaseController) controller;
+                    if (controller instanceof EditCaseController editController) {
                         editController.setCase(activeCase);
 
-                        // onSaved: refresh list and switch back to manage screen
+                        // After SAVE: reload manageCases.fxml
                         editController.setOnSaved(savedCase -> {
                             System.out.println("onSaved callback: " + savedCase.getId());
-                            Platform.runLater(() -> {
-                                loadCases();
-                                // switch back to manage screen by replacing center with manageCases.fxml
-                                // Use SceneManager to keep consistent navigation if available
-                                try {
-                                    new SceneManager(stage).switchContent("/fxml/policeOfficer/manageCases.fxml");
-                                } catch (Exception ex) {
-                                    // fallback: set the original root center back if switchContent fails
-                                    ex.printStackTrace();
-                                }
-                            });
+                            try {
+                                FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/manageCases.fxml"));
+                                Parent manageRoot = manageLoader.load();
+                                root.setCenter(manageRoot);
+                            } catch (IOException ioEx) {
+                                ioEx.printStackTrace();
+                                Platform.runLater(() -> root.setCenter(caseDetailsRoot));
+                            }
                         });
 
-                        // onCancel: simply switch back to manage screen
+                        // After CANCEL: reload manageCases.fxml
                         editController.setOnCancel(() -> {
                             System.out.println("onCancel callback");
-                            Platform.runLater(() -> {
-                                try {
-                                    new SceneManager(stage).switchContent("/fxml/policeOfficer/manageCases.fxml");
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                }
-                            });
+                            try {
+                                FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/manageCases.fxml"));
+                                Parent manageRoot = manageLoader.load();
+                                root.setCenter(manageRoot);
+                            } catch (IOException ioEx) {
+                                ioEx.printStackTrace();
+                                Platform.runLater(() -> root.setCenter(caseDetailsRoot));
+                            }
                         });
-                    } else {
-                        System.out.println("Loaded controller is not EditCaseController");
                     }
 
-                    // Replace center with the edit screen
                     root.setCenter(editRoot);
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -139,7 +121,21 @@ public class ManageCasesController {
 
     private void loadCases() {
         caseListContainer.getChildren().clear();
-        List<Case> cases = caseService.getAllCases();
+
+        UserSession s = UserSession.getInstance();
+        List<Case> cases = null;
+
+        if (s != null && s.isLoggedIn() && s.isPoliceOfficer()) {
+            // Only fetch cases assigned to this officer
+            cases = caseService.getCasesByOfficer(s.getUserID());
+        } else {
+            // If no session or not officer, show nothing
+            Label none = new Label("No cases available");
+            none.getStyleClass().add("placeholder-text");
+            caseListContainer.getChildren().add(none);
+            return;
+        }
+
         if (cases == null || cases.isEmpty()) {
             Label none = new Label("No cases found");
             none.getStyleClass().add("placeholder-text");

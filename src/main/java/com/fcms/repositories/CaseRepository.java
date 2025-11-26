@@ -26,9 +26,11 @@ public class CaseRepository {
                 c.setAssignedOfficer(rs.getString("assignedOfficer"));
                 c.setLocation(rs.getString("location"));
 
-                // FIXED
                 String dr = rs.getString("dateRegistered");
-                c.setDateRegistered(dr != null ? LocalDate.parse(dr) : null);
+                if (dr != null && !dr.isBlank()) {
+                    // take only the first 10 characters to enforce yyyy-MM-dd
+                    c.setDateRegistered(LocalDate.parse(dr.substring(0, 10)));
+                }
 
                 c.setStatus(rs.getString("status"));
                 c.setPriority(rs.getString("priority"));
@@ -66,9 +68,24 @@ public class CaseRepository {
         }
         return null;
     }
+    public int getNextCaseNumber() {
+        String sql = "SELECT MAX(caseID) as maxId FROM CaseFile";
+        try (Connection conn = SQLiteDatabase.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next() && rs.getString("maxId") != null) {
+                String maxId = rs.getString("maxId"); // e.g. CS00012
+                int num = Integer.parseInt(maxId.substring(2));
+                return num + 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1; // start at CS00001
+    }
 
     public void save(Case c) {
-        String query = "INSERT INTO CaseFile (caseID, title, type, assignedOfficer, location, dateRegistered, status, priority) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO CaseFile (caseID, title, type, assignedOfficer, location, dateRegistered, status, priority, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
         try (Connection conn = SQLiteDatabase.getConnection();
@@ -79,10 +96,10 @@ public class CaseRepository {
             stmt.setString(3, c.getType());
             stmt.setString(4, c.getAssignedOfficer());
             stmt.setString(5, c.getLocation());
-            stmt.setDate(6, Date.valueOf(c.getDateRegistered()));
+            stmt.setString(6, c.getDateRegistered().toString());
             stmt.setString(7, c.getStatus());
             stmt.setString(8, c.getPriority().toLowerCase());
-
+            stmt.setString(9, c.getDescription());
             stmt.executeUpdate();
             System.out.println("Saved case: " + c.getId());
         } catch (SQLException e) {
@@ -100,7 +117,7 @@ public class CaseRepository {
             stmt.setString(2, c.getType());
             stmt.setString(3, c.getAssignedOfficer());
             stmt.setString(4, c.getLocation());
-            stmt.setDate(5, Date.valueOf(c.getDateRegistered()));
+            stmt.setString(5, c.getDateRegistered().toString());
             stmt.setString(6, c.getStatus());
             stmt.setString(7, c.getPriority());
             stmt.setString(8, c.getId());
@@ -327,4 +344,35 @@ public class CaseRepository {
         }
     }
 
+    public List<Case> getCasesByOfficer(String officerId) {
+        List<Case> cases = new ArrayList<>();
+        String query = "SELECT caseID, title, type, assignedOfficer, location, dateRegistered, status, priority FROM CaseFile WHERE assignedOfficer = ?";
+
+        try (Connection conn = SQLiteDatabase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, officerId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Case c = new Case();
+                    c.setId(rs.getString("caseID"));
+                    c.setTitle(rs.getString("title"));
+                    c.setType(rs.getString("type"));
+                    c.setAssignedOfficer(rs.getString("assignedOfficer"));
+                    c.setLocation(rs.getString("location"));
+
+                    String dr = rs.getString("dateRegistered");
+                    c.setDateRegistered(dr != null ? LocalDate.parse(dr) : null);
+
+                    c.setStatus(rs.getString("status"));
+                    c.setPriority(rs.getString("priority"));
+                    cases.add(c);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error fetching cases for officer: " + officerId, e);
+        }
+        return cases;
+    }
 }

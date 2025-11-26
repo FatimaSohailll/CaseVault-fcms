@@ -14,13 +14,12 @@ public class Case {
     // Extended fields
     private String description;
     private String priority;
-    private String time; // NEW: time of incident
 
     public Case() {}
 
     public Case(String id, String title, String type, String assignedOfficer,
                 String location, LocalDate dateRegistered, String status,
-                String description, String priority, String time) {
+                String description, String priority) {
         this.id = id;
         this.title = title;
         this.type = type;
@@ -30,7 +29,6 @@ public class Case {
         this.status = status;
         this.description = description;
         this.priority = priority;
-        this.time = time;
     }
 
     // Getters and setters
@@ -61,8 +59,6 @@ public class Case {
     public String getPriority() { return priority; }
     public void setPriority(String priority) { this.priority = priority; }
 
-    public String getTime() { return time; }
-    public void setTime(String time) { this.time = time; }
 
     public boolean isSubmittedToCourt() {
         return "submitted".equalsIgnoreCase(status);

@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.fcms.controllers.policeOfficer.RegisterCaseController">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.fcms.controllers.policeOfficer.RegisterCaseController">
 
     <center>
         <ScrollPane fitToWidth="true">
@@ -23,41 +24,41 @@
                     <VBox spacing="8">
                         <Label text="Case Title *"/>
                         <TextField fx:id="caseTitleField" promptText="Enter case title"/>
-                        <Label fx:id="titleWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                        <Label fx:id="titleWarning" text="⚠ Please fill in this field"
+                               visible="false" styleClass="field-warning"/>
                     </VBox>
 
                     <!-- Case Type -->
                     <VBox spacing="8">
                         <Label text="Case Type *"/>
                         <ComboBox fx:id="caseTypeDropdown" promptText="Select case type"/>
-                        <Label fx:id="typeWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                        <Label fx:id="typeWarning" text="⚠ Please fill in this field"
+                               visible="false" styleClass="field-warning"/>
                     </VBox>
 
                     <!-- Priority -->
                     <VBox spacing="8">
                         <Label text="Priority *"/>
                         <ComboBox fx:id="priorityDropdown" promptText="Select priority"/>
-                        <Label fx:id="priorityWarning" text="⚠ Please select a priority" visible="false" styleClass="field-warning"/>
+                        <Label fx:id="priorityWarning" text="⚠ Please select a priority"
+                               visible="false" styleClass="field-warning"/>
                     </VBox>
 
                     <!-- Description -->
                     <VBox spacing="8">
                         <Label text="Description *"/>
-                        <TextArea fx:id="descriptionField" promptText="Enter case description" prefRowCount="4"/>
-                        <Label fx:id="descWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
+                        <TextArea fx:id="descriptionField" promptText="Enter case description"
+                                  prefRowCount="4"/>
+                        <Label fx:id="descWarning" text="⚠ Please fill in this field"
+                               visible="false" styleClass="field-warning"/>
                     </VBox>
 
                     <!-- Date -->
                     <VBox spacing="8">
                         <Label text="Date *"/>
-                        <DatePicker fx:id="datePicker" promptText="dd/mm/yyyy"/>
-                        <Label fx:id="dateWarning" text="⚠ Please fill in this field" visible="false" styleClass="field-warning"/>
-                    </VBox>
-
-                    <!-- Time -->
-                    <VBox spacing="8">
-                        <Label text="Time *"/>
-                        <TextField fx:id="timeField" promptText="--:-- --"/>
+                        <DatePicker fx:id="datePicker" promptText="yyyy-MM-dd"/>
+                        <Label fx:id="dateWarning" text="⚠ Please fill in this field"
+                               visible="false" styleClass="field-warning"/>
                     </VBox>
 
                     <!-- Location -->
@@ -77,8 +78,8 @@
 
                 <!-- Action Buttons -->
                 <HBox spacing="12">
-                    <Button text="Save Case" onAction="#handleSaveCase" styleClass="nav-btn"/>
-                    <Button text="Cancel" onAction="#handleCancel" styleClass="nav-btn"/>
+                    <Button text="Save Case" onAction="#handleSaveCase" styleClass="btn"/>
+                    <Button text="Cancel" onAction="#handleCancel" styleClass="btn"/>
                 </HBox>
             </VBox>
         </ScrollPane>
