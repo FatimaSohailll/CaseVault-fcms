@@ -33,7 +33,7 @@ public class EditCaseController {
     @FXML private ComboBox<String> statusCombo;
     @FXML private ComboBox<String> priorityCombo;
     @FXML private TextField typeField;
-    @FXML private TextField dateField;
+    @FXML private DatePicker datePicker;
     @FXML private TextField locationField;
     @FXML private TextField officerField;
     @FXML private TextArea descriptionArea;
@@ -70,6 +70,24 @@ public class EditCaseController {
             statusCombo.setEditable(false);
         }
 
+        // Force DatePicker to use yyyy-MM-dd format
+        if (datePicker != null) {
+            datePicker.setConverter(new javafx.util.StringConverter<LocalDate>() {
+                @Override
+                public String toString(LocalDate date) {
+                    return date != null ? date.format(DATE_FMT) : "";
+                }
+
+                @Override
+                public LocalDate fromString(String string) {
+                    if (string == null || string.trim().isEmpty()) return null;
+                    return LocalDate.parse(string, DATE_FMT);
+                }
+            });
+            // Optional: show placeholder text
+            datePicker.setPromptText("yyyy-MM-dd");
+        }
+
         if (saveBtn != null) saveBtn.setOnAction(e -> onSaveClicked());
         if (cancelBtn != null) cancelBtn.setOnAction(e -> onCancelClicked());
 
@@ -79,6 +97,7 @@ public class EditCaseController {
             System.out.println("Editing disabled: no session or insufficient role");
         }
     }
+
 
     /**
      * Called by loader to provide the Case to edit.
@@ -100,7 +119,7 @@ public class EditCaseController {
         if (statusCombo != null) statusCombo.getSelectionModel().select(capitalize(safe(c.getStatus())));
         if (priorityCombo != null) priorityCombo.getSelectionModel().select(capitalize(safe(c.getPriority())));
         typeField.setText(safe(c.getType()));
-        dateField.setText(c.getDateRegistered() != null ? c.getDateRegistered().format(DATE_FMT) : "");
+        datePicker.setValue(c.getDateRegistered());
         locationField.setText(safe(c.getLocation()));
         officerField.setText(safe(c.getAssignedOfficer()));
         descriptionArea.setText(safe(c.getDescription()));
@@ -169,7 +188,12 @@ public class EditCaseController {
             VBox left = new VBox(2);
             Label title = new Label(safe(ev.getId()) + " — " + safe(ev.getDescription()));
             title.setStyle("-fx-text-fill: #001440; -fx-font-size: 14px; -fx-font-weight: bold;");
-            Label meta = new Label("Collected: " + safe(String.valueOf(ev.getCollectionDateTime())) + " • " + safe(ev.getLocation()));
+            String collectedDate = "";
+            if (ev.getCollectionDateTime() != null) {
+                String raw = ev.getCollectionDateTime().toString();
+                collectedDate = raw.length() >= 10 ? raw.substring(0, 10) : raw;
+            }
+            Label meta = new Label("Collected: " + collectedDate + " • " + safe(ev.getLocation()));
             meta.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 12px;");
             left.getChildren().addAll(title, meta);
 
@@ -330,20 +354,14 @@ public class EditCaseController {
         String newStatus = statusCombo != null && statusCombo.getValue() != null ? statusCombo.getValue() : safe(statusCombo == null ? null : statusCombo.getEditor().getText());
         String rawPriority = priorityCombo != null && priorityCombo.getValue() != null ? priorityCombo.getValue() : safe(priorityCombo == null ? null : priorityCombo.getEditor().getText());
         String newType = safe(typeField.getText());
-        String newDateText = safe(dateField.getText());
         String newLocation = safe(locationField.getText());
         String newOfficer = safe(officerField.getText());
         String newDescription = safe(descriptionArea.getText());
 
-        // Parse date
-        LocalDate parsedDate = null;
-        if (!newDateText.isBlank()) {
-            try {
-                parsedDate = LocalDate.parse(newDateText, DATE_FMT);
-            } catch (DateTimeParseException ex) {
-                showAlert(Alert.AlertType.ERROR, "Invalid date", "Please use yyyy-MM-dd format for Date Reported.");
-                return;
-            }
+        LocalDate parsedDate = datePicker.getValue();
+        if (parsedDate == null) {
+            showAlert(Alert.AlertType.ERROR, "Invalid date", "Please select a date.");
+            return;
         }
 
         // Normalize and validate priority to match DB CHECK constraint
@@ -365,7 +383,7 @@ public class EditCaseController {
         caseToEdit.setStatus(normalizedStatus);
         caseToEdit.setPriority(normalizedPriority);
         caseToEdit.setType(newType);
-        if (parsedDate != null) caseToEdit.setDateRegistered(parsedDate);
+        caseToEdit.setDateRegistered(parsedDate);
         caseToEdit.setLocation(newLocation);
         caseToEdit.setAssignedOfficer(newOfficer);
         caseToEdit.setDescription(newDescription);
@@ -402,6 +420,7 @@ public class EditCaseController {
                 ex.printStackTrace();
             }
             return;
+
         }
 
         // Fallback: reload original values or clear
@@ -419,7 +438,7 @@ public class EditCaseController {
         if (statusCombo != null) statusCombo.setDisable(!editable);
         if (priorityCombo != null) priorityCombo.setDisable(!editable);
         if (typeField != null) typeField.setEditable(editable);
-        if (dateField != null) dateField.setEditable(editable);
+        if (datePicker != null) datePicker.setDisable(!editable);
         if (locationField != null) locationField.setEditable(editable);
         if (officerField != null) officerField.setEditable(editable);
         if (descriptionArea != null) descriptionArea.setEditable(editable);
@@ -461,7 +480,7 @@ public class EditCaseController {
         if (statusCombo != null) statusCombo.getSelectionModel().clearSelection();
         if (priorityCombo != null) priorityCombo.getSelectionModel().clearSelection();
         if (typeField != null) typeField.clear();
-        if (dateField != null) dateField.clear();
+        if (datePicker != null) datePicker.setValue(null);
         if (locationField != null) locationField.clear();
         if (officerField != null) officerField.clear();
         if (descriptionArea != null) descriptionArea.clear();

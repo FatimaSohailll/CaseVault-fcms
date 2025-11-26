@@ -102,7 +102,11 @@
 .sidebar-police .nav-row.active .icon-path,
 .sidebar-police .nav-row.active .icon-line,
 .sidebar-police .nav-row.active .icon-circle {
-    -fx-stroke: #001440;
+    -fx-stroke: #ffffff;
+}
+.btn{
+    -fx-background-color: #001940;
+    -fx-text-fill: #ffffff;
 }
 
 /* ---------- COURT (ORANGE) ---------- */
@@ -497,11 +501,11 @@
 }
 
 .priority-medium {
-    -fx-background-color: #f1c40f;
+    -fx-background-color: #f8d129;
 }
 
 .priority-low {
-    -fx-background-color: #0ff1d7;
+    -fx-background-color: #229588;
 }
 
 .case-date {

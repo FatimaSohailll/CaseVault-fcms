@@ -6,11 +6,9 @@ import com.fcms.repositories.UserRepository;
 import com.fcms.services.CaseService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxListCell;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 public class RegisterCaseController {
 
@@ -21,10 +19,9 @@ public class RegisterCaseController {
     @FXML private Label validationMessage;
     @FXML private ComboBox<String> priorityDropdown;
 
-    @FXML private Label titleWarning, typeWarning, descWarning, dateWarning;
-    @FXML private TextField timeField;
+    @FXML private Label titleWarning, typeWarning, descWarning, dateWarning, priorityWarning;
     @FXML private TextField locationField;
-    @FXML private ComboBox<PoliceOfficer> officerDropdown; // changed to PoliceOfficer
+    @FXML private ComboBox<PoliceOfficer> officerDropdown;
 
     private final CaseService caseService = new CaseService();
     @FXML private Label priorityWarning;
@@ -35,7 +32,8 @@ public class RegisterCaseController {
 
         // Populate static dropdowns
         caseTypeDropdown.getItems().addAll(
-                "Robbery", "Burglary", "Fraud", "Assault", "Vehicle Theft", "Cybercrime", "Domestic Violence"
+                "Robbery", "Burglary", "Fraud", "Assault",
+                "Vehicle Theft", "Cybercrime", "Domestic Violence"
         );
 
         priorityDropdown.getItems().addAll("High", "Medium", "Low");
@@ -83,41 +81,36 @@ public class RegisterCaseController {
         String description = descriptionField.getText().trim();
         LocalDate date = datePicker.getValue();
 
-        // Validate via service (keeps your existing validation logic)
+        // Validate via service
         String validationError = caseService.validateCaseInput(title, type, description, date);
         if (validationError != null) {
             showValidationError(validationError);
             return;
         }
 
-        // Generate a unique case ID
-        String caseId = "CS-" + LocalDate.now().getYear() + "-" + UUID.randomUUID().toString().substring(0, 4);
+        // Generate sequential case ID
+        String caseId = generateCaseId();
 
         // Get selected officer id (nullable)
         PoliceOfficer selectedOfficer = officerDropdown.getValue();
         String assignedOfficerId = selectedOfficer == null ? null : selectedOfficer.getUserID();
 
-        // Normalize priority to match DB CHECK (your schema expects lowercase)
+        // Normalize priority to lowercase
         String priority = priorityDropdown.getValue() == null ? "low" : priorityDropdown.getValue().toLowerCase();
 
-        // Build Case object (uses your existing Case model constructor)
+        // Build Case object (no time field)
         Case newCase = new Case(
                 caseId,
                 title,
                 type,
                 assignedOfficerId,
                 locationField.getText().trim(),
-                date,
+                date,              // LocalDate stored as yyyy-MM-dd
                 "open",
                 description,
-                priority,
-                timeField.getText().trim()
+                priority
         );
 
-        newCase.setDescription(description);
-        newCase.setPriority(priority);
-
-        // Persist and handle errors
         try {
             caseService.registerCase(newCase);
 
@@ -149,7 +142,6 @@ public class RegisterCaseController {
         caseTypeDropdown.setValue(null);
         descriptionField.clear();
         datePicker.setValue(null);
-        timeField.clear();
         locationField.clear();
         priorityDropdown.setValue("Low");
         officerDropdown.setValue(null);
@@ -179,4 +171,8 @@ public class RegisterCaseController {
         }
     }
 
+    private String generateCaseId() {
+        int nextNumber = caseService.getNextCaseNumber(); // implement in CaseService/CaseRepository
+        return String.format("CS%05d", nextNumber);
+    }
 }
