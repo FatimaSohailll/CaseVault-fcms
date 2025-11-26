@@ -885,3 +885,22 @@
     -fx-background-color: #ffffff;
     -fx-text-fill: black;
 }
+
+#edit-case-button {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+    -fx-padding: 10 20;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+#edit-case-button:hover {
+    -fx-background-color: #1d4ed8;
+}
+
+#edit-case-button:disabled {
+    -fx-background-color: #94a3b8;
+    -fx-text-fill: white;
+    -fx-opacity: 0.7;
+}

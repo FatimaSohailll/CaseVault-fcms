@@ -86,7 +86,7 @@
                             <VBox fx:id="participantsContainer" spacing="8"/>
                         </VBox>
                         <!-- Edit Button -->
-                        <Button fx:id="editCaseBtn" text="Edit Case" styleClass="btn" maxWidth="180"/>
+                        <Button fx:id="editCaseBtn" text="Edit Case" styleClass="edit-case-button" maxWidth="180"/>
                     </VBox>
                 </content>
             </ScrollPane>

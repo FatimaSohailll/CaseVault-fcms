@@ -231,7 +231,7 @@ public class EditCaseController {
             if (controller instanceof AddEvidenceController) {
                 AddEvidenceController evidenceController = (AddEvidenceController) controller;
                 evidenceController.setSelectedCase(caseToEdit);
-                    refreshEvidenceList();
+                refreshEvidenceList();
             }
 
             // Create and setup the dialog stage
