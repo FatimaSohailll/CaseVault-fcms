@@ -27,7 +27,22 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
 
         SQLiteDatabase.initializeDatabase();
-        TestDataInserter.insertTestData();
+        //TestDataInserter.insertTestData();
+//
+//        try (Connection conn = SQLiteDatabase.getConnection();
+//             Statement stmt = conn.createStatement()) {
+//
+//            stmt.execute("""
+//    INSERT INTO SystemAdmin (adminID, name, password)
+//    SELECT 'ADM-001', 'System Administrator', 'admin123'
+//    WHERE NOT EXISTS (SELECT 1 FROM SystemAdmin)
+//""");
+//            System.out.println("Test data inserted successfully!");
+//
+//        } catch (Exception e) {
+//            System.out.println("Error inserting test data: " + e.getMessage());
+//            e.printStackTrace();
+//        }
 
         showLoginScreen();
 //        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/addEvidence.fxml"));
