@@ -116,33 +116,6 @@ public class CaseService {
         return 0;
     }
 
-    public List<Case> findRecentByAssignedOfficer(String assigned, int limit) {
-        String sql = "SELECT caseID, title, type, assignedOfficer, location, dateRegistered, status, priority " +
-                "FROM CaseFile WHERE assignedOfficer = ? ORDER BY dateRegistered DESC LIMIT ?";
-        List<Case> list = new ArrayList<>();
-        try (Connection conn = SQLiteDatabase.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, assigned);
-            ps.setInt(2, limit);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Case c = new Case();
-                    c.setId(rs.getString("caseID"));
-                    c.setTitle(rs.getString("title"));
-                    c.setType(rs.getString("type"));
-                    c.setAssignedOfficer(rs.getString("assignedOfficer"));
-                    c.setLocation(rs.getString("location"));
-                    Date dr = rs.getDate("dateRegistered");
-                    c.setDateRegistered(dr != null ? dr.toLocalDate() : null);
-                    c.setStatus(rs.getString("status"));
-                    c.setPriority(rs.getString("priority"));
-                    list.add(c);
-                }
-            }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return list;
-    }
-
     public int countPendingAnalysisForOfficer(String assigned) {
         return forensicRequestRepository.countPendingForOfficer(assigned);
     }
@@ -166,11 +139,16 @@ public class CaseService {
         System.out.println("Case updated: " + updatedCase.getId());
     }
 
-    public void closeCase(String caseId, String reason, String report) {
-        caseRepository.closeCase(caseId, reason, report);
-        System.out.println("Case " + caseId + " closed. Reason: " + reason);
-        System.out.println("Final Report: " + report);
+    public boolean closeCase(String caseId, String reason, String report) {
+        boolean ok = caseRepository.closeCase(caseId, reason, report);
+        if (ok) {
+            System.out.println("CaseService: case closed: " + caseId);
+        } else {
+            System.out.println("CaseService: failed to close case: " + caseId);
+        }
+        return ok;
     }
+
 
     public void deleteCase(String caseId) {
         caseRepository.delete(caseId);
@@ -191,17 +169,6 @@ public class CaseService {
         return evidenceRepository.findByCaseId(caseId);
     }
 
-    // ---------------- Participant Management ----------------
-    public void addParticipantToCase(String caseId, Participant participant) {
-        participantRepository.save(participant);
-        // TODO: also insert into CaseParticipants junction table
-        System.out.println("Linked participant " + participant.getId() + " to case " + caseId);
-    }
-
-    public List<Participant> getParticipantsForCase(String caseId) {
-        // TODO: Actually query junction table
-        return participantRepository.findAll();
-    }
 
     public void submitCaseToCourt(String caseId, String courtOfficialId) {
         caseRepository.submitCaseToCourt(caseId, courtOfficialId);
@@ -221,5 +188,9 @@ public class CaseService {
 
     public int countForensicReportsForCase(String caseId) {
         return caseRepository.countForensicReports(caseId);
+    }
+
+    public List<Case> getSubmittedCasesForOfficial(String officialId) {
+        return caseRepository.findSubmittedForOfficial(officialId);
     }
 }

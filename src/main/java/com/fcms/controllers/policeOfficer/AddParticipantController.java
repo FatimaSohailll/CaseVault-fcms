@@ -89,10 +89,6 @@ public class AddParticipantController implements Initializable {
                 showSuccessAlert("Participant added successfully to case " + caseId + "!");
             }
 
-            if (mainController != null) {
-                mainController.addNewParticipant(newParticipant);
-            }
-
             closeWindow();
         } catch (BusinessException e) {
             showErrorAlert(e.getMessage());

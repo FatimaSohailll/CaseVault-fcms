@@ -1,5 +1,7 @@
 package com.fcms.app;
 
+import com.fcms.controllers.policeOfficer.AddEvidenceController;
+import com.fcms.database.TestDataInserter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,7 +27,7 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
 
         SQLiteDatabase.initializeDatabase();
-        insertTestData();
+        TestDataInserter.insertTestData();
 
         showLoginScreen();
     }

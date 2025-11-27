@@ -1,7 +1,9 @@
 package com.fcms.controllers.policeOfficer;
 
+import com.fcms.models.ChainOfCustody;
 import com.fcms.services.EvidenceService;
 import com.fcms.services.BusinessException;
+import com.fcms.services.ChainofCustodyService;
 import com.fcms.models.Evidence;
 import com.fcms.models.Case;
 import javafx.collections.FXCollections;
@@ -11,10 +13,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
@@ -37,44 +41,69 @@ public class AddEvidenceController implements Initializable {
     private Case selectedCase;
     private File selectedFile;
     private EvidenceService evidenceService;
+    private ChainofCustodyService chainofCustodyService;
+    private Runnable onEvidenceUpdated; // Callback for when evidence is updated
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialize with a default case ID for now
-        this.evidenceService = new EvidenceService("CS00001"); // Default case ID
-        initializeExistingEvidence();
+        // Don't initialize evidenceService here - wait for setCase to be called
         initializeComboBoxes();
         setupEventHandlers();
         setupFormDefaults();
         populateCaseDetails();
     }
 
-    public void setSelectedCase(Case selectedCase) {
+    // Add this method - called by EditCaseController
+    public void setCase(Case selectedCase) {
         this.selectedCase = selectedCase;
         // Update EvidenceService with the actual case ID if available
         if (selectedCase != null) {
             this.evidenceService = new EvidenceService(selectedCase.getId());
+            this.chainofCustodyService = new ChainofCustodyService();
+        } else {
+            this.evidenceService = new EvidenceService("CS00001"); // Default case ID
+            this.chainofCustodyService = new ChainofCustodyService();
         }
         populateCaseDetails();
         // Refresh existing evidence for this case
         initializeExistingEvidence();
     }
 
+    // Add this method - called by EditCaseController
+    public void setOnEvidenceUpdated(Runnable callback) {
+        this.onEvidenceUpdated = callback;
+    }
+
+    // Keep this for backward compatibility
+    public void setSelectedCase(Case selectedCase) {
+        setCase(selectedCase);
+    }
+
     private void initializeExistingEvidence() {
         try {
-            // Load existing evidence through service
-            existingEvidence.setAll(evidenceService.getEvidenceByCase("CS00001"));
+            if (evidenceService == null) {
+                System.out.println("EvidenceService is null - cannot load evidence");
+                return;
+            }
+
+            // Use the actual case ID instead of hardcoded one
+            String caseId = selectedCase != null ? selectedCase.getId() : "CS00001";
+            existingEvidence.setAll(evidenceService.getEvidenceByCase(caseId));
             existingEvidenceList.setItems(existingEvidence);
             existingEvidenceList.setCellFactory(param -> new EvidenceListCell());
+
+            System.out.println("Loaded " + existingEvidence.size() + " evidence items for case: " + caseId);
         } catch (Exception e) {
             showAlert("Error", "Failed to load existing evidence: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void initializeComboBoxes() {
         evidenceTypeCombo.setItems(FXCollections.observableArrayList(
                 "Physical Evidence", "Digital Evidence", "Documentary Evidence",
-                "Testimonial Evidence", "Biological Evidence"
+                "Testimonial Evidence", "Biological Evidence", "Weapon",
+                "Clothing", "Electronics", "Drugs", "Other"
         ));
     }
 
@@ -91,9 +120,9 @@ public class AddEvidenceController implements Initializable {
 
     private void populateCaseDetails() {
         if (selectedCase != null) {
-            selectedCaseLabel.setText("Selected Case: " + selectedCase.getId() + " • " + selectedCase.getTitle());
+            selectedCaseLabel.setText("Case: " + selectedCase.getId() + " • " + selectedCase.getTitle());
         } else {
-            selectedCaseLabel.setText("Selected Case: ");
+            selectedCaseLabel.setText("Case: Not Selected");
         }
     }
 
@@ -120,28 +149,50 @@ public class AddEvidenceController implements Initializable {
         if (validateForm()) {
             try {
                 Evidence newEvidence = createEvidence();
+                ChainOfCustody c = new ChainOfCustody();
 
                 if (selectedFile != null) {
                     evidenceService.addEvidenceWithFile(newEvidence, selectedFile);
+                    c.setTimestamp(LocalDateTime.now());
+                    c.setEvidenceId(newEvidence.getId());
+                    c.setDoneBy(selectedCase.getAssignedOfficer());
+                    c.setAction("Add Evidence");
+                    chainofCustodyService.addCustodyRecord(c);
                 } else {
                     evidenceService.addEvidence(newEvidence);
+                    c.setTimestamp(LocalDateTime.now());
+                    c.setEvidenceId(newEvidence.getId());
+                    c.setDoneBy(selectedCase.getAssignedOfficer());
+                    c.setAction("Add Evidence");
+                    c.setEvidenceId(newEvidence.getId());
+                    chainofCustodyService.addCustodyRecord(c);
                 }
 
-                showSuccessAlert();
+                showSuccessAlert("Evidence successfully logged!");
+                showSuccessAlert("Chain of Custody successfully logged!");
                 resetForm();
                 initializeExistingEvidence(); // Refresh list
+
+                // Notify parent that evidence was updated
+                if (onEvidenceUpdated != null) {
+                    onEvidenceUpdated.run();
+                }
             } catch (BusinessException e) {
                 showAlert("Validation Error", e.getMessage());
+            } catch (Exception e) {
+                showAlert("Error", "Failed to save evidence: " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }
 
     private void handleCancel() {
-        resetForm();
+        // Close the window when cancel is clicked
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
+        stage.close();
     }
 
     private boolean validateForm() {
-        // UI validation only
         if (evidenceTypeCombo.getValue() == null || evidenceTypeCombo.getValue().isEmpty()) {
             showAlert("Validation Error", "Please select an evidence type.");
             return false;
@@ -185,7 +236,7 @@ public class AddEvidenceController implements Initializable {
         evidence.setCollectionDateTime(dateTime);
         evidence.setLocation(locationField.getText());
 
-        // Set case ID - use selected case if available, otherwise use default
+        // Set case ID - use selected case if available
         if (selectedCase != null) {
             evidence.setCaseId(selectedCase.getId());
         } else {
@@ -195,11 +246,11 @@ public class AddEvidenceController implements Initializable {
         return evidence;
     }
 
-    private void showSuccessAlert() {
+    private void showSuccessAlert(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);
-        alert.setContentText("Evidence successfully logged!");
+        alert.setContentText(msg);
         alert.showAndWait();
     }
 
@@ -221,7 +272,7 @@ public class AddEvidenceController implements Initializable {
         fileNameLabel.setText("");
     }
 
-    // Custom ListCell for displaying evidence items (UI only)
+    // Custom ListCell for displaying evidence items
     private class EvidenceListCell extends ListCell<Evidence> {
         @Override
         protected void updateItem(Evidence evidence, boolean empty) {
@@ -244,7 +295,7 @@ public class AddEvidenceController implements Initializable {
                 Label typeLabel = new Label(evidence.getType());
                 typeLabel.setStyle("-fx-background-color: #f3f4f6; -fx-padding: 2 6; -fx-font-size: 11px; -fx-text-fill: #6b7280;");
 
-                HBox.setHgrow(header, javafx.scene.layout.Priority.ALWAYS);
+                HBox.setHgrow(header, Priority.ALWAYS);
                 header.getChildren().addAll(idLabel, typeLabel);
 
                 Label descriptionLabel = new Label(evidence.getDescription());

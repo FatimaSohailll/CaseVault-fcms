@@ -1,6 +1,7 @@
 package com.fcms.controllers.courtOfficial;
 
 import com.fcms.models.Case;
+import com.fcms.models.UserSession;
 import com.fcms.services.CaseService;
 import com.fcms.services.RecordVerdictService;
 import javafx.fxml.FXML;
@@ -31,7 +32,8 @@ public class SearchCasesController {
     }
 
     private void loadCases() {
-        List<Case> cases = caseService.getAllCases();
+        String officialId = UserSession.getInstance().getUserID();
+        List<Case> cases = caseService.getSubmittedCasesForOfficial(officialId);
 
         resultsContainer.getChildren().clear();
         resultsCount.setText(cases.size() + " cases found");

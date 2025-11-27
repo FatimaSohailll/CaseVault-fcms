@@ -51,7 +51,7 @@
 
             <!-- Add Case ID Field -->
             <VBox spacing="8">
-                <Label text="Case ID (Optional)" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                <Label text="Case ID" style="-fx-text-fill: #171617; -fx-font-size: 14px; -fx-font-weight: bold;" />
                 <TextField fx:id="caseIdField" promptText="CS00001" styleClass="form-field" />
             </VBox>
         </VBox>

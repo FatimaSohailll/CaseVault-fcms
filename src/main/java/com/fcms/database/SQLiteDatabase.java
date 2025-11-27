@@ -82,13 +82,16 @@ public class SQLiteDatabase {
                 "description TEXT, " +
                 "location TEXT, " +
                 "type TEXT, " +
-                "status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed', 'archived', 'submitted')), " +
-                "priority TEXT CHECK (priority IN ('high', 'low', 'medium')), " +
+                "status TEXT DEFAULT 'open' CHECK (status IN ('open','closed','archived','submitted')), " +
+                "priority TEXT CHECK (priority IN ('high','low','medium')), " +
                 "assignedOfficer TEXT, " +
                 "dateRegistered DATE NOT NULL, " +
                 "reviewedBy TEXT, " +
+                "close_reason TEXT, " +
+                "final_report TEXT, " +
                 "FOREIGN KEY (assignedOfficer) REFERENCES PoliceOfficer(officerID), " +
                 "FOREIGN KEY (reviewedBy) REFERENCES CourtOfficial(officialID))");
+
 
         // PARTICIPANT
         stmt.execute("CREATE TABLE IF NOT EXISTS Participant (" +
@@ -123,15 +126,9 @@ public class SQLiteDatabase {
                 "recordID TEXT PRIMARY KEY, " +
                 "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
                 "action TEXT NOT NULL, " +
-                "doneBy TEXT NOT NULL)");
-
-        // CUSTODY RECORD EVIDENCE (Junction table)
-        stmt.execute("CREATE TABLE IF NOT EXISTS CustodyRecordEvidence (" +
-                "recordID TEXT NOT NULL, " +
+                "doneBy TEXT NOT NULL, " +
                 "evidenceID TEXT NOT NULL, " +
-                "PRIMARY KEY (recordID, evidenceID), " +
-                "FOREIGN KEY (recordID) REFERENCES ChainOfCustody(recordID) ON DELETE CASCADE, " +
-                "FOREIGN KEY (evidenceID) REFERENCES Evidence(evidenceID) ON DELETE CASCADE)");
+                "FOREIGN KEY (evidenceID) REFERENCES Evidence(evidenceID))");
 
         // FORENSIC REQUEST
         stmt.execute("CREATE TABLE IF NOT EXISTS ForensicRequest (" +
