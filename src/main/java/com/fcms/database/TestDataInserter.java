@@ -221,7 +221,7 @@ public class TestDataInserter {
                         INSERT OR IGNORE INTO ForensicRequest
                         (requestID, expertID, status, requestedBy, evidenceType,
                          requestedDate, evidenceID, analysisType, priority)
-                        VALUES ('%s', '%s', 'completed', '%s', 'Physical',
+                        VALUES ('%s', '%s', 'pending', '%s', 'Physical',
                                 '%s', '%s', 'Full Analysis', 'Medium')
                     """, rid, expert, police, dateStr, eid));
 
@@ -230,7 +230,7 @@ public class TestDataInserter {
                         (reportID, title, filename, notes, completionDate, uploadDate,
                          status, requestID, uploadedBy)
                         VALUES ('RP%05d', 'Report %s', 'report_%s.pdf', 'Notes...',
-                                '%s', '%s', 'completed', '%s', '%s')
+                                '%s', '%s', 'pending', '%s', '%s')
                     """, (i * 4 + r), caseID, caseID, dateStr, dateStr, rid, expert));
                 }
             }
