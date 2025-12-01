@@ -225,6 +225,7 @@ public class TestDataInserter {
                                 '%s', '%s', 'Full Analysis', 'Medium')
                     """, rid, expert, police, dateStr, eid));
 
+                    /*
                     stmt.execute(String.format("""
                         INSERT OR IGNORE INTO ForensicReport
                         (reportID, title, filename, notes, completionDate, uploadDate,
@@ -232,6 +233,7 @@ public class TestDataInserter {
                         VALUES ('RP%05d', 'Report %s', 'report_%s.pdf', 'Notes...',
                                 '%s', '%s', 'pending', '%s', '%s')
                     """, (i * 4 + r), caseID, caseID, dateStr, dateStr, rid, expert));
+                        */
                 }
             }
 
