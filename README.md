@@ -66,7 +66,7 @@
 **Requirements:** JDK 8+, JavaFX, SQLite (embedded)
 
 ```bash
-git clone https://github.com/your-username/CaseVault.git
+git clone https://github.com/FatimaSohailll/CaseVault-fcms.git
 ```
 
 Open in an IDE and run the JavaFX main class.
