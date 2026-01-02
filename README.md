@@ -4,7 +4,7 @@
 
 ---
 
-## Features
+## 🏸Features
 
 * Case registration, tracking, search, and closure
 * Secure digital & physical evidence logging with chain-of-custody
@@ -16,7 +16,7 @@
 
 ---
 
-## User Roles
+## 👨‍✈️ User Roles
 
 | Role            | Key Permissions                                                            |
 | --------------- | -------------------------------------------------------------------------- |
@@ -27,7 +27,7 @@
 
 ---
 
-## Tech Stack
+## ⚙ Tech Stack
 
 * **Frontend:** JavaFX
 * **Backend:** Java
@@ -35,14 +35,28 @@
   
 ---
 
-## Images
+## 📷 Images
 
-* Use Case Diagram
-* Class Diagram
-* Architecture Diagram
-* Deployment Diagram
+### Police Dashboard
+![Police Dashobard](images/police-dashboard.png)
 
-(See `images/` folder)
+### Expert Dashobard
+![Expert Dashobard](images/expert-dashboard.png)
+
+### Court Official Dashboard
+![Court Dashboard](images/court-dashboard.png)
+
+### Admin Dashboard
+![Admin Dashboard](images/admin-dashboard.png)
+
+### Manage Cases
+![Manage Cases](images/manage-cases.png)
+
+### Crime Analytics
+![analytics page](images/analytics.png)
+![analytics page](images/analytics2.png)
+
+***Run the project to view the complete project***
 
 ---
 
