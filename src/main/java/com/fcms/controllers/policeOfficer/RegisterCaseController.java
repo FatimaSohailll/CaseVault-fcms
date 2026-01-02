@@ -24,7 +24,6 @@ public class RegisterCaseController {
     @FXML private ComboBox<PoliceOfficer> officerDropdown;
 
     private final CaseService caseService = new CaseService();
-    @FXML private Label priorityWarning;
 
     @FXML
     public void initialize() {

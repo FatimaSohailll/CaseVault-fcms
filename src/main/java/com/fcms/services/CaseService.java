@@ -167,4 +167,20 @@ public class CaseService {
     public List<Case> getSubmittedCasesForOfficial(String officialId) {
         return caseRepository.findSubmittedForOfficial(officialId);
     }
+
+    public int getNextCaseNumber() {
+        String sql = "SELECT COUNT(*) + 1 AS nextNum FROM CaseFile";
+        try (Connection conn = SQLiteDatabase.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                return rs.getInt("nextNum");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1; // fallback
+    }
+
 }

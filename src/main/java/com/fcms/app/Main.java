@@ -26,7 +26,7 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
 
         SQLiteDatabase.initializeDatabase();
-        //TestDataInserter.insertTestData();
+        TestDataInserter.insertTestData();
 
         showLoginScreen();
     }
