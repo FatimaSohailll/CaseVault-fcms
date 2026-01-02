@@ -38,35 +38,24 @@
 ## 📷 Images
 
 ### Police Dashboard
-<p align="center">
 <img src="images/police-dashboard.PNG" width="600">
-</p>
 
 ### Expert Dashboard
-<p align="center">
 <img src="images/expert-dashboard.PNG" width="600">
-</p>
 
 ### Court Official Dashboard
-<p align="center">
 <img src="images/court-dashboard.PNG" width="600">
-</p>
 
 ### Admin Dashboard
-<p align="center">
 <img src="images/admin-dashboard.PNG" width="600">
-</p>
 
-<p align="center">
+
 ### Manage Cases
 <img src="images/manage-cases.PNG" width="600">
-</p>
 
 ### Crime Analytics
-<p align="center">
 <img src="images/analytics.PNG" width="600">
 <img src="images/analytics2.PNG" width="600">
-</p>
 
 ***Run the project to view the complete project***
 
