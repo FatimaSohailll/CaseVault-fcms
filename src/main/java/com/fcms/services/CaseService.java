@@ -19,7 +19,7 @@ public class CaseService {
     private final CaseRepository caseRepository;
     private final EvidenceRepository evidenceRepository;
     private final ParticipantRepository participantRepository;
-    private final ForensicRequestRepository forensicRequestRepository;
+    private final ForensicRequestRepository forensicRequestRepository = new ForensicRequestRepository(null);
     private String caseID;
 
     public CaseService(String caseID) {
@@ -27,15 +27,12 @@ public class CaseService {
         this.caseRepository = new CaseRepository();
         this.evidenceRepository = new EvidenceRepository();
         this.participantRepository = new ParticipantRepository();
-        this.forensicRequestRepository = new ForensicRequestRepository(null);
     }
 
     public CaseService() {
         this.caseRepository = new CaseRepository();
         this.evidenceRepository = new EvidenceRepository();
         this.participantRepository = new ParticipantRepository();
-        this.forensicRequestRepository = new ForensicRequestRepository(null);
-
     }
 
     // ---------------- Validation ----------------
@@ -46,30 +43,6 @@ public class CaseService {
         if (date == null) return "Date is required";
         return null;
     }
-
-    // ---------------- Case ID Generator ----------------
-    public int getNextCaseNumber() {
-        String sql = "SELECT MAX(caseID) AS maxId FROM CaseFile";
-        try (Connection conn = SQLiteDatabase.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            if (rs.next() && rs.getString("maxId") != null) {
-                String maxId = rs.getString("maxId"); // e.g. CS00012
-                int num = Integer.parseInt(maxId.substring(2)); // strip "CS"
-                return num + 1;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 1; // start at CS00001
-    }
-
-    public String generateCaseId() {
-        int nextNumber = getNextCaseNumber();
-        return String.format("CS%05d", nextNumber);
-    }
-
-    // ---------------- Counts ----------------
     public int countByAssignedOfficer(String assigned) {
         String sql = "SELECT COUNT(1) AS cnt FROM CaseFile WHERE assignedOfficer = ?";
         try (Connection conn = SQLiteDatabase.getConnection();
@@ -117,13 +90,14 @@ public class CaseService {
     }
 
     public int countPendingAnalysisForOfficer(String assigned) {
-        return forensicRequestRepository.countPendingForOfficer(assigned);
+        ForensicRequestRepository repo = new ForensicRequestRepository(null); // or new ForensicRequestRepository()
+        return repo.countPendingForOfficer(assigned);
     }
 
     // ---------------- Case Management ----------------
     public void registerCase(Case newCase) {
         caseRepository.save(newCase);
-        System.out.println("Case registered: " + newCase.getId() + " (" + newCase.getTitle() + ")");
+        System.out.println("Case registered: " + newCase.getTitle());
     }
 
     public List<Case> getAllCases() {
