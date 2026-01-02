@@ -1,6 +1,7 @@
 package com.fcms.controllers.courtOfficial;
 
 import com.fcms.models.Case;
+import com.fcms.models.UserSession;
 import com.fcms.services.RecordVerdictService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -67,8 +68,7 @@ public class RecordVerdictController {
             return;
         }
 
-        // TODO: Replace with actual logged-in court official ID
-        String courtOfficialId = "COURT-UNKNOWN";     // TEMP FIX
+        String courtOfficialId = UserSession.getInstance().getUserID();
 
         boolean success = service.saveVerdict(
                 verdict,

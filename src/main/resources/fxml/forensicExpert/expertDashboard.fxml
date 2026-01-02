@@ -47,7 +47,7 @@
                             </VBox>
                             <Region HBox.hgrow="ALWAYS" />
                             <VBox alignment="CENTER" prefHeight="71.0" prefWidth="84.0" styleClass="stat-icon-urgent">
-                                <Label styleClass="stat-icon" text="⚠️" />
+                                <Label styleClass="stat-icon" text="⚠" />
                             </VBox>
                         </HBox>
                     </VBox>

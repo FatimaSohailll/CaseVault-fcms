@@ -26,7 +26,7 @@ public class ForensicRequestRepository {
             pstmt.setString(3, request.getStatus());
             pstmt.setString(4, request.getRequestedBy());
             pstmt.setString(5, request.getEvidenceType());
-            pstmt.setDate(6, Date.valueOf(request.getRequestedDate()));
+            pstmt.setString(6, request.getRequestedDate().toString());
             pstmt.setString(7, request.getEvidenceId());
             pstmt.setString(8, request.getAnalysisType());
             pstmt.setString(9, request.getPriority());
@@ -47,7 +47,8 @@ public class ForensicRequestRepository {
             pstmt.setString(2, request.getStatus());
             pstmt.setString(3, request.getRequestedBy());
             pstmt.setString(4, request.getEvidenceType());
-            pstmt.setDate(5, Date.valueOf(request.getRequestedDate()));
+            pstmt.setString(5, request.getRequestedDate().toString());
+
             pstmt.setString(6, request.getEvidenceId());
             pstmt.setString(7, request.getAnalysisType());
             pstmt.setString(8, request.getPriority());
@@ -241,9 +242,9 @@ public class ForensicRequestRepository {
 
         // Handle date parsing safely
         try {
-            Date requestedDate = rs.getDate("requestedDate");
+            String requestedDate = rs.getString("requestedDate");
             if (requestedDate != null) {
-                request.setRequestedDate(requestedDate.toLocalDate());
+                request.setRequestedDate(LocalDate.parse(requestedDate));
             } else {
                 // If date is null, set to current date
                 request.setRequestedDate(LocalDate.now());

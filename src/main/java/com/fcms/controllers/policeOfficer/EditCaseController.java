@@ -5,6 +5,7 @@ import com.fcms.models.Evidence;
 import com.fcms.models.Participant;
 import com.fcms.models.UserSession;
 import com.fcms.services.CaseService;
+import com.fcms.services.ParticipantService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -129,9 +130,9 @@ public class EditCaseController {
         boolean canEdit = sessionCanEdit() && !closed;
         setEditable(canEdit);
 
-        // Populate lists (pass current editable state)
+        ParticipantService pservice = new ParticipantService();
         populateEvidence(caseService.getEvidenceForCase(c.getId()));
-        populateParticipants(caseService.getParticipantsForCase(c.getId()));
+        populateParticipants(pservice.getParticipantsByCase(c.getId()));
 
         // If case is closed and session would otherwise allow editing, inform user via console (no behavior change)
         if (closed) {
@@ -290,7 +291,7 @@ public class EditCaseController {
         participantsContainer.getChildren().clear();
 
         if (participants == null || participants.isEmpty()) {
-            // Row showing "No participants linked" plus an Edit button
+            // Row showing "No participants linked"
             HBox row = new HBox(8);
             row.getStyleClass().add("list-item");
 
@@ -300,8 +301,10 @@ public class EditCaseController {
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
+            row.getChildren().addAll(none, spacer);
             participantsContainer.getChildren().add(row);
-            System.out.println("Added empty-participant row with Edit button");
+
+            System.out.println("Added empty-participant row");
             return;
         }
 
@@ -319,21 +322,13 @@ public class EditCaseController {
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            Button editBtn = new Button("Edit");
-            editBtn.setStyle("-fx-opacity:1; -fx-min-width:64; -fx-min-height:28;");
-            editBtn.getStyleClass().add("primary-btn");
-            editBtn.setDisable(!editable);
-
-            editBtn.setOnAction(evt -> {
-                System.out.println("Edit participant clicked: " + safe(p.getName()));
-                showAlert(Alert.AlertType.INFORMATION, "Not implemented", "Can't open edit page for participant yet.");
-            });
-
-            row.getChildren().addAll(left, spacer, editBtn);
+            // NOTE: Edit button removed per request — no edit UI here
+            row.getChildren().addAll(left, spacer);
             participantsContainer.getChildren().add(row);
         }
         System.out.println("participantsContainer children after populate: " + participantsContainer.getChildren().size());
     }
+
 
     private void onSaveClicked() {
         System.out.println("onSaveClicked()");

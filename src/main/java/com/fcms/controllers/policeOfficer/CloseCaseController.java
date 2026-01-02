@@ -98,8 +98,20 @@ public class CloseCaseController {
             return;
         }
 
-        // Persist closure (service should enforce authorization server-side as well)
-        caseService.closeCase(selectedCase.getId(), reason, report);
+        // Persist closure and check result
+        boolean ok;
+        try {
+            ok = caseService.closeCase(selectedCase.getId(), reason, report);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showAlert("Failed to close case: " + ex.getMessage());
+            return;
+        }
+
+        if (!ok) {
+            showAlert("Failed to close case. Please check logs and database schema.");
+            return;
+        }
 
         showAlert("Case " + selectedCase.getId() + " closed successfully with reason: " + reason);
 
@@ -109,6 +121,7 @@ public class CloseCaseController {
         closureReasonDropdown.getSelectionModel().clearSelection();
         finalReportSummary.clear();
     }
+
 
     @FXML
     private void handleCancel() {

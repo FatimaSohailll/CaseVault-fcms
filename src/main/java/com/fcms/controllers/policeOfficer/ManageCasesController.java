@@ -5,7 +5,9 @@ import com.fcms.models.Evidence;
 import com.fcms.models.Participant;
 import com.fcms.models.UserSession;
 import com.fcms.services.CaseService;
+import com.fcms.services.ParticipantService;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -44,38 +46,46 @@ public class ManageCasesController {
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    // Cache root and original center to avoid reloading FXML and duplicating controllers
+    private BorderPane appRoot;
+    private Node originalCenter;
+
     @FXML
     public void initialize() {
         System.out.println("ManageCasesController.initialize()");
 
+        // Capture root and original center after the scene is ready
+        Platform.runLater(() -> {
+            Stage stage = (Stage) caseDetailsRoot.getScene().getWindow();
+            appRoot = (BorderPane) stage.getScene().getRoot();
+            originalCenter = appRoot.getCenter();  // returns Node
+        });
+
         showPlaceholder();
         updateEditButtonState();
-        loadCases();
+        loadCasesAsync(); // do DB reads off the FX thread
 
         if (editCaseBtn != null) {
             editCaseBtn.setOnAction(e -> {
                 UserSession s = UserSession.getInstance();
                 if (s == null || !s.isLoggedIn()) {
-                    showAlert("Not signed in", "Please sign in to edit cases.");
+                    showInfo("Not signed in", "Please sign in to edit cases.");
                     return;
                 }
                 if (!s.isPoliceOfficer()) {
-                    showAlert("Permission denied", "Only Police Officers can edit cases.");
+                    showInfo("Permission denied", "Only Police Officers can edit cases.");
                     return;
                 }
                 if (activeCase == null) {
-                    showAlert("No case selected", "Please select a case first.");
+                    showInfo("No case selected", "Please select a case first.");
                     return;
                 }
                 if (isClosedStatus(activeCase.getStatus())) {
-                    showAlert("Cannot edit", "This case is closed and cannot be edited.");
+                    showInfo("Cannot edit", "This case is closed and cannot be edited.");
                     return;
                 }
 
                 try {
-                    Stage stage = (Stage) caseDetailsRoot.getScene().getWindow();
-                    BorderPane root = (BorderPane) stage.getScene().getRoot();
-
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/editCase.fxml"));
                     Parent editRoot = loader.load();
 
@@ -83,82 +93,99 @@ public class ManageCasesController {
                     if (controller instanceof EditCaseController editController) {
                         editController.setCase(activeCase);
 
-                        // After SAVE: reload manageCases.fxml
+                        // After SAVE: restore original center and refresh content
                         editController.setOnSaved(savedCase -> {
                             System.out.println("onSaved callback: " + savedCase.getId());
-                            try {
-                                FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/manageCases.fxml"));
-                                Parent manageRoot = manageLoader.load();
-                                root.setCenter(manageRoot);
-                            } catch (IOException ioEx) {
-                                ioEx.printStackTrace();
-                                Platform.runLater(() -> root.setCenter(caseDetailsRoot));
-                            }
+                            // restore center first so UI is visible, then reload data off-UI thread
+                            Platform.runLater(() -> {
+                                if (appRoot != null && originalCenter != null) {
+                                    appRoot.setCenter(originalCenter);
+                                    showPlaceholder();
+                                }
+                            });
+                            loadCasesAsync();
                         });
 
-                        // After CANCEL: reload manageCases.fxml
+                        // After CANCEL: same flow (no reload of FXML)
                         editController.setOnCancel(() -> {
                             System.out.println("onCancel callback");
-                            try {
-                                FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("/fxml/policeOfficer/manageCases.fxml"));
-                                Parent manageRoot = manageLoader.load();
-                                root.setCenter(manageRoot);
-                            } catch (IOException ioEx) {
-                                ioEx.printStackTrace();
-                                Platform.runLater(() -> root.setCenter(caseDetailsRoot));
-                            }
+                            Platform.runLater(() -> {
+                                if (appRoot != null && originalCenter != null) {
+                                    appRoot.setCenter(originalCenter);
+                                    showPlaceholder();
+                                }
+                            });
+                            loadCasesAsync();
                         });
                     }
 
-                    root.setCenter(editRoot);
+                    // Show edit screen by swapping center
+                    if (appRoot != null) {
+                        appRoot.setCenter(editRoot);
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                    showAlert("Load error", "Failed to open edit screen.");
+                    showInfo("Load error", "Failed to open edit screen.");
                 }
             });
         }
     }
 
-    private void loadCases() {
-        caseListContainer.getChildren().clear();
+    // Load cases off the FX thread; update UI on FX thread when done
+    private void loadCasesAsync() {
+        Task<List<Case>> task = new Task<>() {
+            @Override
+            protected List<Case> call() {
+                UserSession s = UserSession.getInstance();
+                if (s != null && s.isLoggedIn() && s.isPoliceOfficer()) {
+                    return caseService.getCasesByOfficer(s.getUserID());
+                }
+                return null;
+            }
+        };
 
-        UserSession s = UserSession.getInstance();
-        List<Case> cases = null;
+        task.setOnSucceeded(evt -> {
+            caseListContainer.getChildren().clear();
+            List<Case> cases = task.getValue();
+            if (cases == null) {
+                Label none = new Label("No cases available");
+                none.getStyleClass().add("placeholder-text");
+                caseListContainer.getChildren().add(none);
+                return;
+            }
+            if (cases.isEmpty()) {
+                Label none = new Label("No cases found");
+                none.getStyleClass().add("placeholder-text");
+                caseListContainer.getChildren().add(none);
+                return;
+            }
+            ParticipantService pservice = new ParticipantService();
+            for (Case c : cases) {
+                List<Evidence> evidence = caseService.getEvidenceForCase(c.getId());
+                List<Participant> participants = pservice.getParticipantsByCase(c.getId());
+                addCaseTile(c, evidence, participants);
+            }
 
-        if (s != null && s.isLoggedIn() && s.isPoliceOfficer()) {
-            // Only fetch cases assigned to this officer
-            cases = caseService.getCasesByOfficer(s.getUserID());
-        } else {
-            // If no session or not officer, show nothing
-            Label none = new Label("No cases available");
-            none.getStyleClass().add("placeholder-text");
-            caseListContainer.getChildren().add(none);
-            return;
-        }
+        });
 
-        if (cases == null || cases.isEmpty()) {
-            Label none = new Label("No cases found");
-            none.getStyleClass().add("placeholder-text");
-            caseListContainer.getChildren().add(none);
-            return;
-        }
+        task.setOnFailed(evt -> {
+            caseListContainer.getChildren().clear();
+            Label err = new Label("Failed to load cases");
+            err.getStyleClass().add("placeholder-text");
+            caseListContainer.getChildren().add(err);
+            Throwable ex = task.getException();
+            if (ex != null) ex.printStackTrace();
+        });
 
-        for (Case c : cases) {
-            List<Evidence> evidence = caseService.getEvidenceForCase(c.getId());
-            List<Participant> participants = caseService.getParticipantsForCase(c.getId());
-            addCaseTile(c, evidence, participants);
-        }
+        new Thread(task, "load-cases").start();
     }
 
     private void showPlaceholder() {
-        // Title
         if (caseTitle != null) {
             caseTitle.setText("Select a case from the list to view details");
             caseTitle.getStyleClass().removeIf(s -> s.equals("muted-title"));
             caseTitle.getStyleClass().add("section-title");
         }
-
-        // Clear stat values
         if (statusLabel != null) statusLabel.setText("");
         if (priorityLabel != null) priorityLabel.setText("");
         if (typeLabel != null) typeLabel.setText("");
@@ -167,10 +194,8 @@ public class ManageCasesController {
         if (officerLabel != null) officerLabel.setText("");
         if (descriptionLabel != null) descriptionLabel.setText("");
 
-        // Disable edit button until a case is selected or session allows
         updateEditButtonState();
 
-        // Evidence placeholder
         if (evidenceContainer != null) {
             evidenceContainer.getChildren().clear();
             Label evPlaceholder = new Label("No case selected");
@@ -178,7 +203,6 @@ public class ManageCasesController {
             evidenceContainer.getChildren().add(evPlaceholder);
         }
 
-        // Participants placeholder
         if (participantsContainer != null) {
             participantsContainer.getChildren().clear();
             Label pPlaceholder = new Label("No case selected");
@@ -186,10 +210,8 @@ public class ManageCasesController {
             participantsContainer.getChildren().add(pPlaceholder);
         }
 
-        // Remove any previous placeholder card and add a friendly card
         if (caseDetailsRoot != null) {
             caseDetailsRoot.getChildren().removeIf(node -> "empty-placeholder-card".equals(node.getId()));
-
             VBox placeholderCard = new VBox(8);
             placeholderCard.setId("empty-placeholder-card");
             placeholderCard.getStyleClass().addAll("manage-card", "placeholder-card");
@@ -259,7 +281,6 @@ public class ManageCasesController {
         tile.setOnMouseExited(e -> tile.getStyleClass().remove("hover"));
 
         tile.setOnMouseClicked(e -> {
-            // clear previous active
             for (Node n : caseListContainer.getChildren()) {
                 n.getStyleClass().remove("active");
             }
@@ -267,12 +288,10 @@ public class ManageCasesController {
 
             activeCase = c;
 
-            // Remove placeholder card if present
             if (caseDetailsRoot != null) {
                 caseDetailsRoot.getChildren().removeIf(node -> "empty-placeholder-card".equals(node.getId()));
             }
 
-            // Populate right-side details
             if (caseTitle != null) caseTitle.setText(id + " — " + title);
             if (statusLabel != null) statusLabel.setText(status);
             if (priorityLabel != null) priorityLabel.setText(capitalize(priority));
@@ -282,13 +301,11 @@ public class ManageCasesController {
             if (officerLabel != null) officerLabel.setText(officer);
             if (descriptionLabel != null) descriptionLabel.setText(description);
 
-            // Enable/disable edit button based on session and case status
             UserSession s = UserSession.getInstance();
             boolean closed = isClosedStatus(activeCase.getStatus());
             boolean canEdit = s != null && s.isLoggedIn() && s.isPoliceOfficer() && !closed;
             if (editCaseBtn != null) editCaseBtn.setDisable(!canEdit);
 
-            // Evidence
             if (evidenceContainer != null) {
                 evidenceContainer.getChildren().clear();
                 if (evidence == null || evidence.isEmpty()) {
@@ -315,7 +332,6 @@ public class ManageCasesController {
                 }
             }
 
-            // Participants
             if (participantsContainer != null) {
                 participantsContainer.getChildren().clear();
                 if (participants == null || participants.isEmpty()) {
@@ -326,7 +342,6 @@ public class ManageCasesController {
                     for (Participant p : participants) {
                         VBox item = new VBox(2);
                         item.getStyleClass().add("list-item");
-
                         Label pTitle = new Label(safe(p.getName()) + " — " + safe(p.getRole()));
                         pTitle.getStyleClass().add("item-title");
 
@@ -354,13 +369,14 @@ public class ManageCasesController {
         return status.trim().equalsIgnoreCase("closed");
     }
 
-    private void showAlert(String title, String content) {
+    // Non-blocking info alert (avoids showAndWait freeze sensations)
+    private void showInfo(String title, String content) {
         Platform.runLater(() -> {
             javafx.scene.control.Alert a = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
             a.setTitle(title);
             a.setHeaderText(null);
             a.setContentText(content);
-            a.showAndWait();
+            a.show(); // non-blocking
         });
     }
 

@@ -1,16 +1,16 @@
 package com.fcms.models.users;
 
-public class UserAccount {
+public abstract class UserAccount {
 
-    private String userID;
-    private String username;
-    private String name;
-    private String email;
-    private String password;
-    private String role;
-    private String managedBy;
-    private String createdAt;
-    private boolean approved;   // now boolean
+    protected String userID;
+    protected String username;
+    protected String name;
+    protected String email;
+    protected String password;
+    protected String role;
+    protected String managedBy;
+    protected String createdAt;
+    protected boolean approved;
 
     // ========= FULL CONSTRUCTOR (all fields) =========
     public UserAccount(String userID,
@@ -30,7 +30,7 @@ public class UserAccount {
         this.password = password;
         this.role = role;
         this.managedBy = managedBy;
-        this.approved = approved;     // TRUE/FALSE in Java
+        this.approved = approved;
         this.createdAt = createdAt;
     }
 

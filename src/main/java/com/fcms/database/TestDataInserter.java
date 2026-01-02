@@ -122,26 +122,64 @@ public class TestDataInserter {
 
                 // Submit every 5th case to court
                 boolean submitted = (i % 5 == 0);
-                String status = submitted ? "submitted" : "open";
-                String reviewedBy = submitted ? String.format("CR%05d", ((i % 3) + 1)) : null;
+                // Close every 7th case (for testing close flow)
+                boolean closed = (i % 7 == 0);
 
-                stmt.execute(String.format("""
-                    INSERT OR IGNORE INTO CaseFile
-                    (caseID, title, description, location, type, status, priority,
-                     assignedOfficer, dateRegistered, reviewedBy)
-                    VALUES ('%s', 'Case Title %s', 'Description for case %s',
-                            '%s', '%s', '%s', '%s', '%s', '2025-11-%02d', %s)
-                """,
-                        caseID, i, i, location, type, status, priority, assignedOfficer,
-                        ((i % 28) + 1),
-                        (reviewedBy == null ? "NULL" : "'" + reviewedBy + "'")
-                ));
+                String status;
+                String reviewedBy = null;
+                String closeReason = null;
+                String finalReport = null;
+
+                if (closed) {
+                    status = "closed";
+                    closeReason = "Routine closure for test data";
+                    finalReport = "Final report summary for " + caseID;
+                } else if (submitted) {
+                    status = "submitted";
+                    reviewedBy = String.format("CR%05d", ((i % 3) + 1));
+                } else {
+                    status = "open";
+                }
+
+                // Use a safe date (day between 1 and 28)
+                int day = ((i % 28) + 1);
+                String dateStr = String.format("2025-11-%02d", day);
+
+                // Insert case with optional close_reason and final_report
+                if (closeReason != null) {
+                    stmt.execute(String.format("""
+                        INSERT OR IGNORE INTO CaseFile
+                        (caseID, title, description, location, type, status, priority,
+                         assignedOfficer, dateRegistered, reviewedBy, close_reason, final_report)
+                        VALUES ('%s', 'Case Title %s', 'Description for case %s',
+                                '%s', '%s', '%s', '%s', '%s', '%s', %s, '%s', '%s')
+                    """,
+                            caseID, i, i, location, type, status, priority, assignedOfficer,
+                            dateStr,
+                            (reviewedBy == null ? "NULL" : "'" + reviewedBy + "'"),
+                            closeReason.replace("'", "''"),
+                            finalReport.replace("'", "''")
+                    ));
+                } else {
+                    stmt.execute(String.format("""
+                        INSERT OR IGNORE INTO CaseFile
+                        (caseID, title, description, location, type, status, priority,
+                         assignedOfficer, dateRegistered, reviewedBy)
+                        VALUES ('%s', 'Case Title %s', 'Description for case %s',
+                                '%s', '%s', '%s', '%s', '%s', '%s', %s)
+                    """,
+                            caseID, i, i, location, type, status, priority, assignedOfficer,
+                            dateStr,
+                            (reviewedBy == null ? "NULL" : "'" + reviewedBy + "'")
+                    ));
+                }
 
                 // -------------------------
                 // 4. Participants (0–2 per case)
                 // -------------------------
                 for (int p = 0; p < (i % 3); p++) {
-                    String pid = String.format("PA%05d", (i * 2 + p));
+                    // Ensure unique participant IDs across runs
+                    String pid = String.format("PA%05d", (i * 10 + p));
                     String role = (p % 2 == 0) ? "victim" : "suspect";
 
                     stmt.execute(String.format("""
@@ -166,8 +204,8 @@ public class TestDataInserter {
                         INSERT OR IGNORE INTO Evidence
                         (evidenceID, type, description, filename, location, collectionDate, caseID)
                         VALUES ('%s', 'Physical', 'Evidence description %s_%s',
-                                'file_%s.png', '%s', '2025-11-%02d', '%s')
-                    """, eid, i, ev, eid, location, ((i % 28) + 1), caseID));
+                                'file_%s.png', '%s', '%s', '%s')
+                    """, eid, i, ev, eid, location, dateStr, caseID));
                 }
 
                 // -------------------------
@@ -183,17 +221,19 @@ public class TestDataInserter {
                         INSERT OR IGNORE INTO ForensicRequest
                         (requestID, expertID, status, requestedBy, evidenceType,
                          requestedDate, evidenceID, analysisType, priority)
-                        VALUES ('%s', '%s', 'completed', '%s', 'Physical',
-                                '2025-11-%02d', '%s', 'Full Analysis', 'Medium')
-                    """, rid, expert, police, ((i % 28) + 1), eid));
+                        VALUES ('%s', '%s', 'pending', '%s', 'Physical',
+                                '%s', '%s', 'Full Analysis', 'Medium')
+                    """, rid, expert, police, dateStr, eid));
 
+                    /*
                     stmt.execute(String.format("""
                         INSERT OR IGNORE INTO ForensicReport
                         (reportID, title, filename, notes, completionDate, uploadDate,
                          status, requestID, uploadedBy)
                         VALUES ('RP%05d', 'Report %s', 'report_%s.pdf', 'Notes...',
-                                '2025-11-26', '2025-11-27', 'completed', '%s', '%s')
-                    """, (i * 4 + r), caseID, caseID, rid, expert));
+                                '%s', '%s', 'pending', '%s', '%s')
+                    """, (i * 4 + r), caseID, caseID, dateStr, dateStr, rid, expert));
+                        */
                 }
             }
 

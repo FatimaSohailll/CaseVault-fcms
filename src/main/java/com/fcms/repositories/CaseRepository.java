@@ -133,22 +133,46 @@ public class CaseRepository {
         }
     }
 
-    public void closeCase(String caseId, String reason, String report) {
-        String sql = "UPDATE CaseFile SET status = ?, close_reason = ?, final_report = ? WHERE caseID = ?";
-        try (Connection conn = SQLiteDatabase.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    public boolean closeCase(String caseId, String reason, String report) {
+        String sqlWithDetails = "UPDATE CaseFile SET status = ?, close_reason = ?, final_report = ? WHERE caseID = ?";
+        String sqlStatusOnly = "UPDATE CaseFile SET status = ? WHERE caseID = ?";
 
-            stmt.setString(1, "closed");
-            stmt.setString(2, reason);
-            stmt.setString(3, report);
-            stmt.setString(4, caseId);
+        try (Connection conn = SQLiteDatabase.getConnection()) {
+            // Try full update first
+            try (PreparedStatement stmt = conn.prepareStatement(sqlWithDetails)) {
+                stmt.setString(1, "closed");
+                stmt.setString(2, reason);
+                stmt.setString(3, report);
+                stmt.setString(4, caseId);
+                int rows = stmt.executeUpdate();
+                if (rows > 0) {
+                    System.out.println("Closed case with details: " + caseId);
+                    return true;
+                }
+            } catch (SQLException e) {
+                // Log and fall back to status-only update
+                System.out.println("closeCase: full update failed, falling back to status-only: " + e.getMessage());
+            }
 
-            stmt.executeUpdate();
-            System.out.println("Closed case: " + caseId);
+            // Fallback: update status only
+            try (PreparedStatement stmt2 = conn.prepareStatement(sqlStatusOnly)) {
+                stmt2.setString(1, "closed");
+                stmt2.setString(2, caseId);
+                int rows2 = stmt2.executeUpdate();
+                if (rows2 > 0) {
+                    System.out.println("Closed case (status-only): " + caseId);
+                    return true;
+                } else {
+                    System.out.println("closeCase: no rows updated for caseID: " + caseId);
+                    return false;
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
+
 
     public boolean exists(String id) {
         String query = "SELECT 1 FROM CaseFile WHERE caseID = ?";
@@ -375,6 +399,7 @@ public class CaseRepository {
         }
         return cases;
     }
+
 
     public List<Case> findSubmittedForOfficial(String officialId) {
         List<Case> cases = new ArrayList<>();

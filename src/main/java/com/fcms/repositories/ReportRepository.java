@@ -21,8 +21,8 @@ public class ReportRepository {
             pstmt.setString(2, report.getTitle());
             pstmt.setString(3, report.getFileName());
             pstmt.setString(4, report.getNotes());
-            pstmt.setDate(5, Date.valueOf(report.getCompletionDate()));
-            pstmt.setDate(6, Date.valueOf(report.getUploadDate()));
+            pstmt.setString(5, report.getCompletionDate().toString());
+            pstmt.setString(6, report.getUploadDate().toString());
             pstmt.setString(7, report.getStatus());
             pstmt.setString(8, report.getRequestId());
             pstmt.setString(9, report.getUploadedBy());
@@ -42,8 +42,8 @@ public class ReportRepository {
             pstmt.setString(1, report.getTitle());
             pstmt.setString(2, report.getFileName());
             pstmt.setString(3, report.getNotes());
-            pstmt.setDate(4, Date.valueOf(report.getCompletionDate()));
-            pstmt.setDate(5, Date.valueOf(report.getUploadDate()));
+            pstmt.setString(4, report.getCompletionDate().toString());
+            pstmt.setString(5, report.getUploadDate().toString());
             pstmt.setString(6, report.getStatus());
             pstmt.setString(7, report.getRequestId());
             pstmt.setString(8, report.getUploadedBy());
@@ -124,15 +124,16 @@ public class ReportRepository {
         report.setFileName(rs.getString("filename"));
         report.setNotes(rs.getString("notes"));
 
-        Date completionDate = rs.getDate("completionDate");
+        String completionDate = rs.getString("completionDate");
         if (completionDate != null) {
-            report.setCompletionDate(completionDate.toLocalDate());
+            report.setCompletionDate(LocalDate.parse(completionDate));
         }
 
-        Date uploadDate = rs.getDate("uploadDate");
+        String uploadDate = rs.getString("uploadDate");
         if (uploadDate != null) {
-            report.setUploadDate(uploadDate.toLocalDate());
+            report.setUploadDate(LocalDate.parse(uploadDate));
         }
+
 
         report.setStatus(rs.getString("status"));
         report.setRequestId(rs.getString("requestID"));

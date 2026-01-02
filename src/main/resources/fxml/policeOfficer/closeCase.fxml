@@ -45,8 +45,8 @@
 
                     <!-- Action Buttons -->
                     <HBox spacing="16" alignment="CENTER_RIGHT">
-                        <Button text="Cancel" onAction="#handleCancel" styleClass="nav-btn"/>
-                        <Button text="Close Case" onAction="#handleCloseCase" styleClass="nav-btn"/>
+                        <Button text="Cancel" onAction="#handleCancel" styleClass="btn"/>
+                        <Button text="Close Case" onAction="#handleCloseCase" styleClass="btn"/>
                     </HBox>
                 </VBox>
             </content>
