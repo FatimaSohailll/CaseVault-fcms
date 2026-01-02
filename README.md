@@ -38,23 +38,35 @@
 ## 📷 Images
 
 ### Police Dashboard
-![Police Dashobard](images/police-dashboard.PNG)
+<p align="center">
+<img src="images/police-dashboard.PNG" width="600">
+</p>
 
-### Expert Dashobard
-![Expert Dashobard](images/expert-dashboard.PNG)
+### Expert Dashboard
+<p align="center">
+<img src="images/expert-dashboard.PNG" width="600">
+</p>
 
 ### Court Official Dashboard
-![Court Dashboard](images/court-dashboard.PNG)
+<p align="center">
+<img src="images/court-dashboard.PNG" width="600">
+</p>
 
 ### Admin Dashboard
-![Admin Dashboard](images/admin-dashboard.PNG)
+<p align="center">
+<img src="images/admin-dashboard.PNG" width="600">
+</p>
 
+<p align="center">
 ### Manage Cases
-![Manage Cases](images/manage-cases.PNG)
+<img src="images/manage-cases.PNG" width="600">
+</p>
 
 ### Crime Analytics
-![analytics page](images/analytics.PNG)
-![analytics page](images/analytics2.PNG)
+<p align="center">
+<img src="images/analytics.PNG" width="600">
+<img src="images/analytics2.PNG" width="600">
+</p>
 
 ***Run the project to view the complete project***
 
