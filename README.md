@@ -4,7 +4,7 @@
 
 ---
 
-## 🏸Features
+## Features
 
 * Case registration, tracking, search, and closure
 * Secure digital & physical evidence logging with chain-of-custody
@@ -16,7 +16,7 @@
 
 ---
 
-## 🕵️‍♂️ User Roles
+## User Roles
 
 | Role            | Key Permissions                                                            |
 | --------------- | -------------------------------------------------------------------------- |
@@ -27,7 +27,7 @@
 
 ---
 
-## ⚙ Tech Stack
+## Tech Stack
 
 * **Frontend:** JavaFX
 * **Backend:** Java
@@ -35,7 +35,7 @@
   
 ---
 
-## 📷 Images
+## Images
 
 ### Police Dashboard
 <img src="images/police-dashboard.PNG" width="600">
